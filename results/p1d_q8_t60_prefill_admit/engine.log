@@ -1,0 +1,43 @@
+strata generate: unified memory: the GPU reads every missed expert in place (pcie_frac 1.00)
+strata generate: this CPU has no AVX-512: the expert kernels run on AVX-2 (multi-token for the i-quant gate/up rows)
+strata generate: native pack: ~/src/Strata-data/packs/q8_0 experts (largest blob 5.22 MB), token embedding type 8 in mapped host memory (644 MiB)
+strata generate: 1466 MiB of weights loaded from ~/src/Strata-data/packs/q8_0 (302 canonical tensors skipped: served natively)
+strata generate: 300 native projection matrices, 2948.44 MiB of weights
+strata generate: PLE on, table 320001536 rows of ~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0-merged/Qwen3.8-Flash-Next-Q8_0.gguf
+strata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.17 s (4507 MiB/s)
+strata generate: expert tier: 13723 slots of 5104 KiB (66 GiB pinned, cudaHostRegister PORTABLE ok; MAP_HUGETLB unavailable (no hugetlb pool configured?); using 4 KB pages) over ~/src/Strata-data/packs/q8_0/experts.bin (14.1 s)
+strata generate: expert tier: adaptive VRAM swaps off (--adapt-every 0)
+strata generate: profile ~/src/Strata/data/expert-profile.bin: 24576 ranked pairs, built for 24576 slots
+strata generate: experimental native Q5_K head, 675430400 bytes
+strata generate: expert cache 1024 slots, 4.98 GiB of VRAM; policy is
+strata generate: the GPU computes the experts in the cache; it rounds differently from the CPU,
+                 so a reply can differ slightly from a run without the cache (same quality:
+                 bench/results/2026-09-27-cache-parity).
+                 PROFILE, ranked by routing frequency, no eviction.
+strata generate: pre-filled 1024 of 1024 slots from the profile; slot 0 verified
+strata generate: R4 hit path ON - resident experts are computed on the GPU
+strata generate: 19 expert-pool workers + the host thread
+strata generate: session is up (engine 0.1.27)
+strata generate: expert tier: 13723 of 13723 slots warm from the profile in 6.0 s (11.87 GB/s)
+strata generate: token graph hit path: 1024 resident experts, decided on the device
+strata serve: prompt chunk auto: 8192 tokens
+strata serve: the prompt path borrows 819 cache slots (3.98 GiB)
+strata serve: expert tier: next-layer prediction on (top-10, 1 layer ahead)
+strata verify: window up to 6 tokens, 113.2 MiB of device buffers
+strata mtp: draft head over 106299 tokens (275.7 MiB)
+strata serve: 34426 MiB of VRAM free with everything loaded
+strata verify: captured the 6-token window (upload no error, sync no error)
+strata verify: captured the 1-token window (upload no error, sync no error)
+strata verify: captured the 3-token window (upload no error, sync no error)
+strata verify: captured the 4-token window (upload no error, sync no error)
+strata verify: captured the 2-token window (upload no error, sync no error)
+strata decode timing: 72 windows, avg T 3.44, 2.78 tokens/window, 106.40 ms/window = verify 98.94 (GPU-reach wait 49.73 + per-layer host 42.27 [plan 41.48 actq 0.57 jobs 0.18 CPU 0.00] + stage 2.16) + commit/emit 1.47 + draft 6.00; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 5.05, PCIe 0.00; DRAM tier 19.46, SSD 1.56, SSD wait 38.36 ms/window
+strata serve: prompt 5412 tokens = 0 reused + 5412 read in 15067 ms (359.2 tok/s), 200 generated in 7661 ms (26.1 tok/s), drafts accepted 129 of 176, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (17441 hits / 17441 lookups)
+strata serve: decode expert tier: 67258 resident + 5390 from the SSD (92.6% resident), 41.62 GB read, waited 2762 ms in 1416 layer-windows; prefetched 5228, used 3923, evicted unused 0, still loading when asked 2649
+strata serve: suffix drafts: 2 windows, 3 of 6 drafts accepted
+strata decode timing: 83 windows, avg T 3.17, 2.41 tokens/window, 98.75 ms/window = verify 91.14 (GPU-reach wait 49.32 + per-layer host 36.18 [plan 35.45 actq 0.53 jobs 0.17 CPU 0.00] + stage 1.66) + commit/emit 1.43 + draft 6.17; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 4.46, PCIe 0.00; DRAM tier 18.18, SSD 1.28, SSD wait 32.32 ms/window
+strata serve: prompt 18917 tokens = 0 reused + 18917 read in 46235 ms (409.2 tok/s), 200 generated in 8196 ms (24.4 tok/s), drafts accepted 119 of 180, 2 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (17781 hits / 17781 lookups)
+strata serve: decode expert tier: 72432 resident + 5101 from the SSD (93.4% resident), 39.94 GB read, waited 2682 ms in 1417 layer-windows; prefetched 4978, used 3637, evicted unused 0, still loading when asked 2431
+strata serve: suffix drafts: 1 windows, 1 of 3 drafts accepted

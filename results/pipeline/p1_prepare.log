@@ -1,0 +1,104 @@
+[2/2] Linking CXX executable bin/llama-gguf-split
+gguf_merge: writing tensors ~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00006-of-00006.gguf ...[3Ddone
+gguf_merge: ~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0-merged/Qwen3.8-Flash-Next-Q8_0.gguf merged from 6 split with 1224 tensors.
+	Command being timed: "~/src/llama.cpp-master/build/bin/llama-gguf-split --merge ~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00001-of-00006.gguf ~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0-merged/Qwen3.8-Flash-Next-Q8_0.gguf"
+	User time (seconds): 0.77
+	System time (seconds): 111.52
+	Percent of CPU this job got: 41%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 4:29.96
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 53999592
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 666
+	Minor (reclaiming a frame) page faults: 13498168
+	Voluntary context switches: 718517
+	Involuntary context switches: 1087
+	Swaps: 0
+	File system inputs: 367672608
+	File system outputs: 367648576
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+tokenizer/: vocab 248320, merges 247587, pre qwen35, specials {'tokenizer.ggml.eos_token_id': 248046, 'tokenizer.ggml.padding_token_id': 248044, 'tokenizer.ggml.bos_token_id': 248044}
+index.txt: 1079 tensors, 302 served natively, 0 in extra.bin, arena 1.43 GiB
+compat-bf16: 460 tensors, 1.39 GiB; expert and PLE table bytes unchanged
+  layer  0  Q8_0    /Q8_0    blob  5222400  at 0.00 GiB
+  layer  8  Q8_0    /Q8_0    blob  5222400  at 19.92 GiB
+  layer 16  Q8_0    /Q8_0    blob  5222400  at 39.84 GiB
+  layer 24  Q8_0    /Q8_0    blob  5222400  at 59.77 GiB
+  layer 32  Q8_0    /Q8_0    blob  5222400  at 79.69 GiB
+  layer 40  Q8_0    /Q8_0    blob  5222400  at 99.61 GiB
+experts.bin: 48 layers, 119.53 GiB
+	Command being timed: ".venv/bin/python tools/iq_pack.py --gguf ~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0-merged/Qwen3.8-Flash-Next-Q8_0.gguf --out ~/src/Strata-data/packs/q8_0 --compat-bf16 --experts-bin"
+	User time (seconds): 18.07
+	System time (seconds): 144.62
+	Percent of CPU this job got: 59%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 4:31.27
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 71857604
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 9063
+	Minor (reclaiming a frame) page faults: 35250473
+	Voluntary context switches: 496162
+	Involuntary context switches: 11587
+	Swaps: 0
+	File system inputs: 252638264
+	File system outputs: 253698880
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+  layer 40  Q2_0    /Q2_0    blob  1382400  at 26.37 GiB
+experts.bin: 48 layers, 31.64 GiB
+	Command being timed: ".venv/bin/python tools/iq_pack.py --gguf ~/src/Strata-data/models/Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf --out ~/src/Strata-data/packs/q2_0-tier --experts-bin"
+	User time (seconds): 7.93
+	System time (seconds): 69.21
+	Percent of CPU this job got: 69%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:51.41
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 26446564
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 22406
+	Minor (reclaiming a frame) page faults: 9596242
+	Voluntary context switches: 102636
+	Involuntary context switches: 1082
+	Swaps: 0
+	File system inputs: 39079920
+	File system outputs: 69276216
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+~/src/Strata-data/packs/q2_0-tier:
+total 34628504
+drwxrwxr-x 3 user user        4096 Oct 22 19:31 .
+drwxrwxr-x 5 user user        4096 Oct 22 19:31 ..
+-rw-rw-r-- 1 user user  1485606400 Oct 22 19:31 dense.bin
+-rw-rw-r-- 1 user user 33973862400 Oct 22 19:33 experts.bin
+-rw-rw-r-- 1 user user       93561 Oct 22 19:31 index.txt
+-rw-rw-r-- 1 user user        3286 Oct 22 19:31 native_experts.txt
+drwxrwxr-x 2 user user        4096 Oct 22 19:31 tokenizer
+
+~/src/Strata-data/packs/q8_0:
+total 126839848
+drwxrwxr-x 3 user user         4096 Oct 22 19:27 .
+drwxrwxr-x 5 user user         4096 Oct 22 19:31 ..
+-rw-rw-r-- 1 user user        49573 Oct 22 19:27 compat-bf16.json
+-rw-rw-r-- 1 user user   1538117120 Oct 22 19:27 dense.bin
+-rw-rw-r-- 1 user user 128345702400 Oct 22 19:31 experts.bin
+-rw-rw-r-- 1 user user        93663 Oct 22 19:27 index.txt
+-rw-rw-r-- 1 user user         3324 Oct 22 19:27 native_experts.txt
+drwxrwxr-x 2 user user         4096 Oct 22 19:27 tokenizer

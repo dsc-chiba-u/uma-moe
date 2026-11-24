@@ -1,0 +1,6 @@
+# Python packages of the analysis and harness venv (~/work/uma-moe/.venv), Python 3.12
+huggingface_hub==2.2.0
+matplotlib==3.11.2
+numpy==2.5.4
+PyYAML==6.0.3
+tqdm==4.70.1

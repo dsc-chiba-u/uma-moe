@@ -1,0 +1,2 @@
+f_up_b90_exact_mtp {'load_s': 102.04465985298157, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 6.424549102783203, 'mem_avail_min_gib': 6.082874298095703}
+f_up_b66_default_mtp {'load_s': 80.03420329093933, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 30.032085418701172, 'mem_avail_min_gib': 29.761394500732422}

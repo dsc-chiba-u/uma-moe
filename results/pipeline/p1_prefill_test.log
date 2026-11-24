@@ -1,0 +1,2 @@
+p1d_q8_t60_prefill_bypass {'load_s': 47.01556634902954, 'requests': 2, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 33.928993225097656, 'mem_avail_min_gib': 32.48174285888672}
+p1d_q8_t60_prefill_admit {'load_s': 34.01116943359375, 'requests': 2, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 33.587982177734375, 'mem_avail_min_gib': 33.51350021362305}

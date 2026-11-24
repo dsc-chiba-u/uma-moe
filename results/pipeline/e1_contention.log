@@ -1,0 +1,10 @@
+== GPU alone
+gpu-seq alloc=dev GiB=16.0 first_pass=243.6 GB/s median=238.0 GB/s max=246.2 GB/s
+== NVMe alone
+seq block=1024KiB threads=16 : 10.58 GB/s, 10092 IOPS, lat p50=1561us p90=1764us p99=2148us  (~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00003-of-00006.gguf)
+== GPU while NVMe streams
+gpu-seq alloc=dev GiB=16.0 first_pass=229.9 GB/s median=229.7 GB/s max=230.7 GB/s
+seq block=1024KiB threads=16 : 10.78 GB/s, 10277 IOPS, lat p50=1544us p90=1713us p99=1969us  (~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00003-of-00006.gguf)
+== NVMe while GPU streams
+seq block=1024KiB threads=16 : 10.65 GB/s, 10158 IOPS, lat p50=1561us p90=1755us p99=2045us  (~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00003-of-00006.gguf)
+concurrent gpu_alloc=dev cpu_threads=0 cpus=all : GPU 234.0 GB/s, CPU 0.0 GB/s, sum 234.0 GB/s

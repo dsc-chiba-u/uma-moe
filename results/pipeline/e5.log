@@ -1,0 +1,4 @@
+e5_llama_q8_cpumoe {'load_s': 137.2461154460907, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 109.02312469482422, 'mem_avail_min_gib': 107.72647094726562}
+e5_llama_q8_cpumoe_cache16g {'load_s': 202.34281659126282, 'requests': None, 'error': "URLError(ConnectionRefusedError(111, 'Connection refused'))", 'watchdog': False, 'mem_avail_loaded_gib': 92.76232528686523, 'mem_avail_min_gib': 91.48411178588867}
+e5_llama_q8_cpumoe_mtp2 {'load_s': 150.22339057922363, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 104.07151794433594, 'mem_avail_min_gib': 102.98332977294922}
+e5_llama_q8_cpumoe_prefill {'load_s': 129.22450375556946, 'requests': 1, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 109.05356979370117, 'mem_avail_min_gib': 108.17159652709961}

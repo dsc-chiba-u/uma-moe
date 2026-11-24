@@ -1,0 +1,49 @@
+# TODO before publishing: date-released, the identifiers (arXiv ID, Zenodo dataset DOI) below and in README.md and
+# .zenodo.json, and the preferred-citation status (`submitted` once the manuscript has been submitted; `preprint`
+# while only the arXiv version exists). The DOI of this software record is minted by Zenodo's GitHub integration at the
+# first release and is added in the next commit.
+cff-version: 1.2.0
+message: "If you use this software or data, please cite the paper (preferred-citation) and this release."
+type: software
+title: "Expert Tiering on Unified Memory: Running a 188 GB Mixture-of-Experts Model on a 128 GB GPU Workstation"
+version: 1.0.0
+license: MIT
+authors:
+  - family-names: Nishiuchi
+    given-names: Hiromu
+    affiliation: "Data Science Core, Chiba University, Chiba, Japan; SoujouData Inc., Tokyo, Japan"
+    orcid: "https://orcid.org/0000-0001-8515-2748"
+  - family-names: Ohta
+    given-names: Tazro
+    affiliation: "Department of Artificial Intelligence Medicine, Graduate School of Medicine, Chiba University, Chiba, Japan; Institute for Advanced Academic Research, Chiba University, Chiba, Japan; Data Science Core, Chiba University, Chiba, Japan"
+    orcid: "https://orcid.org/0000-0003-3777-5945"
+keywords:
+  - mixture of experts
+  - large language model inference
+  - unified memory
+  - expert offloading
+  - NVMe
+  - speculative decoding
+repository-code: "https://github.com/dsc-chiba-u/uma-moe"
+identifiers:
+  - type: other
+    value: "arXiv:XXXX.XXXXX"
+    description: "Preprint of the paper (to be filled in)"
+  - type: other
+    value: "10.5281/zenodo.XXXXXXX"
+    description: "Zenodo dataset record: routing traces, locality traces and logits (to be filled in)"
+preferred-citation:
+  type: article
+  title: "Expert Tiering on Unified Memory: Running a 188 GB Mixture-of-Experts Model on a 128 GB GPU Workstation"
+  authors:
+    - family-names: Nishiuchi
+      given-names: Hiromu
+      affiliation: "Data Science Core, Chiba University, Chiba, Japan; SoujouData Inc., Tokyo, Japan"
+      orcid: "https://orcid.org/0000-0001-8515-2748"
+    - family-names: Ohta
+      given-names: Tazro
+      affiliation: "Department of Artificial Intelligence Medicine, Graduate School of Medicine, Chiba University, Chiba, Japan; Institute for Advanced Academic Research, Chiba University, Chiba, Japan; Data Science Core, Chiba University, Chiba, Japan"
+      orcid: "https://orcid.org/0000-0003-3777-5945"
+  journal: "IEEE Transactions on Parallel and Distributed Systems"
+  status: submitted
+  year: 2026

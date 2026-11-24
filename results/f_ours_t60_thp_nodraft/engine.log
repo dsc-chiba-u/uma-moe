@@ -1,0 +1,7 @@
+strata generate: unified memory: the GPU reads every missed expert in place (pcie_frac 1.00)
+strata generate: this CPU has no AVX-512: the expert kernels run on AVX-2 (multi-token for the i-quant gate/up rows)
+strata generate: native pack: ~/src/Strata-data/packs/q8_0 experts (largest blob 5.22 MB), token embedding type 8 in mapped host memory (644 MiB)
+strata generate: 1466 MiB of weights loaded from ~/src/Strata-data/packs/q8_0 (302 canonical tensors skipped: served natively)
+strata generate: 300 native projection matrices, 2948.44 MiB of weights
+strata generate: PLE on, table 320001536 rows of ~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0-merged/Qwen3.8-Flash-Next-Q8_0.gguf
+strata mtp: draft layer loaded, 838 MiB of VRAM (experts 675, dense 111), files read in 0.18 s (4311 MiB/s)

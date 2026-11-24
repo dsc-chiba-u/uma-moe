@@ -1,0 +1,38 @@
+{
+ "exe": "~/src/Strata-upstream-026/build-gb10/strata",
+ "args": [
+  "--pack",
+  "~/src/Strata-data/packs-upstream/q8_0",
+  "--native",
+  "~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00001-of-00006.gguf",
+  "--resident-budget-gib",
+  "66.8",
+  "--expert-profile",
+  "~/src/Strata-upstream-026/data/expert-profile.bin",
+  "--expert-cache",
+  "1024",
+  "--prefill",
+  "auto",
+  "--spec",
+  "4",
+  "--spec-min-p",
+  "0.5",
+  "--mtp",
+  "~/src/Strata-data/mtp/rt",
+  "--max-context",
+  "32768",
+  "--kv",
+  "int8"
+ ],
+ "cwd": "~/src/Strata-upstream-026",
+ "tokenizer": "~/src/Strata-data/packs-upstream/q8_0/tokenizer",
+ "model_name": "qwen3.8-flash-next-q8_0",
+ "log": "~/work/uma-moe/results/f_up026_b66_exact_mtp/engine.log",
+ "lib_dirs": [
+  "/usr/local/cuda/bin",
+  "/usr/local/cuda/lib64"
+ ],
+ "port": 8080,
+ "gpu": 0,
+ "gpus_asked": true
+}

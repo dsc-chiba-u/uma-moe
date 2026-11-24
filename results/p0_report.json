@@ -1,0 +1,354 @@
+[
+ {
+  "run": "p0f_base_auto_nodraft",
+  "decode": {
+   "code_en": 36.3,
+   "story_en": 36.2,
+   "explain_en": 36.2,
+   "math_en": 35.0,
+   "essay_ja": 36.4,
+   "tech_ja": 36.4
+  },
+  "decode_mean": 36.083333333333336,
+  "prefill": {
+   "long5k": 1473.1680740942522,
+   "long19k": 1554.7061241265926,
+   "long26k": 1433.6338203294995
+  },
+  "cpu": 6.07280549537686,
+  "gpu": 95.09276695526697,
+  "footprint_gib": 71.96037292480469,
+  "loaded_gib": 70.96101379394531,
+  "same_as_ref": 18,
+  "n_texts": 18,
+  "repeats_identical": true,
+  "accept": {
+   "code_en": null,
+   "story_en": null,
+   "explain_en": null,
+   "math_en": null,
+   "essay_ja": null,
+   "tech_ja": null
+  }
+ },
+ {
+  "run": "p0f_base_auto_mtp",
+  "decode": {
+   "code_en": 78.9,
+   "story_en": 54.9,
+   "explain_en": 65.4,
+   "math_en": 78.3,
+   "essay_ja": 51.7,
+   "tech_ja": 67.6
+  },
+  "decode_mean": 66.13333333333334,
+  "prefill": {
+   "long5k": 1505.2895322939864,
+   "long19k": 1545.224283029659,
+   "long26k": 1430.8098045299412
+  },
+  "cpu": 5.732628498402692,
+  "gpu": 93.28964709126,
+  "footprint_gib": 73.13339233398438,
+  "loaded_gib": 71.60998916625977,
+  "same_as_ref": 18,
+  "n_texts": 18,
+  "repeats_identical": true,
+  "accept": {
+   "code_en": 0.8198614318706697,
+   "story_en": 0.5823665893271461,
+   "explain_en": 0.6904231625835189,
+   "math_en": 0.8171296296296297,
+   "essay_ja": 0.5621890547263682,
+   "tech_ja": 0.7610837438423645
+  }
+ },
+ {
+  "run": "p0f_base_c4096_nodraft",
+  "decode": {
+   "code_en": 25.6,
+   "story_en": 26.1,
+   "explain_en": 24.6,
+   "math_en": 23.9,
+   "essay_ja": 27.1,
+   "tech_ja": 25.5
+  },
+  "decode_mean": 25.46666666666667,
+  "prefill": {
+   "long5k": 1427.591664468478,
+   "long19k": 1504.6929685014318,
+   "long26k": 1357.458075904678
+  },
+  "cpu": 99.8799758650981,
+  "gpu": 94.06628211575844,
+  "footprint_gib": 44.897666931152344,
+  "loaded_gib": 44.214942932128906,
+  "same_as_ref": 2,
+  "n_texts": 18,
+  "repeats_identical": false,
+  "accept": {
+   "code_en": null,
+   "story_en": null,
+   "explain_en": null,
+   "math_en": null,
+   "essay_ja": null,
+   "tech_ja": null
+  }
+ },
+ {
+  "run": "p0f_base_c4096_mtp",
+  "decode": {
+   "code_en": 39.6,
+   "story_en": 33.1,
+   "explain_en": 34.8,
+   "math_en": 37.7,
+   "essay_ja": 33.2,
+   "tech_ja": 36.4
+  },
+  "decode_mean": 35.8,
+  "prefill": {
+   "long5k": 1432.6184802753507,
+   "long19k": 1512.07034372502,
+   "long26k": 1367.368109069354
+  },
+  "cpu": 99.74991535786617,
+  "gpu": 93.79799679487179,
+  "footprint_gib": 45.060184478759766,
+  "loaded_gib": 44.2599983215332,
+  "same_as_ref": 2,
+  "n_texts": 18,
+  "repeats_identical": false,
+  "accept": {
+   "code_en": 0.8356807511737089,
+   "story_en": 0.5804195804195804,
+   "explain_en": 0.6572052401746725,
+   "math_en": 0.8181818181818182,
+   "essay_ja": 0.6196319018404908,
+   "tech_ja": 0.74
+  }
+ },
+ {
+  "run": "p0f_base_c4096_pcie1_nodraft",
+  "decode": {
+   "code_en": 31.8,
+   "story_en": 32.3,
+   "explain_en": 31.4,
+   "math_en": 32.3,
+   "essay_ja": 32.5,
+   "tech_ja": 31.8
+  },
+  "decode_mean": 32.016666666666666,
+  "prefill": {
+   "long5k": 1451.353524524256,
+   "long19k": 1515.4185022026431,
+   "long26k": 1375.9129527500372
+  },
+  "cpu": 6.0474082341269835,
+  "gpu": 92.22013125763125,
+  "footprint_gib": 44.83995819091797,
+  "loaded_gib": 44.23432159423828,
+  "same_as_ref": 2,
+  "n_texts": 18,
+  "repeats_identical": false,
+  "accept": {
+   "code_en": null,
+   "story_en": null,
+   "explain_en": null,
+   "math_en": null,
+   "essay_ja": null,
+   "tech_ja": null
+  }
+ },
+ {
+  "run": "p0f_base_c4096_pcie1_mtp",
+  "decode": {
+   "code_en": 60.2,
+   "story_en": 43.6,
+   "explain_en": 50.6,
+   "math_en": 57.4,
+   "essay_ja": 42.3,
+   "tech_ja": 53.7
+  },
+  "decode_mean": 51.3,
+  "prefill": {
+   "long5k": 1452.6428763080226,
+   "long19k": 1514.7317854283426,
+   "long26k": 1377.6119402985073
+  },
+  "cpu": 58.26789907688844,
+  "gpu": 91.63011972332792,
+  "footprint_gib": 44.99476623535156,
+  "loaded_gib": 44.2645149230957,
+  "same_as_ref": 1,
+  "n_texts": 18,
+  "repeats_identical": false,
+  "accept": {
+   "code_en": 0.8439716312056738,
+   "story_en": 0.5480984340044742,
+   "explain_en": 0.6581196581196581,
+   "math_en": 0.8364928909952607,
+   "essay_ja": 0.6132075471698113,
+   "tech_ja": 0.7844155844155845
+  }
+ },
+ {
+  "run": "p0f_fix_auto_nodraft",
+  "decode": {
+   "code_en": 34.9,
+   "story_en": 35.0,
+   "explain_en": 34.7,
+   "math_en": 34.4,
+   "essay_ja": 35.0,
+   "tech_ja": 34.8
+  },
+  "decode_mean": 34.8,
+  "prefill": {
+   "long5k": 1451.0330024148109,
+   "long19k": 1512.0722737448034,
+   "long26k": 1379.1866028708132
+  },
+  "cpu": 5.476867608169312,
+  "gpu": 95.44778881745567,
+  "footprint_gib": 45.20888137817383,
+  "loaded_gib": 44.226280212402344,
+  "same_as_ref": 18,
+  "n_texts": 18,
+  "repeats_identical": true,
+  "accept": {
+   "code_en": null,
+   "story_en": null,
+   "explain_en": null,
+   "math_en": null,
+   "essay_ja": null,
+   "tech_ja": null
+  }
+ },
+ {
+  "run": "p0f_fix_auto_mtp",
+  "decode": {
+   "code_en": 74.2,
+   "story_en": 51.6,
+   "explain_en": 62.4,
+   "math_en": 73.0,
+   "essay_ja": 48.3,
+   "tech_ja": 64.1
+  },
+  "decode_mean": 62.266666666666666,
+  "prefill": {
+   "long5k": 1462.5371923180955,
+   "long19k": 1520.257234726688,
+   "long26k": 1388.378744543128
+  },
+  "cpu": 5.79960220484414,
+  "gpu": 94.25955691063218,
+  "footprint_gib": 44.99116897583008,
+  "loaded_gib": 44.31680679321289,
+  "same_as_ref": 18,
+  "n_texts": 18,
+  "repeats_identical": true,
+  "accept": {
+   "code_en": 0.8198614318706697,
+   "story_en": 0.5823665893271461,
+   "explain_en": 0.6904231625835189,
+   "math_en": 0.8171296296296297,
+   "essay_ja": 0.5607940446650124,
+   "tech_ja": 0.762962962962963
+  }
+ },
+ {
+  "run": "p0f_fix_c1024_nodraft",
+  "decode": {
+   "code_en": 33.7,
+   "story_en": 33.7,
+   "explain_en": 33.6,
+   "math_en": 33.7,
+   "essay_ja": 33.9,
+   "tech_ja": 33.5
+  },
+  "decode_mean": 33.68333333333334,
+  "prefill": {
+   "long5k": 723.7229205669965,
+   "long19k": 750.0495618730423,
+   "long26k": 734.3625656533503
+  },
+  "cpu": 5.458588342440802,
+  "gpu": 94.99744990892532,
+  "footprint_gib": 40.634246826171875,
+  "loaded_gib": 40.07785415649414,
+  "same_as_ref": 18,
+  "n_texts": 18,
+  "repeats_identical": true,
+  "accept": {
+   "code_en": null,
+   "story_en": null,
+   "explain_en": null,
+   "math_en": null,
+   "essay_ja": null,
+   "tech_ja": null
+  }
+ },
+ {
+  "run": "p0f_fix_c1024_mtp",
+  "decode": {
+   "code_en": 73.4,
+   "story_en": 50.9,
+   "explain_en": 61.4,
+   "math_en": 73.1,
+   "essay_ja": 47.3,
+   "tech_ja": 63.6
+  },
+  "decode_mean": 61.61666666666667,
+  "prefill": {
+   "long5k": 722.8159230563718,
+   "long19k": 748.4667431646421,
+   "long26k": 734.5167966884254
+  },
+  "cpu": 5.877722500812918,
+  "gpu": 94.31565551696366,
+  "footprint_gib": 40.83837890625,
+  "loaded_gib": 40.1034049987793,
+  "same_as_ref": 18,
+  "n_texts": 18,
+  "repeats_identical": true,
+  "accept": {
+   "code_en": 0.8198614318706697,
+   "story_en": 0.5823665893271461,
+   "explain_en": 0.6904231625835189,
+   "math_en": 0.8171296296296297,
+   "essay_ja": 0.5594059405940595,
+   "tech_ja": 0.762962962962963
+  }
+ },
+ {
+  "run": "p0f_fix_c24576_mtp",
+  "decode": {
+   "code_en": 78.5,
+   "story_en": 54.3,
+   "explain_en": 65.3,
+   "math_en": 78.2,
+   "essay_ja": 51.4,
+   "tech_ja": 67.2
+  },
+  "decode_mean": 65.81666666666666,
+  "prefill": {
+   "long5k": 1502.4986118822876,
+   "long19k": 1547.1497505520567,
+   "long26k": 1440.0749063670412
+  },
+  "cpu": 5.409722403610349,
+  "gpu": 94.25488997371498,
+  "footprint_gib": 71.63703155517578,
+  "loaded_gib": 70.9801254272461,
+  "same_as_ref": 18,
+  "n_texts": 18,
+  "repeats_identical": true,
+  "accept": {
+   "code_en": 0.8198614318706697,
+   "story_en": 0.5823665893271461,
+   "explain_en": 0.6904231625835189,
+   "math_en": 0.8171296296296297,
+   "essay_ja": 0.5607940446650124,
+   "tech_ja": 0.762962962962963
+  }
+ }
+]

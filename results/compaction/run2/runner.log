@@ -1,0 +1,29 @@
+2026-10-23 16:24:49 armed by the root script; original value 20
+2026-10-23 16:30:39 GPU lock taken
+2026-10-23 16:30:39 phase A1 begins: compaction_proactiveness=20
+2026-10-23 16:30:50   page cache filled: MemFree: 55.8 GiB  Cached: 60.0 GiB  
+2026-10-23 16:38:37   page cache filled: MemFree: 80.4 GiB  Cached: 35.4 GiB  
+2026-10-23 16:41:30   page cache filled: MemFree: 79.0 GiB  Cached: 36.8 GiB  
+2026-10-23 16:44:08 phase A1 ends: compaction_proactiveness=20
+2026-10-23 16:44:08 A1 check: kcompactd ran 111 s during the cudaHostAlloc decode
+2026-10-23 16:44:10 phase B1 begins: compaction_proactiveness=0
+2026-10-23 16:44:21   page cache filled: MemFree: 80.3 GiB  Cached: 35.5 GiB  
+2026-10-23 16:51:49   page cache filled: MemFree: 78.9 GiB  Cached: 36.9 GiB  
+2026-10-23 16:54:38   page cache filled: MemFree: 78.9 GiB  Cached: 36.9 GiB  
+2026-10-23 16:57:15 phase B1 ends: compaction_proactiveness=0
+2026-10-23 16:57:17 phase A2 begins: compaction_proactiveness=20
+2026-10-23 16:57:28   page cache filled: MemFree: 80.3 GiB  Cached: 35.5 GiB  
+2026-10-23 17:05:41   page cache filled: MemFree: 78.9 GiB  Cached: 36.9 GiB  
+2026-10-23 17:08:30   page cache filled: MemFree: 78.9 GiB  Cached: 36.9 GiB  
+2026-10-23 17:11:15 phase A2 ends: compaction_proactiveness=20
+2026-10-23 17:11:17 phase B2 begins: compaction_proactiveness=0
+2026-10-23 17:11:27   page cache filled: MemFree: 80.3 GiB  Cached: 35.5 GiB  
+2026-10-23 17:18:50   page cache filled: MemFree: 78.9 GiB  Cached: 36.9 GiB  
+2026-10-23 17:21:40   page cache filled: MemFree: 78.9 GiB  Cached: 36.9 GiB  
+2026-10-23 17:24:24 phase B2 ends: compaction_proactiveness=0
+2026-10-23 17:24:26 phase A3 begins: compaction_proactiveness=20
+2026-10-23 17:24:35   page cache filled: MemFree: 80.3 GiB  Cached: 35.5 GiB  
+2026-10-23 17:32:13   page cache filled: MemFree: 78.8 GiB  Cached: 36.9 GiB  
+2026-10-23 17:34:57   page cache filled: MemFree: 78.8 GiB  Cached: 36.9 GiB  
+2026-10-23 17:37:44 phase A3 ends: compaction_proactiveness=20
+2026-10-23 17:37:44 all phases done: compaction_proactiveness=20

@@ -1,0 +1,10 @@
+[11:21:19] waiting for the E4 sweep
+[11:26:31] E4 sweep done
+[11:27:42] E4 extra done
+[11:28:34] E1 GPU microbenchmarks done
+[11:28:34] waiting for the Q8_0 download
+[11:36:35] download done: 176G
+[11:42:30] E1 NVMe microbenchmarks done
+[11:43:10] E1 contention done
+[11:50:09] E8 replay done
+[12:53:02] E2 done

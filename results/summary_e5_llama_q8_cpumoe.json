@@ -1,0 +1,102 @@
+[
+ {
+  "name": "e5_llama_q8_cpumoe_cache16g",
+  "error": "URLError(ConnectionRefusedError(111, 'Connection refused'))",
+  "mem_avail_before": 116.1424331665039,
+  "mem_avail_loaded": 92.76232528686523,
+  "mem_avail_min": 91.48411178588867,
+  "load_s": 202.34281659126282,
+  "prompts": {
+   "code_en": {
+    "decode_tok_s": 0.2647347701964657,
+    "decode_min": 0.2647347701964657,
+    "decode_max": 0.2647347701964657,
+    "prefill_tok_s": null,
+    "accept_rate": null,
+    "tokens_per_step": null,
+    "hit_rate": null,
+    "cpu_util": 6.896421161825726,
+    "gpu_util": 2.1747925311203318,
+    "nvme_mbs": 31.100466804979252,
+    "client_decode": 0.2647342767606611,
+    "n": 1
+   },
+   "story_en": {
+    "decode_tok_s": null,
+    "decode_min": null,
+    "decode_max": null,
+    "prefill_tok_s": null,
+    "accept_rate": null,
+    "tokens_per_step": null,
+    "hit_rate": null,
+    "cpu_util": 6.408450704225352,
+    "gpu_util": 1.6169014084507043,
+    "nvme_mbs": 36.03746478873239,
+    "client_decode": 0.13489526157407872,
+    "n": 0
+   }
+  }
+ },
+ {
+  "name": "e5_llama_q8_cpumoe_mtp2",
+  "error": null,
+  "mem_avail_before": 115.8766975402832,
+  "mem_avail_loaded": 104.07151794433594,
+  "mem_avail_min": 102.98332977294922,
+  "load_s": 150.22339057922363,
+  "prompts": {
+   "code_en": {
+    "decode_tok_s": 8.25324584157889,
+    "decode_min": 6.680511330512558,
+    "decode_max": 9.825980352645221,
+    "prefill_tok_s": null,
+    "accept_rate": 0.9375,
+    "tokens_per_step": 2.8135265700483094,
+    "hit_rate": null,
+    "cpu_util": 37.1495951417004,
+    "gpu_util": 14.149797570850202,
+    "nvme_mbs": 616.8234311740891,
+    "client_decode": 8.251934986186791,
+    "n": 2
+   },
+   "story_en": {
+    "decode_tok_s": 5.737983072053377,
+    "decode_min": 5.737983072053377,
+    "decode_max": 5.737983072053377,
+    "prefill_tok_s": null,
+    "accept_rate": 0.55,
+    "tokens_per_step": 2.064516129032258,
+    "hit_rate": null,
+    "cpu_util": 36.30449438202247,
+    "gpu_util": 14.123595505617978,
+    "nvme_mbs": 691.3550561797753,
+    "client_decode": 5.737607075116795,
+    "n": 1
+   }
+  }
+ },
+ {
+  "name": "e5_llama_q8_cpumoe_prefill",
+  "error": null,
+  "mem_avail_before": 116.24629974365234,
+  "mem_avail_loaded": 109.05356979370117,
+  "mem_avail_min": 108.17159652709961,
+  "load_s": 129.22450375556946,
+  "prompts": {
+   "long5k": {
+    "decode_tok_s": 4.984269645000379,
+    "decode_min": 4.984269645000379,
+    "decode_max": 4.984269645000379,
+    "prefill_tok_s": 2.7645531216111743,
+    "accept_rate": null,
+    "tokens_per_step": null,
+    "hit_rate": null,
+    "cpu_util": 35.1,
+    "gpu_util": 14.15,
+    "nvme_mbs": 140.426875,
+    "client_decode": 4.972246084039865,
+    "n": 1
+   }
+  }
+ }
+]

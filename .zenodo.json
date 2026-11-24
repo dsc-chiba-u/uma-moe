@@ -1,0 +1,33 @@
+{
+  "title": "Expert Tiering on Unified Memory: Running a 188 GB Mixture-of-Experts Model on a 128 GB GPU Workstation",
+  "upload_type": "software",
+  "version": "1.0.0",
+  "description": "<p>Code, benchmark harness, analysis scripts and run logs of the paper <em>Expert Tiering on Unified Memory: Running a 188 GB Mixture-of-Experts Model on a 128 GB GPU Workstation</em>: a single-copy expert tier for the Strata inference engine (patches against Strata 0.1.27) that runs the 188 GB Q8_0 quantization of Qwen3.8-Flash-Next on a 128 GB NVIDIA DGX Spark (GB10), the microbenchmarks that characterize GB10's memory and storage paths, and the cross-model routing-locality study. The routing traces and other bulky data are in a separate dataset record.</p>",
+  "creators": [
+    {
+      "name": "Nishiuchi, Hiromu",
+      "affiliation": "Data Science Core, Chiba University, Chiba, Japan; SoujouData Inc., Tokyo, Japan",
+      "orcid": "0000-0001-8515-2748"
+    },
+    {
+      "name": "Ohta, Tazro",
+      "affiliation": "Department of Artificial Intelligence Medicine, Graduate School of Medicine, Chiba University, Chiba, Japan; Institute for Advanced Academic Research, Chiba University, Chiba, Japan; Data Science Core, Chiba University, Chiba, Japan",
+      "orcid": "0000-0003-3777-5945"
+    }
+  ],
+  "license": "MIT",
+  "access_right": "open",
+  "keywords": [
+    "mixture of experts",
+    "large language model inference",
+    "unified memory",
+    "expert offloading",
+    "NVMe",
+    "speculative decoding"
+  ],
+  "related_identifiers": [
+    {"identifier": "arXiv:XXXX.XXXXX", "relation": "isSupplementTo", "resource_type": "publication-preprint", "scheme": "arxiv"},
+    {"identifier": "10.5281/zenodo.XXXXXXX", "relation": "isSupplementedBy", "resource_type": "dataset", "scheme": "doi"},
+    {"identifier": "https://github.com/Niko1221/Strata", "relation": "isDerivedFrom", "resource_type": "software", "scheme": "url"}
+  ]
+}

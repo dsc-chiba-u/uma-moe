@@ -1,0 +1,9 @@
+e2_strata_mtp {'load_s': 17.009822607040405, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 44.55226516723633, 'mem_avail_min_gib': 43.77554702758789}
+e2_strata_nodraft {'load_s': 18.009087562561035, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 44.62717819213867, 'mem_avail_min_gib': 44.07121276855469}
+e2_strata_spec3 {'load_s': 18.007608652114868, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 44.696556091308594, 'mem_avail_min_gib': 44.06959915161133}
+e2_strata_spec5 {'load_s': 17.009171724319458, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 44.69816589355469, 'mem_avail_min_gib': 43.945045471191406}
+e2_llama_nomtp {'load_s': 31.05509662628174, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 50.99336242675781, 'mem_avail_min_gib': 46.692256927490234}
+e2_llama_mtp2 {'load_s': 37.06180000305176, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 45.722991943359375, 'mem_avail_min_gib': 40.65753936767578}
+e2_llama_mtp3 {'load_s': 35.04653549194336, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 45.2710075378418, 'mem_avail_min_gib': 40.235939025878906}
+e2_llama_mtp4 {'load_s': 36.04867506027222, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 44.87353515625, 'mem_avail_min_gib': 39.7835578918457}
+e2_llama_nomtp_managed {'load_s': 45.06770324707031, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 51.46528244018555, 'mem_avail_min_gib': 47.02360534667969}

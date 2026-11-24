@@ -1,0 +1,47 @@
+# E1 microbenchmarks, first run (2026-10-21 10:36-10:41 JST, bench/uma_bw). Output copied verbatim.
+# Conditions: no inference server running; the Q8_0 model download (~30-50 MB/s write, ~0.3 CPU core) was in progress.
+
+gpu-seq alloc=dev GiB=4.0 first_pass=226.7 GB/s median=232.6 GB/s max=233.3 GB/s
+gpu-seq alloc=pinned GiB=4.0 first_pass=217.8 GB/s median=213.4 GB/s max=216.8 GB/s
+gpu-seq alloc=registered GiB=4.0 first_pass=167.7 GB/s median=168.0 GB/s max=168.5 GB/s
+gpu-seq alloc=pageable GiB=4.0 first_pass=166.8 GB/s median=165.2 GB/s max=168.7 GB/s
+gpu-seq alloc=pageable-thp GiB=4.0 first_pass=161.9 GB/s median=161.6 GB/s max=162.5 GB/s
+gpu-seq alloc=managed GiB=4.0 first_pass=160.7 GB/s median=161.6 GB/s max=162.2 GB/s
+gpu-seq alloc=file:<Q2_0 GGUF shard 1, page cache> GiB=4.0 first_pass=163.0 GB/s median=160.9 GB/s max=162.1 GB/s
+gpu-seq alloc=file:<Q2_0 GGUF shard 1, page cache> GiB=16.0 first_pass=161.5 GB/s median=165.3 GB/s max=165.4 GB/s
+gpu-seq alloc=dev GiB=16.0 first_pass=235.3 GB/s median=233.3 GB/s max=240.8 GB/s
+gpu-seq alloc=pinned GiB=16.0 first_pass=217.5 GB/s median=218.5 GB/s max=219.4 GB/s
+(AnonHugePages stayed 0 kB during pageable-thp: THP did not take effect; FileHugePages 15.5 GB, FilePmdMapped 0 kB)
+
+gpu-gather alloc=dev pool=16.0GiB expert=1350KiB per_step=10 steps=3000 -> 223.3 GB/s, 61.9 us/step
+gpu-gather alloc=dev pool=16.0GiB expert=1350KiB per_step=40 steps=3000 -> 232.1 GB/s, 238.2 us/step
+gpu-gather alloc=pinned pool=16.0GiB expert=1350KiB per_step=10 steps=3000 -> 204.6 GB/s, 67.6 us/step
+gpu-gather alloc=pinned pool=16.0GiB expert=1350KiB per_step=40 steps=3000 -> 220.8 GB/s, 250.4 us/step
+gpu-gather alloc=registered pool=16.0GiB expert=1350KiB per_step=10 steps=3000 -> 154.4 GB/s, 89.6 us/step
+gpu-gather alloc=registered pool=16.0GiB expert=1350KiB per_step=40 steps=3000 -> 162.7 GB/s, 339.8 us/step
+gpu-gather alloc=pageable pool=16.0GiB expert=1350KiB per_step=10 steps=3000 -> 154.8 GB/s, 89.3 us/step
+gpu-gather alloc=pageable pool=16.0GiB expert=1350KiB per_step=40 steps=3000 -> 162.7 GB/s, 339.8 us/step
+gpu-gather alloc=file(page-cache) pool=16.0GiB expert=1350KiB per_step=10 steps=3000 -> 156.4 GB/s, 88.4 us/step
+gpu-gather alloc=file(page-cache) pool=16.0GiB expert=1350KiB per_step=40 steps=3000 -> 160.8 GB/s, 343.8 us/step
+
+cpu-seq threads=1 cpus=big GiB=8.0 median=31.8 GB/s max=31.8 GB/s
+cpu-seq threads=2 cpus=big GiB=8.0 median=44.6 GB/s max=44.7 GB/s
+cpu-seq threads=5 cpus=big GiB=8.0 median=48.9 GB/s max=49.3 GB/s
+cpu-seq threads=10 cpus=big GiB=8.0 median=92.1 GB/s max=93.0 GB/s
+cpu-seq threads=10 cpus=little GiB=8.0 median=102.2 GB/s max=102.6 GB/s
+cpu-seq threads=20 cpus=all GiB=8.0 median=102.4 GB/s max=103.3 GB/s
+
+concurrent gpu_alloc=none cpu_threads=20 cpus=all : GPU 0.0 GB/s, CPU 130.1 GB/s, sum 130.1 GB/s
+concurrent gpu_alloc=dev cpu_threads=5 cpus=all : GPU 210.6 GB/s, CPU 18.1 GB/s, sum 228.6 GB/s
+concurrent gpu_alloc=dev cpu_threads=10 cpus=all : GPU 175.2 GB/s, CPU 53.0 GB/s, sum 228.2 GB/s
+concurrent gpu_alloc=dev cpu_threads=20 cpus=all : GPU 163.4 GB/s, CPU 59.4 GB/s, sum 222.9 GB/s
+concurrent gpu_alloc=dev cpu_threads=0 cpus=all : GPU 230.6 GB/s, CPU 0.0 GB/s, sum 230.6 GB/s
+
+# GB10 CUDA attributes (bench attr probe): PageableMemoryAccess 1, PageableMemoryAccessUsesHostPageTables 1,
+# ConcurrentManagedAccess 1, CanUseHostPointerForRegisteredMem 1, DirectManagedMemAccessFromHost 0,
+# HostNativeAtomicSupported 1, Integrated 1, L2 24 MiB, memory clock 8533 MHz x 256-bit (273 GB/s peak)
+
+# Replay smoke test (Q2_0 experts on NVMe, 33% resident, 300 warm + 100 measured tokens, QD 32, download in progress):
+replay policy=lru cap=8192 mode=token qd=32 tokens=100 : miss_rate=0.0698 misses/token=33.5 MB/token=46.7 io_ms/token mean=5.49 -> 8.52 GB/s
+replay policy=belady cap=8192 mode=token qd=32 tokens=100 : miss_rate=0.0311 misses/token=14.9 MB/token=20.8 io_ms/token mean=3.11 -> 6.69 GB/s
+replay policy=static cap=8192 mode=token qd=32 tokens=100 : miss_rate=0.2865 misses/token=137.5 MB/token=191.8 io_ms/token mean=20.57 -> 9.32 GB/s

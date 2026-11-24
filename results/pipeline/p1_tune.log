@@ -1,0 +1,4 @@
+p1d_q8_t45_io32_nodraft {'load_s': 26.00891423225403, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 52.04638671875, 'mem_avail_min_gib': 51.784664154052734}
+p1d_q8_t45_io32_mtp {'load_s': 26.006773710250854, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 52.03474426269531, 'mem_avail_min_gib': 51.7454833984375}
+p1d_q8_t45_split_mtp {'load_s': 29.014219284057617, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 52.038143157958984, 'mem_avail_min_gib': 51.7126350402832}
+p1d_q8_t45_base_mtp {'load_s': 30.01066493988037, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 52.031768798828125, 'mem_avail_min_gib': 51.74216842651367}

@@ -1,0 +1,273 @@
+{
+ "name": "e2_llama_nomtp_managed",
+ "engine": "llama",
+ "args": [
+  "-m",
+  "~/src/Strata-data/models/Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf",
+  "-ngl",
+  "999",
+  "-fa",
+  "on",
+  "-c",
+  "32768",
+  "--no-warmup"
+ ],
+ "env": {
+  "GGML_CUDA_ENABLE_UNIFIED_MEMORY": "1"
+ },
+ "meta": {
+  "exp": "E2"
+ },
+ "mem_avail_before_gib": 115.65149688720703,
+ "started": "2026-10-21T12:42:43",
+ "load_s": 45.06770324707031,
+ "mem_avail_loaded_gib": 51.46528244018555,
+ "requests": 27,
+ "mem_avail_min_gib": 47.02360534667969,
+ "watchdog": false,
+ "server_stats": [
+  {
+   "prompt_read": 34,
+   "prefill_ms": 367.3,
+   "gen_tokens": 512,
+   "gen_ms": 17902.55,
+   "decode_tok_s": 28.59927775652072,
+   "prompt_id": "code_en",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 34,
+   "prefill_ms": 178.54,
+   "gen_tokens": 512,
+   "gen_ms": 16143.83,
+   "decode_tok_s": 31.714902845235606,
+   "prompt_id": "story_en",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 38,
+   "prefill_ms": 180.74,
+   "gen_tokens": 512,
+   "gen_ms": 16140.36,
+   "decode_tok_s": 31.72172120076628,
+   "prompt_id": "explain_en",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 70,
+   "prefill_ms": 228.13,
+   "gen_tokens": 512,
+   "gen_ms": 16152.29,
+   "decode_tok_s": 31.698291697338274,
+   "prompt_id": "math_en",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 35,
+   "prefill_ms": 167.28,
+   "gen_tokens": 512,
+   "gen_ms": 16124.87,
+   "decode_tok_s": 31.7521939711762,
+   "prompt_id": "essay_ja",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 42,
+   "prefill_ms": 170.03,
+   "gen_tokens": 512,
+   "gen_ms": 16139.48,
+   "decode_tok_s": 31.72345081749846,
+   "prompt_id": "tech_ja",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 5407,
+   "prefill_ms": 7408.06,
+   "gen_tokens": 200,
+   "gen_ms": 6385.48,
+   "decode_tok_s": 31.321059654090217,
+   "prompt_id": "long5k",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 18912,
+   "prefill_ms": 26583.72,
+   "gen_tokens": 200,
+   "gen_ms": 6482.44,
+   "decode_tok_s": 30.852580201282233,
+   "prompt_id": "long19k",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 25607,
+   "prefill_ms": 36660.28,
+   "gen_tokens": 200,
+   "gen_ms": 6526.96,
+   "decode_tok_s": 30.642136614901883,
+   "prompt_id": "long26k",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 34,
+   "prefill_ms": 163.96,
+   "gen_tokens": 512,
+   "gen_ms": 16142.07,
+   "decode_tok_s": 31.718360780246897,
+   "prompt_id": "code_en",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 34,
+   "prefill_ms": 184.43,
+   "gen_tokens": 512,
+   "gen_ms": 16153.26,
+   "decode_tok_s": 31.696388221324984,
+   "prompt_id": "story_en",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 38,
+   "prefill_ms": 174.66,
+   "gen_tokens": 512,
+   "gen_ms": 16126.35,
+   "decode_tok_s": 31.749279905248244,
+   "prompt_id": "explain_en",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 70,
+   "prefill_ms": 217.84,
+   "gen_tokens": 512,
+   "gen_ms": 16117.26,
+   "decode_tok_s": 31.767186233888392,
+   "prompt_id": "math_en",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 35,
+   "prefill_ms": 167.18,
+   "gen_tokens": 512,
+   "gen_ms": 16115.63,
+   "decode_tok_s": 31.770399295590682,
+   "prompt_id": "essay_ja",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 42,
+   "prefill_ms": 170.83,
+   "gen_tokens": 512,
+   "gen_ms": 16112.52,
+   "decode_tok_s": 31.776531541931366,
+   "prompt_id": "tech_ja",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 5407,
+   "prefill_ms": 7367.5,
+   "gen_tokens": 200,
+   "gen_ms": 6343.0,
+   "decode_tok_s": 31.530821377896896,
+   "prompt_id": "long5k",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 18912,
+   "prefill_ms": 26583.92,
+   "gen_tokens": 200,
+   "gen_ms": 6434.02,
+   "decode_tok_s": 31.0847650458034,
+   "prompt_id": "long19k",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 25607,
+   "prefill_ms": 36622.42,
+   "gen_tokens": 200,
+   "gen_ms": 6480.58,
+   "decode_tok_s": 30.861435241907362,
+   "prompt_id": "long26k",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 34,
+   "prefill_ms": 161.61,
+   "gen_tokens": 512,
+   "gen_ms": 16023.37,
+   "decode_tok_s": 31.95332817004163,
+   "prompt_id": "code_en",
+   "repeat": 2
+  },
+  {
+   "prompt_read": 34,
+   "prefill_ms": 185.9,
+   "gen_tokens": 512,
+   "gen_ms": 16083.34,
+   "decode_tok_s": 31.83418369567515,
+   "prompt_id": "story_en",
+   "repeat": 2
+  },
+  {
+   "prompt_read": 38,
+   "prefill_ms": 175.56,
+   "gen_tokens": 512,
+   "gen_ms": 16191.97,
+   "decode_tok_s": 31.62061194530375,
+   "prompt_id": "explain_en",
+   "repeat": 2
+  },
+  {
+   "prompt_read": 70,
+   "prefill_ms": 213.95,
+   "gen_tokens": 512,
+   "gen_ms": 16191.71,
+   "decode_tok_s": 31.62111969643725,
+   "prompt_id": "math_en",
+   "repeat": 2
+  },
+  {
+   "prompt_read": 35,
+   "prefill_ms": 166.98,
+   "gen_tokens": 512,
+   "gen_ms": 16181.55,
+   "decode_tok_s": 31.640973825128004,
+   "prompt_id": "essay_ja",
+   "repeat": 2
+  },
+  {
+   "prompt_read": 42,
+   "prefill_ms": 170.8,
+   "gen_tokens": 512,
+   "gen_ms": 16176.61,
+   "decode_tok_s": 31.650636319970623,
+   "prompt_id": "tech_ja",
+   "repeat": 2
+  },
+  {
+   "prompt_read": 5407,
+   "prefill_ms": 7356.36,
+   "gen_tokens": 200,
+   "gen_ms": 6408.79,
+   "decode_tok_s": 31.207138945105083,
+   "prompt_id": "long5k",
+   "repeat": 2
+  },
+  {
+   "prompt_read": 18912,
+   "prefill_ms": 26563.79,
+   "gen_tokens": 200,
+   "gen_ms": 6510.36,
+   "decode_tok_s": 30.720267389207358,
+   "prompt_id": "long19k",
+   "repeat": 2
+  },
+  {
+   "prompt_read": 25607,
+   "prefill_ms": 36678.7,
+   "gen_tokens": 200,
+   "gen_ms": 6522.85,
+   "decode_tok_s": 30.661444000705213,
+   "prompt_id": "long26k",
+   "repeat": 2
+  }
+ ]
+}

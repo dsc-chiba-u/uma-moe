@@ -1,0 +1,19 @@
+# SHA-256 of every downloaded model file, from Hugging Face's LFS metadata (checked 2026-10-23; the sizes of the
+# copies used for the paper match). Paths are relative to the home directory: (cd ~ && sha256sum -c this-file).
+# Sources: unsloth/Qwen3.8-Flash-Next-GGUF (Q8_0/, MTP/), ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-GGUF (Q2_0/),
+# mradermacher/Mixtral-8x7B-Instruct-v0.1-GGUF, ggml-org/gpt-oss-20b-GGUF, unsloth/GLM-4.7-Flash-GGUF,
+# unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF, unsloth/Qwen3.6-35B-A3B-GGUF.
+69820c02ec7d0b45ef2ebb19d6620299db749fe2aded7f39f93c6b88b199b720  src/Strata-data/models/Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf
+316b46f3a2dbd68c900f43136ab9449f9dcc3725dfd8c794847c204bc161e113  src/Strata-data/models/Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00002-of-00002.gguf
+58a47d6a216307e9b97172d5bfdc3436a8994b632f5e436b9bb6edf8951da8d1  models/unsloth-Qwen3.8-Flash-Next-GGUF/MTP/mtp-Qwen3.8-Flash-Next-Q8_0.gguf
+2dabcbb53ca537a7947bc7d20414fd464eeaf4d66d43021b5b2556cc87544ad2  models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00001-of-00006.gguf
+494ca4ed3dbf97bc28da88af3890b8877b9032f909812d00c0526a9ca5e91d2e  models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00002-of-00006.gguf
+34efd79a80a1ce540a517a5d56171924b66ce1c38b04c904f17ad6d8ef17cf20  models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00003-of-00006.gguf
+bfa634025fabbd2658bf7694bc80b90e571699c768723f844c934c7ef06c691a  models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00004-of-00006.gguf
+232a8f14cc0fa4262e7efe8593774b136fe40909e39c7a020342ddaa27259a97  models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00005-of-00006.gguf
+538a93bca918064983409a41187ad4c68640f9aced6f29564da8f551bf86d7a5  models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00006-of-00006.gguf
+27cd6c432c7672cb812a92f611cf3ba7bbc35928262bb1e1253ff4ee6ae35901  models/locality/gpt-oss-20b/gpt-oss-20b-MXFP4.gguf
+9f8d778c2eb8fd7f8426d03496aec30c46cf4076e98758818cc73d020ed01d44  models/locality/mixtral-8x7b/Mixtral-8x7B-Instruct-v0.1.Q4_K_M.gguf
+29837ed2c0fc5f51981adf8ac8083fcf80743c598381f13e9f06cbad0498b174  models/locality/glm-4.7-flash/GLM-4.7-Flash-Q4_K_M.gguf
+6c997b8af17debdfb01d890214400ccbab00db6acc0ba8da5de1cc906c4774d0  models/locality/qwen3-30b-a3b/Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf
+ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61  models/locality/qwen3.6-35b-a3b/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf

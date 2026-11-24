@@ -1,0 +1,42 @@
+WARNING: CPU IP/backtrace sampling not supported, disabling.
+Try the 'nsys status --environment' command to learn more.
+
+WARNING: CPU context switch tracing not supported, disabling.
+Try the 'nsys status --environment' command to learn more.
+
+0.00.404.122 I srv  llama_server: initializing ...
+0.00.404.133 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.404.386 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.407.713 I srv    load_model: loading model '~/src/Strata-data/models/Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf'
+0.24.303.153 I cmn          init: llama threadpool init, n_threads = 20
+0.24.303.238 I common_speculative_init_result: loading draft model '~/models/unsloth-Qwen3.8-Flash-Next-GGUF/MTP/mtp-Qwen3.8-Flash-Next-Q8_0.gguf'
+0.28.428.743 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 8192, kv_unified = 'true'
+0.28.566.887 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.28.566.925 I srv  llama_server: model loaded
+0.28.566.930 I srv  llama_server: listening on http://127.0.0.1:8080
+0.29.520.370 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 0, t_last = -1
+0.29.520.503 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.33.463.743 I slot print_timing: id  0 | task 0 | n_gen =    201, tg =  66.55 t/s, tg_3s =  66.89 t/s
+0.34.372.644 I slot print_timing: id  0 | task 0 | prompt eval time =     938.09 ms /    34 tokens (   27.59 ms per token,    36.24 tokens per second)
+0.34.372.648 I slot print_timing: id  0 | task 0 |        eval time =    3913.93 ms /   256 tokens (   15.35 ms per token,    65.15 tokens per second)
+0.34.372.648 I slot print_timing: id  0 | task 0 |       total time =    4852.02 ms /   290 tokens
+0.34.372.652 I slot print_timing: id  0 | task 0 |    graphs reused =         68
+0.34.372.653 I slot print_timing: id  0 | task 0 |   graph reallocs =          0    /     0        (same size) / (changed size)
+0.34.372.656 I slot print_timing: id  0 | task 0 | draft acceptance = 0.88095 (  185 accepted /   210 generated), mean len =  3.64
+0.34.372.690 I slot      release: id  0 | task 0 | stop processing: n_tokens = 289, truncated = 0
+0.34.422.713 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 0.118
+0.34.494.791 I slot launch_slot_: id  0 | task 73 | processing task, is_child = 0
+0.37.736.244 I slot print_timing: id  0 | task 73 | n_gen =    197, tg =  65.14 t/s, tg_3s =  65.47 t/s
+0.38.699.285 I slot print_timing: id  0 | task 73 | prompt eval time =     232.33 ms /    34 tokens (    6.83 ms per token,   146.34 tokens per second)
+0.38.699.289 I slot print_timing: id  0 | task 73 |        eval time =    3972.05 ms /   256 tokens (   15.58 ms per token,    64.20 tokens per second)
+0.38.699.290 I slot print_timing: id  0 | task 73 |       total time =    4204.38 ms /   290 tokens
+0.38.699.290 I slot print_timing: id  0 | task 73 |    graphs reused =        137
+0.38.699.291 I slot print_timing: id  0 | task 73 |   graph reallocs =          0    /     0        (same size) / (changed size)
+0.38.699.293 I slot print_timing: id  0 | task 73 | draft acceptance = 0.86385 (  184 accepted /   213 generated), mean len =  3.59
+0.38.699.316 I slot      release: id  0 | task 73 | stop processing: n_tokens = 289, truncated = 0
+0.38.707.415 I srv    operator(): operator(): cleaning up before exit...
+Collecting data...
+Generating '/tmp/nsys-report-3eb7.qdstrm'
+[1/1] [0%                          ] llama_mtp3.nsys-rep[1/1] [0%                          ] llama_mtp3.nsys-rep[1/1] [5%                          ] llama_mtp3.nsys-rep[1/1] [5%                          ] llama_mtp3.nsys-rep[1/1] [0%                          ] llama_mtp3.nsys-rep[1/1] [5%                          ] llama_mtp3.nsys-rep[1/1] [6%                          ] llama_mtp3.nsys-rep[1/1] [8%                          ] llama_mtp3.nsys-rep[1/1] [9%                          ] llama_mtp3.nsys-rep[1/1] [10%                         ] llama_mtp3.nsys-rep[1/1] [12%                         ] llama_mtp3.nsys-rep[1/1] [13%                         ] llama_mtp3.nsys-rep[1/1] [14%                         ] llama_mtp3.nsys-rep[1/1] [=15%                        ] llama_mtp3.nsys-rep[1/1] [=16%                        ] llama_mtp3.nsys-rep[1/1] [==18%                       ] llama_mtp3.nsys-rep[1/1] [==19%                       ] llama_mtp3.nsys-rep[1/1] [==20%                       ] llama_mtp3.nsys-rep[1/1] [==21%                       ] llama_mtp3.nsys-rep[1/1] [===22%                      ] llama_mtp3.nsys-rep[1/1] [===23%                      ] llama_mtp3.nsys-rep[1/1] [===24%                      ] llama_mtp3.nsys-rep[1/1] [====25%                     ] llama_mtp3.nsys-rep[1/1] [====26%                     ] llama_mtp3.nsys-rep[1/1] [====27%                     ] llama_mtp3.nsys-rep[1/1] [====28%                     ] llama_mtp3.nsys-rep[1/1] [=====29%                    ] llama_mtp3.nsys-rep[1/1] [=====30%                    ] llama_mtp3.nsys-rep[1/1] [=====31%                    ] llama_mtp3.nsys-rep[1/1] [=====32%                    ] llama_mtp3.nsys-rep[1/1] [======33%                   ] llama_mtp3.nsys-rep[1/1] [======34%                   ] llama_mtp3.nsys-rep[1/1] [======35%                   ] llama_mtp3.nsys-rep[1/1] [=======36%                  ] llama_mtp3.nsys-rep[1/1] [=======37%                  ] llama_mtp3.nsys-rep[1/1] [=======38%                  ] llama_mtp3.nsys-rep[1/1] [=======39%                  ] llama_mtp3.nsys-rep[1/1] [========40%                 ] llama_mtp3.nsys-rep[1/1] [========41%                 ] llama_mtp3.nsys-rep[1/1] [========42%                 ] llama_mtp3.nsys-rep[1/1] [=========43%                ] llama_mtp3.nsys-rep[1/1] [=========44%                ] llama_mtp3.nsys-rep[1/1] [=========46%                ] llama_mtp3.nsys-rep[1/1] [==========47%               ] llama_mtp3.nsys-rep[1/1] [==========48%               ] llama_mtp3.nsys-rep[1/1] [==========49%               ] llama_mtp3.nsys-rep[1/1] [===========50%              ] llama_mtp3.nsys-rep[1/1] [===========51%              ] llama_mtp3.nsys-rep[1/1] [===========52%              ] llama_mtp3.nsys-rep[1/1] [===========53%              ] llama_mtp3.nsys-rep[1/1] [============54%             ] llama_mtp3.nsys-rep[1/1] [============55%             ] llama_mtp3.nsys-rep[1/1] [============56%             ] llama_mtp3.nsys-rep[1/1] [============57%             ] llama_mtp3.nsys-rep[1/1] [=============58%            ] llama_mtp3.nsys-rep[1/1] [=============59%            ] llama_mtp3.nsys-rep[1/1] [=============60%            ] llama_mtp3.nsys-rep[1/1] [==============61%           ] llama_mtp3.nsys-rep[1/1] [==============62%           ] llama_mtp3.nsys-rep[1/1] [==============63%           ] llama_mtp3.nsys-rep[1/1] [========================100%] llama_mtp3.nsys-rep[1/1] [========================100%] llama_mtp3.nsys-rep
+Generated:
+	~/work/uma-moe/results/e7_profile/llama_mtp3.nsys-rep

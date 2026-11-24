@@ -1,0 +1,37 @@
+# strata-p0a (diagnostic build): the two changes on top of strata-0.1.27-base-aarch64.diff, restated from the record
+# of the build commands of 2026-10-22 (its source was not archived as a patch). Apply with: git apply <this file>
+--- a/src/core/expert_source.cpp
++++ b/src/core/expert_source.cpp
+@@ -820,8 +820,8 @@
+         const int m = pcie_ok ? (nmiss * d.pcie_num) >> 8 : 0;
+         int miss_rank = 0, groups = 0, entries = 0, fetches = 0;
+         GpuPlanSink& P = *d.plan;
+-        const uint8_t* dma_src[64];
+-        int64_t pcie_i0[64];
++        const uint8_t* dma_src[128];
++        int64_t pcie_i0[128];
+         for (int q = 0; q < nd; ++q) {
+             const int64_t i0 = distinct[q];
+             const int32_t e = ids[i0];
+@@ -834,7 +834,7 @@
+                     ptr = (unsigned long long) (d.cache_base + (d.cache_slot_off ? (size_t) d.cache_slot_off[slot]
+                                                                                  : (size_t) slot * (size_t) d.cache_blob));
+                 } else {
+-                    if (miss_rank >= nmiss - m && fetches < P.staging_cap && fetches < 64) {
++                    if (miss_rank >= nmiss - m && fetches < P.staging_cap && fetches < 128) {
+                         const uint8_t* src = d.src->blob(d.layers, e);
+                         if (src != nullptr && d.src->pinned(d.layers, e)) {
+                             kd = 1;
+--- a/src/core/verify.cpp
++++ b/src/core/verify.cpp
+@@ -1127,7 +1127,9 @@
+     const int G = groups_[last_t_] > 0 ? groups_[last_t_] : 1;
+     const int64_t per = G == 2 ? kStagingBlobs / 2 : kStagingBlobs;
+     sink_.staging = (unsigned long long) (staging_ + (size_t) (grp * per) * strata::kernels::cpu::expert_layout().max_blob);
+-    sink_.staging_cap = per;
++    // direct mode reads the mapped arena in place: no staging slot bounds the GPU's share of the misses (on a
++    // unified-memory GPU the cap sent every miss past the 16th to the CPU pool)
++    sink_.staging_cap = sink_.pcie_mode == 1 ? cap : per;
+ }
+ 
+ // Flag B only rises: a host function of an earlier layer may run after a later layer already raised it directly.

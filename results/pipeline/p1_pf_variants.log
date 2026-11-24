@@ -1,0 +1,6 @@
+p1c_q8_t45_k16d1_nodraft {'load_s': 30.014856100082397, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 52.07755661010742, 'mem_avail_min_gib': 51.80913543701172}
+p1c_q8_t45_k16d1_mtp {'load_s': 28.01438546180725, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 52.05789566040039, 'mem_avail_min_gib': 51.771690368652344}
+p1c_q8_t45_k24d1_nodraft {'load_s': 30.011291980743408, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 52.07587814331055, 'mem_avail_min_gib': 51.76015090942383}
+p1c_q8_t45_k24d1_mtp {'load_s': 29.009818077087402, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 52.051414489746094, 'mem_avail_min_gib': 51.76424026489258}
+p1c_q8_t45_k16d2_nodraft {'load_s': 29.009642839431763, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 52.07572555541992, 'mem_avail_min_gib': 51.81995391845703}
+p1c_q8_t45_k16d2_mtp {'load_s': 30.012425661087036, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 52.05401611328125, 'mem_avail_min_gib': 51.767601013183594}

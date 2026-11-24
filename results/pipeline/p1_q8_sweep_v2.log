@@ -1,0 +1,8 @@
+p1b_q8_t25_mtp {'load_s': 22.00997805595398, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 76.37234878540039, 'mem_avail_min_gib': 76.07511138916016}
+p1b_q8_t25_nodraft {'load_s': 21.010757446289062, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 76.37728881835938, 'mem_avail_min_gib': 76.11880111694336}
+p1b_q8_t45_mtp {'load_s': 26.009819269180298, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 52.40667724609375, 'mem_avail_min_gib': 52.12632751464844}
+p1b_q8_t45_nodraft {'load_s': 27.010604858398438, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 52.4267692565918, 'mem_avail_min_gib': 52.144615173339844}
+p1b_q8_t60_mtp {'load_s': 36.01661777496338, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.373233795166016, 'mem_avail_min_gib': 34.09221649169922}
+p1b_q8_t60_nodraft {'load_s': 35.01234841346741, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.1887092590332, 'mem_avail_min_gib': 33.98208999633789}
+p1b_q8_t75_mtp {'load_s': 39.0190863609314, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 16.445323944091797, 'mem_avail_min_gib': 15.404590606689453}
+p1b_q8_t75_nodraft {'load_s': 40.020618200302124, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 16.13967514038086, 'mem_avail_min_gib': 15.866531372070312}

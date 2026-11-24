@@ -1,0 +1,42 @@
+{
+ "name": "e5_llama_q8_cpumoe_cache16g",
+ "engine": "llama",
+ "args": [
+  "-m",
+  "~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00001-of-00006.gguf",
+  "-ngl",
+  "999",
+  "-fa",
+  "on",
+  "-c",
+  "16384",
+  "--no-warmup",
+  "--cpu-moe",
+  "-lm",
+  "mmap",
+  "--moe-cache-mib",
+  "16384"
+ ],
+ "env": {},
+ "meta": {
+  "exp": "E5"
+ },
+ "mem_avail_before_gib": 116.1424331665039,
+ "started": "2026-10-21T13:05:39",
+ "load_s": 202.34281659126282,
+ "mem_avail_loaded_gib": 92.76232528686523,
+ "error": "URLError(ConnectionRefusedError(111, 'Connection refused'))",
+ "mem_avail_min_gib": 91.48411178588867,
+ "watchdog": false,
+ "server_stats": [
+  {
+   "prompt_read": 34,
+   "prefill_ms": 195183.86,
+   "gen_tokens": 128,
+   "gen_ms": 483502.79,
+   "decode_tok_s": 0.2647347701964657,
+   "prompt_id": "code_en",
+   "repeat": 0
+  }
+ ]
+}

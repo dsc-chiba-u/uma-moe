@@ -1,0 +1,17 @@
+# strata-p1e: the opt-in 2 MB-page slots (STRATA_ARENA_THP=1) on top of strata-0.1.27-p1d.diff; inactive without it.
+--- a/src/core/pinned.cu
++++ b/src/core/pinned.cu
+@@ -154,6 +154,13 @@
+         note = "cudaHostAlloc refused (STRATA_ARENA_HOSTALLOC); ";
+     }
+     base = reserve(bytes, backing, note);
++#ifndef _WIN32
++    // UMA: transparent 2 MB pages for a 4 KB-paged arena (STRATA_ARENA_THP=1), so the GPU reads it through larger
++    // mappings; the registration below faults the pages in.
++    if (const char* thp = std::getenv("STRATA_ARENA_THP");
++        base && backing == PageBacking::NormalPages && thp != nullptr && std::atoi(thp) != 0)
++        note += madvise(base, bytes, MADV_HUGEPAGE) == 0 ? "; MADV_HUGEPAGE" : "; MADV_HUGEPAGE refused";
++#endif
+ 
+     // Register with CUDA BEFORE any page is touched: cudaHostRegister pins what is resident now, and a region
+     // that has already been faulted in page by page is far more expensive to register and may fail outright.

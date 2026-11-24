@@ -1,0 +1,158 @@
+[
+ {
+  "name": "e4_strata_c1024_nodraft",
+  "error": null,
+  "mem_avail_before": 111.96543502807617,
+  "mem_avail_loaded": 71.56041717529297,
+  "mem_avail_min": 71.19379806518555,
+  "load_s": 16.0103816986084,
+  "prompts": {
+   "code_en": {
+    "decode_tok_s": 15.25,
+    "decode_min": 14.8,
+    "decode_max": 15.7,
+    "prefill_tok_s": null,
+    "accept_rate": null,
+    "tokens_per_step": null,
+    "hit_rate": 57.75,
+    "cpu_util": 99.928125,
+    "gpu_util": 93.6334918478261,
+    "nvme_mbs": 0.6234488224637682,
+    "client_decode": 15.327410610167492,
+    "n": 2
+   },
+   "story_en": {
+    "decode_tok_s": 15.7,
+    "decode_min": 15.7,
+    "decode_max": 15.7,
+    "prefill_tok_s": null,
+    "accept_rate": null,
+    "tokens_per_step": null,
+    "hit_rate": 61.099999999999994,
+    "cpu_util": 99.96923076923076,
+    "gpu_util": 94.67692307692307,
+    "nvme_mbs": 2.65,
+    "client_decode": 15.790096673436203,
+    "n": 2
+   },
+   "essay_ja": {
+    "decode_tok_s": 17.0,
+    "decode_min": 16.6,
+    "decode_max": 17.4,
+    "prefill_tok_s": null,
+    "accept_rate": null,
+    "tokens_per_step": null,
+    "hit_rate": 64.6,
+    "cpu_util": 99.97145279819107,
+    "gpu_util": 93.96127755794234,
+    "nvme_mbs": 0.7025155455059355,
+    "client_decode": 17.122938120398867,
+    "n": 2
+   }
+  }
+ },
+ {
+  "name": "e4_strata_c1024_nodraft_pcie0",
+  "error": null,
+  "mem_avail_before": 113.04562759399414,
+  "mem_avail_loaded": 73.14212417602539,
+  "mem_avail_min": 72.20478439331055,
+  "load_s": 15.005505800247192,
+  "prompts": {
+   "code_en": {
+    "decode_tok_s": 11.15,
+    "decode_min": 10.9,
+    "decode_max": 11.4,
+    "prefill_tok_s": null,
+    "accept_rate": null,
+    "tokens_per_step": null,
+    "hit_rate": 41.75,
+    "cpu_util": 99.93798477709315,
+    "gpu_util": 94.6035399299263,
+    "nvme_mbs": 1.0977407273166606,
+    "client_decode": 11.216206389519076,
+    "n": 2
+   },
+   "story_en": {
+    "decode_tok_s": 11.25,
+    "decode_min": 11.2,
+    "decode_max": 11.3,
+    "prefill_tok_s": null,
+    "accept_rate": null,
+    "tokens_per_step": null,
+    "hit_rate": 45.099999999999994,
+    "cpu_util": 99.8919658119658,
+    "gpu_util": 93.36318681318681,
+    "nvme_mbs": 0.9336202686202686,
+    "client_decode": 11.327112837425824,
+    "n": 2
+   },
+   "essay_ja": {
+    "decode_tok_s": 12.6,
+    "decode_min": 12.0,
+    "decode_max": 13.2,
+    "prefill_tok_s": null,
+    "accept_rate": null,
+    "tokens_per_step": null,
+    "hit_rate": 48.85,
+    "cpu_util": 99.98896103896104,
+    "gpu_util": 95.44805194805195,
+    "nvme_mbs": 616.5045454545455,
+    "client_decode": 12.66499912637414,
+    "n": 2
+   }
+  }
+ },
+ {
+  "name": "e4_strata_c1024_nodraft_pcie1",
+  "error": null,
+  "mem_avail_before": 113.14430618286133,
+  "mem_avail_loaded": 73.11682891845703,
+  "mem_avail_min": 72.45026779174805,
+  "load_s": 17.006015300750732,
+  "prompts": {
+   "code_en": {
+    "decode_tok_s": 30.7,
+    "decode_min": 30.7,
+    "decode_max": 30.7,
+    "prefill_tok_s": null,
+    "accept_rate": null,
+    "tokens_per_step": null,
+    "hit_rate": 100.0,
+    "cpu_util": 9.612121212121213,
+    "gpu_util": 91.77272727272728,
+    "nvme_mbs": 1.5363636363636366,
+    "client_decode": 30.862686216432145,
+    "n": 2
+   },
+   "story_en": {
+    "decode_tok_s": 30.75,
+    "decode_min": 30.7,
+    "decode_max": 30.8,
+    "prefill_tok_s": null,
+    "accept_rate": null,
+    "tokens_per_step": null,
+    "hit_rate": 100.0,
+    "cpu_util": 10.712121212121211,
+    "gpu_util": 92.63636363636364,
+    "nvme_mbs": 2.6484848484848484,
+    "client_decode": 30.909939492637662,
+    "n": 2
+   },
+   "essay_ja": {
+    "decode_tok_s": 30.75,
+    "decode_min": 30.3,
+    "decode_max": 31.2,
+    "prefill_tok_s": null,
+    "accept_rate": null,
+    "tokens_per_step": null,
+    "hit_rate": 100.0,
+    "cpu_util": 10.827130681818183,
+    "gpu_util": 93.83617424242425,
+    "nvme_mbs": 2.0132575757575757,
+    "client_decode": 30.889666987578586,
+    "n": 2
+   }
+  }
+ }
+]

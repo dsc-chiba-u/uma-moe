@@ -1,0 +1,128 @@
+strata generate: unified memory: the GPU reads every missed expert in place (pcie_frac 1.00)
+strata generate: this CPU has no AVX-512: the expert kernels run on AVX-2 (multi-token for the i-quant gate/up rows)
+strata generate: native pack: ~/src/Strata-data/packs/q8_0 experts (largest blob 5.22 MB), token embedding type 8 in mapped host memory (644 MiB)
+strata generate: 1466 MiB of weights loaded from ~/src/Strata-data/packs/q8_0 (302 canonical tensors skipped: served natively)
+strata generate: 300 native projection matrices, 2948.44 MiB of weights
+strata generate: PLE on, table 320001536 rows of ~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0-merged/Qwen3.8-Flash-Next-Q8_0.gguf
+strata mtp: draft layer loaded, 838 MiB of VRAM (experts 675, dense 111), files read in 0.17 s (4712 MiB/s)
+strata generate: expert tier: 13723 slots of 5104 KiB (66 GiB pinned, cudaHostAlloc MAPPED|PORTABLE (STRATA_ARENA_HOSTALLOC)) over ~/src/Strata-data/packs/q8_0/experts.bin (23.2 s)
+strata generate: expert tier: adaptive VRAM swaps off (--adapt-every 0)
+strata generate: profile ~/src/Strata/data/expert-profile.bin: 24576 ranked pairs, built for 24576 slots
+strata generate: experimental native Q5_K head, 675430400 bytes
+strata generate: expert cache 1024 slots, 4.98 GiB of VRAM; policy is
+strata generate: the GPU computes the experts in the cache; it rounds differently from the CPU,
+                 so a reply can differ slightly from a run without the cache (same quality:
+                 bench/results/2026-09-27-cache-parity).
+                 PROFILE, ranked by routing frequency, no eviction.
+strata generate: pre-filled 1024 of 1024 slots from the profile; slot 0 verified
+strata generate: R4 hit path ON - resident experts are computed on the GPU
+strata generate: 19 expert-pool workers + the host thread
+strata generate: session is up (engine 0.1.27)
+strata generate: expert tier: 13723 of 13723 slots warm from the profile in 6.2 s (11.65 GB/s)
+strata generate: token graph hit path: 1024 resident experts, decided on the device
+strata serve: prompt chunk auto: 8192 tokens
+strata serve: the prompt path borrows 819 cache slots (3.98 GiB)
+strata serve: expert tier: next-layer prediction on (top-10, 1 layer ahead)
+strata verify: window up to 4 tokens, 102.0 MiB of device buffers
+strata mtp: draft head over 106299 tokens (275.7 MiB)
+strata serve: 33412 MiB of VRAM free with everything loaded
+strata verify: captured the 4-token window (upload no error, sync no error)
+strata verify: captured the 3-token window (upload no error, sync no error)
+strata verify: captured the 2-token window (upload no error, sync no error)
+strata verify: captured the 1-token window (upload no error, sync no error)
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 59.50 ms/window = verify 55.68 (GPU-reach wait 40.72 + per-layer host 10.42 [plan 10.18 actq 0.18 jobs 0.05 CPU 0.00] + stage 0.91) + commit/emit 1.33 + draft 2.49; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.62, PCIe 0.00; DRAM tier 9.16, SSD 0.22, SSD wait 8.00 ms/window
+strata serve: prompt 34 tokens = 0 reused + 34 read in 1064 ms (31.9 tok/s), 256 generated in 15231 ms (16.8 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (7628 hits / 7628 lookups)
+strata serve: decode expert tier: 112566 resident + 2686 from the SSD (97.7% resident), 24.09 GB read, waited 2048 ms in 1891 layer-windows; prefetched 2786, used 1817, evicted unused 0, still loading when asked 859
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 57.31 ms/window = verify 53.67 (GPU-reach wait 38.74 + per-layer host 9.86 [plan 9.61 actq 0.18 jobs 0.05 CPU 0.00] + stage 1.60) + commit/emit 1.27 + draft 2.37; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.28, PCIe 0.00; DRAM tier 9.48, SSD 0.24, SSD wait 7.68 ms/window
+strata serve: prompt 34 tokens = 0 reused + 34 read in 1244 ms (27.3 tok/s), 256 generated in 14671 ms (17.4 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (3382 hits / 3382 lookups)
+strata serve: decode expert tier: 116548 resident + 2950 from the SSD (97.5% resident), 23.90 GB read, waited 1965 ms in 1986 layer-windows; prefetched 2937, used 2347, evicted unused 759, still loading when asked 1311
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 59.73 ms/window = verify 55.92 (GPU-reach wait 40.63 + per-layer host 10.11 [plan 9.86 actq 0.18 jobs 0.05 CPU 0.00] + stage 1.56) + commit/emit 1.32 + draft 2.49; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 1.12, PCIe 0.00; DRAM tier 8.66, SSD 0.22, SSD wait 7.75 ms/window
+strata serve: prompt 38 tokens = 0 reused + 38 read in 1126 ms (33.7 tok/s), 256 generated in 15290 ms (16.7 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (13755 hits / 13755 lookups)
+strata serve: decode expert tier: 106397 resident + 2728 from the SSD (97.5% resident), 23.43 GB read, waited 1983 ms in 1977 layer-windows; prefetched 2802, used 1984, evicted unused 841, still loading when asked 1043
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 59.56 ms/window = verify 55.91 (GPU-reach wait 38.05 + per-layer host 13.29 [plan 13.03 actq 0.19 jobs 0.05 CPU 0.00] + stage 1.13) + commit/emit 1.28 + draft 2.37; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.82, PCIe 0.00; DRAM tier 8.89, SSD 0.29, SSD wait 10.41 ms/window
+strata serve: prompt 70 tokens = 0 reused + 70 read in 1978 ms (35.4 tok/s), 256 generated in 15248 ms (16.8 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (10122 hits / 10122 lookups)
+strata serve: decode expert tier: 109184 resident + 3574 from the SSD (96.8% resident), 32.26 GB read, waited 2665 ms in 2567 layer-windows; prefetched 3767, used 2582, evicted unused 893, still loading when asked 1163
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 61.21 ms/window = verify 57.41 (GPU-reach wait 40.25 + per-layer host 12.09 [plan 11.84 actq 0.18 jobs 0.05 CPU 0.00] + stage 1.48) + commit/emit 1.32 + draft 2.48; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.14, PCIe 0.00; DRAM tier 9.60, SSD 0.27, SSD wait 9.38 ms/window
+strata serve: prompt 35 tokens = 0 reused + 35 read in 1466 ms (23.9 tok/s), 256 generated in 15671 ms (16.3 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (1676 hits / 1676 lookups)
+strata serve: decode expert tier: 117905 resident + 3299 from the SSD (97.3% resident), 26.67 GB read, waited 2402 ms in 2368 layer-windows; prefetched 2986, used 2301, evicted unused 495, still loading when asked 1179
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 56.99 ms/window = verify 53.35 (GPU-reach wait 38.62 + per-layer host 9.86 [plan 9.60 actq 0.18 jobs 0.05 CPU 0.00] + stage 1.42) + commit/emit 1.27 + draft 2.37; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 1.48, PCIe 0.00; DRAM tier 8.31, SSD 0.21, SSD wait 7.55 ms/window
+strata serve: prompt 42 tokens = 0 reused + 42 read in 1085 ms (38.7 tok/s), 256 generated in 14589 ms (17.5 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (18170 hits / 18170 lookups)
+strata serve: decode expert tier: 102110 resident + 2600 from the SSD (97.5% resident), 22.75 GB read, waited 1932 ms in 1869 layer-windows; prefetched 2774, used 1970, evicted unused 824, still loading when asked 1017
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 59.12 ms/window = verify 55.28 (GPU-reach wait 41.19 + per-layer host 10.51 [plan 10.27 actq 0.17 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.34 + draft 2.50; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.62, PCIe 0.00; DRAM tier 9.16, SSD 0.22, SSD wait 8.07 ms/window
+strata serve: prompt 34 tokens = 0 reused + 34 read in 965 ms (35.2 tok/s), 256 generated in 15136 ms (16.9 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (7628 hits / 7628 lookups)
+strata serve: decode expert tier: 112559 resident + 2693 from the SSD (97.7% resident), 23.70 GB read, waited 2066 ms in 1953 layer-windows; prefetched 2763, used 1974, evicted unused 865, still loading when asked 918
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 55.83 ms/window = verify 52.17 (GPU-reach wait 38.92 + per-layer host 9.79 [plan 9.54 actq 0.18 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.28 + draft 2.38; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.28, PCIe 0.00; DRAM tier 9.48, SSD 0.24, SSD wait 7.65 ms/window
+strata serve: prompt 34 tokens = 0 reused + 34 read in 1232 ms (27.6 tok/s), 256 generated in 14294 ms (17.9 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (3382 hits / 3382 lookups)
+strata serve: decode expert tier: 116532 resident + 2966 from the SSD (97.5% resident), 23.93 GB read, waited 1959 ms in 1964 layer-windows; prefetched 2945, used 2361, evicted unused 747, still loading when asked 1328
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 58.23 ms/window = verify 54.41 (GPU-reach wait 40.56 + per-layer host 10.26 [plan 10.01 actq 0.18 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.33 + draft 2.49; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 1.12, PCIe 0.00; DRAM tier 8.66, SSD 0.22, SSD wait 7.76 ms/window
+strata serve: prompt 38 tokens = 0 reused + 38 read in 1118 ms (34.0 tok/s), 256 generated in 14906 ms (17.2 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (13755 hits / 13755 lookups)
+strata serve: decode expert tier: 106394 resident + 2731 from the SSD (97.5% resident), 23.37 GB read, waited 1985 ms in 1962 layer-windows; prefetched 2790, used 1983, evicted unused 850, still loading when asked 1046
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 58.22 ms/window = verify 54.57 (GPU-reach wait 37.87 + per-layer host 13.28 [plan 13.02 actq 0.19 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.27 + draft 2.37; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.82, PCIe 0.00; DRAM tier 8.89, SSD 0.29, SSD wait 10.34 ms/window
+strata serve: prompt 70 tokens = 0 reused + 70 read in 1959 ms (35.7 tok/s), 256 generated in 14903 ms (17.2 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (10122 hits / 10122 lookups)
+strata serve: decode expert tier: 109179 resident + 3579 from the SSD (96.8% resident), 32.27 GB read, waited 2648 ms in 2564 layer-windows; prefetched 3770, used 2588, evicted unused 894, still loading when asked 1170
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 59.97 ms/window = verify 56.14 (GPU-reach wait 40.56 + per-layer host 11.99 [plan 11.74 actq 0.18 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.34 + draft 2.49; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.14, PCIe 0.00; DRAM tier 9.60, SSD 0.27, SSD wait 9.42 ms/window
+strata serve: prompt 35 tokens = 0 reused + 35 read in 1445 ms (24.2 tok/s), 256 generated in 15352 ms (16.7 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (1676 hits / 1676 lookups)
+strata serve: decode expert tier: 117904 resident + 3300 from the SSD (97.3% resident), 26.68 GB read, waited 2412 ms in 2346 layer-windows; prefetched 2988, used 2301, evicted unused 498, still loading when asked 1179
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 55.89 ms/window = verify 52.24 (GPU-reach wait 38.86 + per-layer host 9.93 [plan 9.68 actq 0.18 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.28 + draft 2.37; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 1.48, PCIe 0.00; DRAM tier 8.31, SSD 0.21, SSD wait 7.59 ms/window
+strata serve: prompt 42 tokens = 0 reused + 42 read in 1080 ms (38.9 tok/s), 256 generated in 14307 ms (17.9 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (18170 hits / 18170 lookups)
+strata serve: decode expert tier: 102115 resident + 2595 from the SSD (97.5% resident), 22.74 GB read, waited 1943 ms in 1873 layer-windows; prefetched 2773, used 1969, evicted unused 824, still loading when asked 1014
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 58.43 ms/window = verify 54.63 (GPU-reach wait 40.59 + per-layer host 10.49 [plan 10.24 actq 0.18 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.32 + draft 2.48; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.62, PCIe 0.00; DRAM tier 9.16, SSD 0.22, SSD wait 8.03 ms/window
+strata serve: prompt 34 tokens = 0 reused + 34 read in 957 ms (35.5 tok/s), 256 generated in 14959 ms (17.1 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (7628 hits / 7628 lookups)
+strata serve: decode expert tier: 112551 resident + 2701 from the SSD (97.7% resident), 23.71 GB read, waited 2057 ms in 1960 layer-windows; prefetched 2765, used 1976, evicted unused 864, still loading when asked 925
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 55.82 ms/window = verify 52.17 (GPU-reach wait 38.79 + per-layer host 9.91 [plan 9.66 actq 0.18 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.27 + draft 2.37; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.28, PCIe 0.00; DRAM tier 9.48, SSD 0.24, SSD wait 7.68 ms/window
+strata serve: prompt 34 tokens = 0 reused + 34 read in 1239 ms (27.4 tok/s), 256 generated in 14289 ms (17.9 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (3382 hits / 3382 lookups)
+strata serve: decode expert tier: 116532 resident + 2966 from the SSD (97.5% resident), 23.93 GB read, waited 1966 ms in 1988 layer-windows; prefetched 2945, used 2361, evicted unused 748, still loading when asked 1328
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 58.01 ms/window = verify 54.22 (GPU-reach wait 40.36 + per-layer host 10.29 [plan 10.04 actq 0.18 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.32 + draft 2.47; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 1.12, PCIe 0.00; DRAM tier 8.66, SSD 0.22, SSD wait 7.87 ms/window
+strata serve: prompt 38 tokens = 0 reused + 38 read in 1118 ms (34.0 tok/s), 256 generated in 14850 ms (17.2 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (13755 hits / 13755 lookups)
+strata serve: decode expert tier: 106397 resident + 2728 from the SSD (97.5% resident), 23.38 GB read, waited 2016 ms in 1972 layer-windows; prefetched 2791, used 1983, evicted unused 849, still loading when asked 1043
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 58.52 ms/window = verify 54.86 (GPU-reach wait 38.11 + per-layer host 13.34 [plan 13.07 actq 0.19 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.28 + draft 2.38; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.82, PCIe 0.00; DRAM tier 8.89, SSD 0.29, SSD wait 10.38 ms/window
+strata serve: prompt 70 tokens = 0 reused + 70 read in 1975 ms (35.4 tok/s), 256 generated in 14981 ms (17.1 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (10122 hits / 10122 lookups)
+strata serve: decode expert tier: 109179 resident + 3579 from the SSD (96.8% resident), 32.27 GB read, waited 2657 ms in 2563 layer-windows; prefetched 3770, used 2587, evicted unused 893, still loading when asked 1169
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 58.62 ms/window = verify 54.90 (GPU-reach wait 39.22 + per-layer host 12.18 [plan 11.92 actq 0.19 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.30 + draft 2.42; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.14, PCIe 0.00; DRAM tier 9.59, SSD 0.27, SSD wait 9.57 ms/window
+strata serve: prompt 35 tokens = 0 reused + 35 read in 1445 ms (24.2 tok/s), 256 generated in 15007 ms (17.1 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (1676 hits / 1676 lookups)
+strata serve: decode expert tier: 117899 resident + 3305 from the SSD (97.3% resident), 26.69 GB read, waited 2449 ms in 2387 layer-windows; prefetched 2989, used 2301, evicted unused 498, still loading when asked 1184
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 58.09 ms/window = verify 54.27 (GPU-reach wait 40.98 + per-layer host 9.69 [plan 9.44 actq 0.18 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.33 + draft 2.49; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 1.48, PCIe 0.00; DRAM tier 8.31, SSD 0.21, SSD wait 7.38 ms/window
+strata serve: prompt 42 tokens = 0 reused + 42 read in 1216 ms (34.5 tok/s), 256 generated in 14872 ms (17.2 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (18170 hits / 18170 lookups)
+strata serve: decode expert tier: 102110 resident + 2600 from the SSD (97.5% resident), 22.75 GB read, waited 1889 ms in 1850 layer-windows; prefetched 2774, used 1970, evicted unused 824, still loading when asked 1017
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 59.15 ms/window = verify 55.28 (GPU-reach wait 41.51 + per-layer host 10.14 [plan 9.89 actq 0.17 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.34 + draft 2.53; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.62, PCIe 0.00; DRAM tier 9.16, SSD 0.22, SSD wait 7.80 ms/window
+strata serve: prompt 34 tokens = 0 reused + 34 read in 1110 ms (30.6 tok/s), 256 generated in 15142 ms (16.9 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (7628 hits / 7628 lookups)
+strata serve: decode expert tier: 112558 resident + 2694 from the SSD (97.7% resident), 23.70 GB read, waited 1997 ms in 1908 layer-windows; prefetched 2763, used 1974, evicted unused 865, still loading when asked 919
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 59.90 ms/window = verify 55.96 (GPU-reach wait 42.35 + per-layer host 9.87 [plan 9.63 actq 0.17 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.36 + draft 2.57; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.28, PCIe 0.00; DRAM tier 9.48, SSD 0.24, SSD wait 7.61 ms/window
+strata serve: prompt 34 tokens = 0 reused + 34 read in 1293 ms (26.3 tok/s), 256 generated in 15334 ms (16.7 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (3382 hits / 3382 lookups)
+strata serve: decode expert tier: 116534 resident + 2964 from the SSD (97.5% resident), 23.93 GB read, waited 1949 ms in 1953 layer-windows; prefetched 2945, used 2361, evicted unused 747, still loading when asked 1326
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 55.98 ms/window = verify 52.33 (GPU-reach wait 38.58 + per-layer host 10.30 [plan 10.04 actq 0.19 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.27 + draft 2.38; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 1.12, PCIe 0.00; DRAM tier 8.66, SSD 0.22, SSD wait 7.92 ms/window
+strata serve: prompt 38 tokens = 0 reused + 38 read in 1123 ms (33.8 tok/s), 256 generated in 14331 ms (17.9 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (13755 hits / 13755 lookups)
+strata serve: decode expert tier: 106393 resident + 2732 from the SSD (97.5% resident), 23.37 GB read, waited 2027 ms in 2002 layer-windows; prefetched 2790, used 1983, evicted unused 850, still loading when asked 1047
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 59.33 ms/window = verify 55.60 (GPU-reach wait 39.02 + per-layer host 13.09 [plan 12.82 actq 0.19 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.30 + draft 2.43; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.82, PCIe 0.00; DRAM tier 8.89, SSD 0.29, SSD wait 10.24 ms/window
+strata serve: prompt 70 tokens = 0 reused + 70 read in 1964 ms (35.6 tok/s), 256 generated in 15189 ms (16.9 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (10122 hits / 10122 lookups)
+strata serve: decode expert tier: 109187 resident + 3571 from the SSD (96.8% resident), 32.27 GB read, waited 2622 ms in 2536 layer-windows; prefetched 3770, used 2588, evicted unused 894, still loading when asked 1162
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 57.76 ms/window = verify 54.10 (GPU-reach wait 38.49 + per-layer host 12.17 [plan 11.91 actq 0.18 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.28 + draft 2.38; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 0.14, PCIe 0.00; DRAM tier 9.59, SSD 0.27, SSD wait 9.61 ms/window
+strata serve: prompt 35 tokens = 0 reused + 35 read in 1531 ms (22.9 tok/s), 256 generated in 14787 ms (17.3 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (1676 hits / 1676 lookups)
+strata serve: decode expert tier: 117898 resident + 3306 from the SSD (97.3% resident), 26.68 GB read, waited 2461 ms in 2386 layer-windows; prefetched 2988, used 2301, evicted unused 498, still loading when asked 1185
+strata decode timing: 256 windows, avg T 1.00, 1.00 tokens/window, 55.79 ms/window = verify 52.13 (GPU-reach wait 38.78 + per-layer host 9.91 [plan 9.65 actq 0.18 jobs 0.05 CPU 0.00] + stage 0.01) + commit/emit 1.28 + draft 2.37; per layer-window: CPU experts 0.00 (0.00 entries), VRAM hits 1.48, PCIe 0.00; DRAM tier 8.31, SSD 0.21, SSD wait 7.58 ms/window
+strata serve: prompt 42 tokens = 0 reused + 42 read in 1083 ms (38.8 tok/s), 256 generated in 14282 ms (17.9 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (18170 hits / 18170 lookups)
+strata serve: decode expert tier: 102113 resident + 2597 from the SSD (97.5% resident), 22.74 GB read, waited 1941 ms in 1864 layer-windows; prefetched 2773, used 1969, evicted unused 824, still loading when asked 1016

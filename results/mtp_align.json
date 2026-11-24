@@ -1,0 +1,55 @@
+{
+ "windows_aligned": 2163,
+ "token0_mismatches": 4,
+ "resyncs": 0,
+ "decode_windows": 1788,
+ "true_token_slots": 5204,
+ "rejected_draft_slots": 1333,
+ "rejected_share_of_slots": 0.20391616949671104,
+ "mean_union_per_layer_all": 24.614140566741238,
+ "mean_union_per_layer_true_only": 20.761162378821776,
+ "share_of_window_union_only_needed_by_rejected": 0.15653515008871072,
+ "drafts_proposed_hist": [
+  0,
+  270,
+  250,
+  1180,
+  1,
+  87,
+  0
+ ],
+ "accept_prob_by_position": {
+  "1": 0.8338926174496645,
+  "2": 0.6877470355731226,
+  "3": 0.6088328075709779,
+  "4": 0.6363636363636364,
+  "5": 0.6091954022988506
+ },
+ "tokens_per_window": 2.9105145413870246,
+ "window_lru": {
+  "2048": {
+   "lru_admit_all_hit": 0.471953870419847,
+   "lru_deferred_admission_hit": 0.44472005468443787,
+   "misses_per_true_token_admit_all": 214.3522290545734,
+   "misses_per_true_token_deferred": 225.4073789392775
+  },
+  "4096": {
+   "lru_admit_all_hit": 0.6986003207598259,
+   "lru_deferred_admission_hit": 0.6802318976143724,
+   "misses_per_true_token_admit_all": 122.34857801691007,
+   "misses_per_true_token_deferred": 129.80495772482706
+  },
+  "8192": {
+   "lru_admit_all_hit": 0.8787266554444909,
+   "lru_deferred_admission_hit": 0.8687142719187458,
+   "misses_per_true_token_admit_all": 49.22905457340507,
+   "misses_per_true_token_deferred": 53.293428132205996
+  },
+  "12288": {
+   "lru_admit_all_hit": 0.9462268116586918,
+   "lru_deferred_admission_hit": 0.9407597880031281,
+   "misses_per_true_token_admit_all": 21.828401229823214,
+   "misses_per_true_token_deferred": 24.047655649500385
+  }
+ }
+}

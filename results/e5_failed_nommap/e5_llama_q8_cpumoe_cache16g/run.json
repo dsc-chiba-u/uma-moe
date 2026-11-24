@@ -1,0 +1,28 @@
+{
+ "name": "e5_llama_q8_cpumoe_cache16g",
+ "engine": "llama",
+ "args": [
+  "-m",
+  "~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00001-of-00006.gguf",
+  "-ngl",
+  "999",
+  "-fa",
+  "on",
+  "-c",
+  "16384",
+  "--no-warmup",
+  "--cpu-moe",
+  "--moe-cache-mib",
+  "16384"
+ ],
+ "env": {},
+ "meta": {
+  "exp": "E5"
+ },
+ "mem_avail_before_gib": 101.00751495361328,
+ "started": "2026-10-21T12:55:21",
+ "error": "server did not become ready",
+ "mem_avail_min_gib": 42.43024826049805,
+ "watchdog": false,
+ "server_stats": []
+}

@@ -1,0 +1,13 @@
+2026-10-23 15:10:36 armed by the root script; original value 20
+2026-10-23 15:10:36 GPU lock taken
+2026-10-23 15:10:36 phase A1 begins: compaction_proactiveness=20
+2026-10-23 15:24:35 phase A1 ends: compaction_proactiveness=20
+2026-10-23 15:24:37 phase B1 begins: compaction_proactiveness=0
+2026-10-23 15:37:29 phase B1 ends: compaction_proactiveness=0
+2026-10-23 15:37:33 phase A2 begins: compaction_proactiveness=20
+2026-10-23 15:50:26 phase A2 ends: compaction_proactiveness=20
+2026-10-23 15:50:28 phase B2 begins: compaction_proactiveness=0
+2026-10-23 16:03:17 phase B2 ends: compaction_proactiveness=0
+2026-10-23 16:03:19 phase A3 begins: compaction_proactiveness=20
+2026-10-23 16:16:21 phase A3 ends: compaction_proactiveness=20
+2026-10-23 16:16:21 all phases done: compaction_proactiveness=20

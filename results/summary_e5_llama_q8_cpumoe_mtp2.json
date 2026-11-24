@@ -1,0 +1,40 @@
+[
+ {
+  "name": "e5_llama_q8_cpumoe_mtp2",
+  "error": null,
+  "mem_avail_before": 115.8766975402832,
+  "mem_avail_loaded": 104.07151794433594,
+  "mem_avail_min": 102.98332977294922,
+  "load_s": 150.22339057922363,
+  "prompts": {
+   "code_en": {
+    "decode_tok_s": 8.25324584157889,
+    "decode_min": 6.680511330512558,
+    "decode_max": 9.825980352645221,
+    "prefill_tok_s": null,
+    "accept_rate": 0.9375,
+    "tokens_per_step": 2.8135265700483094,
+    "hit_rate": null,
+    "cpu_util": 37.1495951417004,
+    "gpu_util": 14.149797570850202,
+    "nvme_mbs": 616.8234311740891,
+    "client_decode": 8.251934986186791,
+    "n": 2
+   },
+   "story_en": {
+    "decode_tok_s": 5.737983072053377,
+    "decode_min": 5.737983072053377,
+    "decode_max": 5.737983072053377,
+    "prefill_tok_s": null,
+    "accept_rate": 0.55,
+    "tokens_per_step": 2.064516129032258,
+    "hit_rate": null,
+    "cpu_util": 36.30449438202247,
+    "gpu_util": 14.123595505617978,
+    "nvme_mbs": 691.3550561797753,
+    "client_decode": 5.737607075116795,
+    "n": 1
+   }
+  }
+ }
+]

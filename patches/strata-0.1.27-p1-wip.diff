@@ -1,0 +1,1264 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 74ae691..d4319e5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -289,7 +289,8 @@ if(STRATA_ENABLE_CUDA OR STRATA_ENABLE_HIP)
+   # library is the honest shape of the dependency graph: core knows about devices and weights, kernels know
+   # about arithmetic, and this one knows the ORDER the arithmetic happens in.
+   add_library(strata_engine STATIC src/core/layer.cpp src/core/session.cpp src/core/expert_source.cpp src/core/remote_experts.cpp
+-    src/core/expert_cache.cpp src/core/native_head.cpp src/core/native_dense.cpp src/core/verify.cpp src/core/mtp.cpp)
++    src/core/expert_cache.cpp src/core/native_head.cpp src/core/native_dense.cpp src/core/verify.cpp src/core/mtp.cpp
++    src/core/tiered_source.cpp)
+   target_include_directories(strata_engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+   target_link_libraries(strata_engine PUBLIC strata_core strata_kernels strata_kernels_cpu ${_strata_gpu_runtime_target})
+   if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/core/file_expert_source_test.cpp")
+@@ -581,12 +582,27 @@ if(STRATA_BUILD_TESTS)
+   add_test(NAME conv_cache_test COMMAND conv_cache_test)
+ endif()
+ 
+-add_library(strata_kernels_cpu STATIC src/kernels/cpu/expert.cpp src/kernels/cpu/pool.cpp
+-            src/kernels/cpu/expert_layout.cpp src/kernels/cpu/q2_avx2.cpp)
++# A CPU that is not x86 (aarch64: DGX Spark) gets cpu_portable.cpp in place of the four x86-intrinsic files.
++if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64|i[3-6]86)$")
++  set(STRATA_X86 ON)
++else()
++  set(STRATA_X86 OFF)
++endif()
++if(STRATA_X86)
++  add_library(strata_kernels_cpu STATIC src/kernels/cpu/expert.cpp src/kernels/cpu/pool.cpp
++              src/kernels/cpu/expert_layout.cpp src/kernels/cpu/q2_avx2.cpp)
++else()
++  add_library(strata_kernels_cpu STATIC src/kernels/cpu/cpu_portable.cpp src/kernels/cpu/pool.cpp
++              src/kernels/cpu/expert_layout.cpp)
++  if(NOT MSVC)
++    set_source_files_properties(src/kernels/cpu/cpu_portable.cpp PROPERTIES COMPILE_OPTIONS "-mcpu=native")
++  endif()
++endif()
+ target_include_directories(strata_kernels_cpu PUBLIC include)
+ # Plan v0.3 P6: only the kernel files get the AVX-512 / AVX2 flags; the pool and the probe run on any x86-64,
+ # and the engine picks the kernels at run time (cpu_avx512_ok).
+-if(MSVC)
++if(NOT STRATA_X86)
++elseif(MSVC)
+   set_source_files_properties(src/kernels/cpu/expert.cpp PROPERTIES COMPILE_OPTIONS "/arch:AVX512")
+   set_source_files_properties(src/kernels/cpu/q2_avx2.cpp PROPERTIES COMPILE_OPTIONS "/arch:AVX2")
+ else()
+@@ -641,10 +657,13 @@ if(STRATA_NATIVE_EXPERTS)
+   endif()
+   # part of strata_kernels_cpu (the pool calls these and they call its CPU probe: one library, so GNU ld's
+   # one-pass static linking has no cycle to resolve)
+-  target_sources(strata_kernels_cpu PRIVATE src/kernels/cpu/native_expert.cpp src/kernels/cpu/iq_avx512.cpp
+-                                           src/kernels/cpu/iq_avx2.cpp)
++  target_sources(strata_kernels_cpu PRIVATE src/kernels/cpu/native_expert.cpp)
++  if(STRATA_X86)
++    target_sources(strata_kernels_cpu PRIVATE src/kernels/cpu/iq_avx512.cpp src/kernels/cpu/iq_avx2.cpp)
++  endif()
+   target_include_directories(strata_kernels_cpu PRIVATE third_party/ggml)
+-  if(MSVC)
++  if(NOT STRATA_X86)
++  elseif(MSVC)
+     set_source_files_properties(src/kernels/cpu/iq_avx512.cpp PROPERTIES COMPILE_OPTIONS "/arch:AVX512")
+     set_source_files_properties(src/kernels/cpu/iq_avx2.cpp PROPERTIES COMPILE_OPTIONS "/arch:AVX2")
+   else()
+diff --git a/include/strata/core/expert_source.hpp b/include/strata/core/expert_source.hpp
+index 0b357a1..ee72e98 100644
+--- a/include/strata/core/expert_source.hpp
++++ b/include/strata/core/expert_source.hpp
+@@ -98,6 +98,17 @@ public:
+     virtual void begin_layer(int64_t layer, const int32_t* ids, int64_t k) { (void) layer; (void) ids; (void) k; }
+     /// Plan v0.3 P6: the DEVICE address of a pinned, mapped blob (the GPU can read it over PCIe), or null.
+     virtual const uint8_t* device_alias(int64_t layer, int64_t expert) const { (void) layer; (void) expert; return nullptr; }
++
++    /// A source whose experts do not all fit in RAM (TieredExpertSource): `begin_layer` admits the layer's missing
++    /// experts and starts their reads; until `wait_loads` returns they are `loading` - their `device_alias` is
++    /// already the slot the GPU will read, but its bytes are not there yet.
++    virtual bool tiered() const { return false; }
++    /// A tiered source's bypass read (the prompt path): the blob into page-aligned `dst` without admitting it.
++    virtual bool read_blob_sync(int64_t layer, int64_t expert, uint8_t* dst, uint32_t& delta, std::string& err) const {
++        (void) layer; (void) expert; (void) dst; (void) delta; err = "this expert source has no bypass read"; return false;
++    }
++    virtual bool loading(int64_t layer, int64_t expert) const { (void) layer; (void) expert; return false; }
++    virtual bool wait_loads(std::string& err) { (void) err; return true; }
+ };
+ 
+ /// Plan v0.3 P6: what the GPU computes in a verify window's layer, written by the pool (mapped host memory) right
+@@ -247,6 +258,8 @@ struct ExpertDispatch {
+     GpuPlanSink* plan = nullptr;
+     int pcie_num = 0;
+     int64_t pcie_experts = 0;      ///< distinct experts the GPU read over PCIe in verify windows
++    int64_t tier_hits = 0;         ///< tiered source: distinct experts computed from a resident DRAM slot
++    int64_t tier_loads = 0;        ///< tiered source: distinct experts computed after their SSD read landed
+     double ms_plan = 0, ms_actq = 0, ms_jobs = 0, ms_run = 0;   ///< verify-window dispatch sections
+     /// Plan v0.3 P6: decayed routing counts per (layer, expert) during decode (sized by the caller; empty = off),
+     /// which the driver uses to swap the most-routed missing experts into the VRAM tier between rounds.
+diff --git a/include/strata/core/pinned.hpp b/include/strata/core/pinned.hpp
+index cc4ef1c..c2462c8 100644
+--- a/include/strata/core/pinned.hpp
++++ b/include/strata/core/pinned.hpp
+@@ -33,6 +33,9 @@ struct PinnedArena {
+     uint64_t registered_bytes = 0;
+     uint64_t slice_bytes = 0;
+     int registered_slices = 0;
++    /// UMA: the arena came from cudaHostAlloc (STRATA_ARENA_HOSTALLOC=1) rather than mmap + cudaHostRegister; on
++    /// GB10 the GPU reads driver-allocated pinned memory faster than registered 4 KB pages
++    bool host_alloc = false;
+ 
+     PinnedArena() = default;
+     /// `slice`: the piece size for the per-slice registration fallback (0 = none).
+diff --git a/include/strata/hip_compat/cuda_runtime.h b/include/strata/hip_compat/cuda_runtime.h
+index 7cfe335..f97a879 100644
+--- a/include/strata/hip_compat/cuda_runtime.h
++++ b/include/strata/hip_compat/cuda_runtime.h
+@@ -9,6 +9,7 @@
+ #define cudaDevAttrMultiProcessorCount hipDeviceAttributeMultiprocessorCount
+ #define cudaDevAttrClockRate hipDeviceAttributeClockRate
+ #define cudaDevAttrComputeCapabilityMajor hipDeviceAttributeComputeCapabilityMajor
++#define cudaDevAttrIntegrated hipDeviceAttributeIntegrated
+ #define cudaDeviceGetAttribute hipDeviceGetAttribute
+ #define cudaDeviceProp hipDeviceProp_t
+ #define cudaDeviceSynchronize hipDeviceSynchronize
+diff --git a/include/strata/kernels/ngram.hpp b/include/strata/kernels/ngram.hpp
+index d15491d..e98ed63 100644
+--- a/include/strata/kernels/ngram.hpp
++++ b/include/strata/kernels/ngram.hpp
+@@ -45,6 +45,9 @@ inline constexpr float NG_RMS_EPS = 1e-6f;
+ // 5 blocks of 32 at 18 bytes = 90 bytes.  The head-slowest flatten then makes 16 rows exactly n_embd = 2560.
+ inline constexpr uint64_t PLE_TABLE_ROWS = 320001536ull;
+ inline constexpr int PLE_ROW_BYTES = (PLE_HEAD_DIM / 32) * 18;           // 90
++// The unsloth Q8_0 file stores the same table as Q8_0: 5 blocks of 32 at 34 bytes = 170 bytes a row.
++inline constexpr int PLE_ROW_BYTES_Q8_0 = (PLE_HEAD_DIM / 32) * 34;      // 170
++inline constexpr int PLE_ROW_BYTES_MAX = PLE_ROW_BYTES_Q8_0;
+ 
+ /// The artifact's own hash constants, transcribed from `docs/gguf-dump-shard1.txt`:
+ ///
+@@ -95,6 +98,8 @@ int iq4nl_code(int code);
+ /// so byte j carries elements j and j+16 - NOT 2j and 2j+1, which is the natural reading and which produces
+ /// a perfectly plausible embedding of the wrong 160 values.
+ void iq4nl_dequant_row(const uint8_t* row, float* out160);
++/// One 170-byte Q8_0 row -> 160 floats (`d * q`, five blocks of an f16 scale and 32 int8).
++void q8_0_dequant_row(const uint8_t* row, float* out160);
+ 
+ /// How the table's rows are read (plan v0.3 P2). `Direct` is the default: unbuffered 4 KiB reads from the SSD,
+ /// so the table never occupies RAM or the OS file cache. `Mmap` is the earlier memory-mapped path, kept as the
+diff --git a/include/strata/ngram/ple_reader.hpp b/include/strata/ngram/ple_reader.hpp
+index 0552ff1..9c8a03f 100644
+--- a/include/strata/ngram/ple_reader.hpp
++++ b/include/strata/ngram/ple_reader.hpp
+@@ -24,7 +24,7 @@
+ 
+ namespace strata::ngram {
+ 
+-inline constexpr uint32_t ROW_BYTES = 90;
++inline constexpr uint32_t ROW_BYTES = 90;        ///< IQ4_NL rows (the GSQ-RCO files); Q8_0 rows are 170 (`open`)
+ inline constexpr uint32_t PAGE = 4096;
+ 
+ struct ReaderStats {
+@@ -57,7 +57,7 @@ public:
+     /// `io_thread` (default): a worker thread submits and reaps reads, so `issue` costs the caller no ReadFile
+     /// calls. false: the caller's thread does it (A/B arm).
+     bool open(const std::string& path, uint64_t table_offset, uint64_t n_rows, uint32_t max_inflight,
+-              uint64_t cache_rows, std::string& err, bool io_thread = true);
++              uint64_t cache_rows, std::string& err, bool io_thread = true, uint32_t row_bytes = ROW_BYTES);
+     void close();
+     bool is_open() const;
+ 
+diff --git a/setup.py b/setup.py
+index 0c30e24..cc8231e 100644
+--- a/setup.py
++++ b/setup.py
+@@ -228,13 +228,16 @@ def cpu_info():
+     else:
+         try:
+             txt = open("/proc/cpuinfo").read()
+-            flags = set(re.search(r"^flags\s*:\s*(.*)$", txt, re.M).group(1).split())
++            fl = re.search(r"^flags\s*:\s*(.*)$", txt, re.M)   # an ARM CPU has "Features" and no x86 flags
++            flags = set(fl.group(1).split()) if fl else set()
+             avx2 = "avx2" in flags
+             avx512 = {"avx512f", "avx512bw", "avx512vl", "avx512_vnni", "avx512vbmi"} <= flags
+             m = re.search(r"^model name\s*:\s*(.*)$", txt, re.M)
+             name = m.group(1) if m else name
+         except OSError:
+             pass
++        if platform.machine() in ("aarch64", "arm64"):
++            name = f"{platform.machine()} ({os.cpu_count()} cores)"
+     return name, avx2, avx512
+ 
+ 
+@@ -308,6 +311,10 @@ def gpus():
+     for line in s.strip().splitlines():
+         try:
+             idx, name, mem, cc, drv = [x.strip() for x in line.split(",")]
++            if mem.startswith("[N/A") and platform.machine() in ("aarch64", "arm64"):
++                # a unified-memory GPU (DGX Spark / GB10: 128 GB shared with the CPU) reports no VRAM of its own:
++                # count half the system memory, the other half being the RAM copy of the experts and the OS
++                mem = str(ram_gb() * 1024.0 / 2)
+             found.append({"index": int(idx), "name": name, "vram_gb": float(mem) / 1024.0, "arch": cc.replace(".", ""),
+                           "driver": drv})
+         except ValueError:
+@@ -1729,8 +1736,8 @@ def main() -> int:
+         warn(f"Windows' page file is {pf:.1f} GB: the graphics card's memory needs room there too (issue #60), so "
+              "the model may not start or may use less VRAM. Set it to \"System managed\": System > About > "
+              "Advanced system settings > Performance > Advanced > Virtual memory")
+-    ok(f"CPU: {cpu} ({'AVX-512' if avx512 else 'AVX2' if avx2 else 'no AVX2'})")
+-    if not avx2:
++    ok(f"CPU: {cpu} ({'AVX-512' if avx512 else 'AVX2' if avx2 else 'NEON, portable kernels' if platform.machine() in ('aarch64', 'arm64') else 'no AVX2'})")
++    if not avx2 and platform.machine() not in ("aarch64", "arm64"):
+         fail("this CPU has no AVX2; Strata needs at least AVX2")
+     if a.check:
+         say()
+@@ -1876,6 +1883,8 @@ def main() -> int:
+     step(4, "the Strata engine")
+     llama = get_llama_cpp()
+     ok(f"llama.cpp {LLAMA_CPP_COMMIT[:7]} (gguf-py, ggml, mtmd)")
++    if platform.machine() in ("aarch64", "arm64") and not a.build:
++        a.build = True                                 # the ready-made engines are x86: compile on an ARM CPU
+     eng = None if a.build or hip else get_prebuilt(a.prebuilt, gpu, vision)
+     if eng is not None and json.loads((eng / "BUILD.json").read_text()).get("source") != "local":
+         pip_install(CUDA_WHEELS, "NVIDIA CUDA libraries (cuBLAS, CUDA runtime; ~0.4 GB)")
+diff --git a/src/core/expert_cache.cpp b/src/core/expert_cache.cpp
+index 6eb0929..c1645e6 100644
+--- a/src/core/expert_cache.cpp
++++ b/src/core/expert_cache.cpp
+@@ -1,5 +1,6 @@
+ // src/core/expert_cache.cpp - R4's slot storage and residency table.  Read the header first.
+ #include "strata/core/expert_cache.hpp"
++#include "strata/core/mem_info.hpp"
+ 
+ #include <cuda_runtime.h>
+ 
+@@ -106,7 +107,7 @@ bool ExpertCache::open(int64_t n_slots, int64_t n_layers, int64_t n_expert, int6
+     // `device_slot()` walks off the end. So the free-VRAM figure is read and compared BEFORE the allocation,
+     // and the two numbers are named in the refusal.
+     size_t free_b = 0, total_b = 0;
+-    if (cudaMemGetInfo(&free_b, &total_b) == cudaSuccess) {
++    if (strata::core::mem_get_info(&free_b, &total_b) == cudaSuccess) {
+         if ((uint64_t) free_b < want) {
+             char buf[320];
+             std::snprintf(buf, sizeof buf,
+diff --git a/src/core/expert_source.cpp b/src/core/expert_source.cpp
+index 6e00792..97c298e 100644
+--- a/src/core/expert_source.cpp
++++ b/src/core/expert_source.cpp
+@@ -816,12 +816,26 @@ void expert_pool_dispatch_multi(ExpertDispatch& d, const float* x_f, const int32
+                 if (e >= 0 && e < d.n_expert && d.host_res[(size_t) d.layers * (size_t) d.n_expert + (size_t) e] < 0) ++nmiss;
+             }
+         }
+-        const bool pcie_ok = d.pcie_num > 0 && d.src->device_alias(d.layers, 0) != nullptr;
++        // a tiered source (experts beyond RAM) has no alias for an expert it has not admitted; begin_layer admitted
++        // this layer's misses, so every one is either resident (computed at once) or loading (after wait_loads)
++        const bool tiered = d.src->tiered();
++        const bool pcie_ok = d.pcie_num > 0 && (tiered || d.src->device_alias(d.layers, 0) != nullptr);
+         const int m = pcie_ok ? (nmiss * d.pcie_num) >> 8 : 0;
+         int miss_rank = 0, groups = 0, entries = 0, fetches = 0;
+         GpuPlanSink& P = *d.plan;
+-        const uint8_t* dma_src[64];
+-        int64_t pcie_i0[64];
++        const bool tier_direct = tiered && P.pcie_mode == 1;
++        bool any_loading = false;
++        // A/B (STRATA_TIER_NO_OVERLAP=1): the SSD's share lands before the plan is published, so the GPU idles
++        // through the reads instead of computing the resident experts meanwhile
++        static const bool tier_no_overlap = std::getenv("STRATA_TIER_NO_OVERLAP") != nullptr;
++        if (tier_direct && tier_no_overlap) {
++            static thread_local std::string tier_error;
++            if (!d.src->wait_loads(tier_error) && !d.failed) {
++                d.failed = true; d.fail = tier_error.c_str(); d.fail_layer = d.layers;
++            }
++        }
++        const uint8_t* dma_src[128];
++        int64_t pcie_i0[128];
+         for (int q = 0; q < nd; ++q) {
+             const int64_t i0 = distinct[q];
+             const int32_t e = ids[i0];
+@@ -834,13 +848,26 @@ void expert_pool_dispatch_multi(ExpertDispatch& d, const float* x_f, const int32
+                     ptr = (unsigned long long) (d.cache_base + (d.cache_slot_off ? (size_t) d.cache_slot_off[slot]
+                                                                                  : (size_t) slot * (size_t) d.cache_blob));
+                 } else {
+-                    if (miss_rank >= nmiss - m && fetches < P.staging_cap && fetches < 64) {
+-                        const uint8_t* src = d.src->blob(d.layers, e);
+-                        if (src != nullptr && d.src->pinned(d.layers, e)) {
+-                            kd = 1;
+-                            dma_src[fetches] = src;
+-                            pcie_i0[fetches] = i0;
+-                            ++fetches;
++                    if (miss_rank >= nmiss - m && fetches < P.staging_cap && fetches < 128) {
++                        if (tier_direct) {
++                            if (d.src->pinned(d.layers, e)) {          // a resident DRAM slot: with the VRAM groups
++                                kd = 1;
++                                ptr = (unsigned long long) d.src->device_alias(d.layers, e);
++                                ++d.tier_hits;
++                            } else if (d.src->loading(d.layers, e)) {  // arriving from the SSD: after flag B
++                                kd = 1;
++                                pcie_i0[fetches] = i0;
++                                ++fetches;
++                                any_loading = true;
++                            }
++                        } else {
++                            const uint8_t* src = d.src->blob(d.layers, e);
++                            if (src != nullptr && d.src->pinned(d.layers, e)) {
++                                kd = 1;
++                                dma_src[fetches] = src;
++                                pcie_i0[fetches] = i0;
++                                ++fetches;
++                            }
+                         }
+                     }
+                     ++miss_rank;
+@@ -848,7 +875,7 @@ void expert_pool_dispatch_multi(ExpertDispatch& d, const float* x_f, const int32
+             }
+             for (int64_t i = i0; i < n; ++i)
+                 if (first_of[i] == i0) kind[i] = kd;
+-            if (kd != 0) continue;                 // the VRAM groups first; the PCIe groups below
++            if (kd != 0 && !(kd == 1 && ptr != 0)) continue;   // VRAM (and resident DRAM-tier) groups first; PCIe below
+             P.ptr[groups] = ptr;
+             P.start[groups] = entries;
+             for (int64_t i = i0; i < n; ++i)
+@@ -872,7 +899,7 @@ void expert_pool_dispatch_multi(ExpertDispatch& d, const float* x_f, const int32
+                     P.tok[entries] = (int32_t) (i / k);
+                     ++entries;
+                 }
+-            ++d.pcie_experts;
++            if (tier_direct) ++d.tier_loads; else ++d.pcie_experts;
+         }
+         P.start2[fetches] = entries;
+         P.counts[0] = groups;
+@@ -882,6 +909,12 @@ void expert_pool_dispatch_multi(ExpertDispatch& d, const float* x_f, const int32
+         pt("publish", fetches);
+         if (P.publish) P.publish(P.ctx);
+         pt("fetch", fetches);
++        if (any_loading) {   // the GPU computes the resident groups while the SSD delivers these; flag B releases them
++            static thread_local std::string tier_error;
++            if (!d.src->wait_loads(tier_error) && !d.failed) {
++                d.failed = true; d.fail = tier_error.c_str(); d.fail_layer = d.layers;
++            }
++        }
+         if (P.fetch) P.fetch(P.ctx, dma_src, P.pcie_mode != 0 ? 0 : fetches, (size_t) bb);   // the copy engine, beside the CPU's work
+     } else {
+         for (int64_t i = 0; i < n; ++i) {
+diff --git a/src/core/graph.cpp b/src/core/graph.cpp
+index 2e9c7e7..f059be2 100644
+--- a/src/core/graph.cpp
++++ b/src/core/graph.cpp
+@@ -1,7 +1,7 @@
+ // src/core/graph.cpp - P2.S5: the GraphRegistry implementation.
+ #include "strata/core/graph.hpp"
+ 
+-#include <immintrin.h>
++#include "strata/platform/spin.hpp"
+ 
+ #include <chrono>
+ #include <cstdio>
+diff --git a/src/core/pinned.cu b/src/core/pinned.cu
+index 0e3e6b4..8e07f28 100644
+--- a/src/core/pinned.cu
++++ b/src/core/pinned.cu
+@@ -140,6 +140,19 @@ PinnedArena::PinnedArena(uint64_t bytes, uint64_t slice) : PinnedArena(bytes, un
+ PinnedArena::PinnedArena(uint64_t bytes, const std::vector<uint64_t>& bounds,
+                          uint64_t max_pinned_bytes) : capacity(bytes) {
+     if (bytes == 0) return;
++    if (const char* ha = std::getenv("STRATA_ARENA_HOSTALLOC"); ha != nullptr && std::atoi(ha) != 0 &&
++        !(max_pinned_bytes > 0 && max_pinned_bytes < bytes)) {
++        void* p = nullptr;
++        if (cudaHostAlloc(&p, (size_t) bytes, cudaHostAllocMapped | cudaHostAllocPortable) == cudaSuccess) {
++            base = p;
++            host_alloc = true;
++            registered_bytes = bytes;
++            note = "cudaHostAlloc MAPPED|PORTABLE (STRATA_ARENA_HOSTALLOC)";
++            return;
++        }
++        (void) cudaGetLastError();
++        note = "cudaHostAlloc refused (STRATA_ARENA_HOSTALLOC); ";
++    }
+     base = reserve(bytes, backing, note);
+ 
+     // Register with CUDA BEFORE any page is touched: cudaHostRegister pins what is resident now, and a region
+@@ -211,6 +224,11 @@ PinnedArena::PinnedArena(uint64_t bytes, const std::vector<uint64_t>& bounds,
+ }
+ 
+ PinnedArena::~PinnedArena() {
++    if (base && host_alloc) {
++        cudaFreeHost(base);
++        base = nullptr;
++        return;
++    }
+     if (base) {
+         if (locked_bytes) strata::platform::unlock_resident((uint8_t*) base + (slice_bytes ? registered_bytes : 0), locked_bytes);
+         if (slice_bytes) {
+diff --git a/src/core/session.cpp b/src/core/session.cpp
+index d18a5ec..9396fe1 100644
+--- a/src/core/session.cpp
++++ b/src/core/session.cpp
+@@ -18,14 +18,9 @@
+ #include <cstring>
+ #include <vector>
+ 
+-// `_mm_pause` for the doorbell spin.  Guarded because it is x86-only; a target without it still builds, the
+-// spin is just less polite to the pipeline.
+-#if defined(_MSC_VER) || defined(__x86_64__) || defined(__i386__)
+-#include <immintrin.h>
++// `_mm_pause` for the doorbell spin (the ISA's spin hint on non-x86, see spin.hpp).
++#include "strata/platform/spin.hpp"
+ #define STRATA_SPIN_PAUSE() _mm_pause()
+-#else
+-#define STRATA_SPIN_PAUSE() ((void) 0)
+-#endif
+ 
+ namespace strata::core {
+ namespace {
+diff --git a/src/core/verify.cpp b/src/core/verify.cpp
+index 54df72b..66555e7 100644
+--- a/src/core/verify.cpp
++++ b/src/core/verify.cpp
+@@ -46,7 +46,7 @@
+ #include <cstdlib>
+ #include <cstring>
+ #include <exception>
+-#include <immintrin.h>
++#include "strata/platform/spin.hpp"
+ 
+ namespace strata::core {
+ namespace {
+@@ -1127,7 +1127,9 @@ void Verifier::set_plan_slot(int grp) {
+     const int G = groups_[last_t_] > 0 ? groups_[last_t_] : 1;
+     const int64_t per = G == 2 ? kStagingBlobs / 2 : kStagingBlobs;
+     sink_.staging = (unsigned long long) (staging_ + (size_t) (grp * per) * strata::kernels::cpu::expert_layout().max_blob);
+-    sink_.staging_cap = per;
++    // direct mode reads the mapped arena in place: no staging slot bounds the GPU's share of the misses (on a
++    // unified-memory GPU the cap sent every miss past the 16th to the CPU pool)
++    sink_.staging_cap = sink_.pcie_mode == 1 ? cap : per;
+ }
+ 
+ // Flag B only rises: a host function of an earlier layer may run after a later layer already raised it directly.
+diff --git a/src/kernels/cpu/expert_layout.cpp b/src/kernels/cpu/expert_layout.cpp
+index ec78774..dbc9084 100644
+--- a/src/kernels/cpu/expert_layout.cpp
++++ b/src/kernels/cpu/expert_layout.cpp
+@@ -6,7 +6,7 @@
+ #if defined(_MSC_VER)
+ #include <intrin.h>
+ #include <immintrin.h>
+-#else
++#elif defined(__x86_64__) || defined(__i386__)
+ #include <cpuid.h>
+ #endif
+ #include <fstream>
+@@ -20,6 +20,9 @@ ExpertLayout g_layout;
+ const ExpertLayout& expert_layout() { return g_layout; }
+ 
+ bool cpu_avx512_ok() {
++#if !defined(_MSC_VER) && !defined(__x86_64__) && !defined(__i386__)
++    return false;   // not an x86 CPU: the portable kernels (cpu_portable.cpp) stand in for both x86 sets
++#else
+     static const bool ok = [] {
+         if (const char* f = std::getenv("STRATA_FORCE_AVX2"); f != nullptr && f[0] == '1') return false;
+         unsigned r[4] = {0, 0, 0, 0};
+@@ -49,6 +52,7 @@ bool cpu_avx512_ok() {
+         return ((ebx >> 16) & 1u) && ((ebx >> 30) & 1u) && ((ebx >> 31) & 1u) && ((ecx >> 11) & 1u) && ((ecx >> 1) & 1u);
+     }();
+     return ok;
++#endif
+ }
+ 
+ void q2_rows_any(const uint8_t* w, size_t row_bytes, int nblocks, const ActQ* const* a, int nt, float* const* out,
+diff --git a/src/kernels/cpu/native_expert.cpp b/src/kernels/cpu/native_expert.cpp
+index b525445..b1ba2ca 100644
+--- a/src/kernels/cpu/native_expert.cpp
++++ b/src/kernels/cpu/native_expert.cpp
+@@ -112,7 +112,11 @@ void native_down_rows(const NativeFmt& f, const uint8_t* blob, const void* const
+                       int r0, int r1) {
+     // IQ4_NL down rows: the AVX-2 multi-token kernel decodes the nibbles and absolutises the weights once per
+     // block instead of once per token; ggml-cpu's dot is single-token.  STRATA_NO_IQ4NL falls back to it.
++#if defined(__x86_64__) || defined(_M_X64)
+     static const bool iq4nl_mt = std::getenv("STRATA_NO_IQ4NL") == nullptr;
++#else
++    static const bool iq4nl_mt = false;   // the multi-token kernel is AVX-2; ggml-cpu's dot elsewhere
++#endif
+     if (nt >= 2 && f.d_type == 20 && iq4nl_mt) {
+         iq4nl256_down_rows(blob + f.down_off, f.d_row, (int) f.n_ff, hq, nt, out, r0, r1);
+         return;
+diff --git a/src/kernels/cpu/pool.cpp b/src/kernels/cpu/pool.cpp
+index c5f4075..b68dd2d 100644
+--- a/src/kernels/cpu/pool.cpp
++++ b/src/kernels/cpu/pool.cpp
+@@ -6,7 +6,7 @@
+ #include <algorithm>
+ #include <cmath>
+ #include <chrono>
+-#include <immintrin.h>
++#include "strata/platform/spin.hpp"
+ 
+ #include <cstdio>
+ #include <cstdlib>
+diff --git a/src/kernels/cuda/iq_kernels.cu b/src/kernels/cuda/iq_kernels.cu
+index ea05d9d..0e9ee6e 100644
+--- a/src/kernels/cuda/iq_kernels.cu
++++ b/src/kernels/cuda/iq_kernels.cu
+@@ -53,6 +53,17 @@ __device__ __forceinline__ int2 get_int_from_table_16(const int& q4, const int8_
+ #define ggml_cuda_dp4a(a, b, c) __dp4a((a), (b), (c))
+ 
+ // ---------------------------------------------------------------- the dot products (vecdotq.cuh)
++// Q8_0 (the unsloth Q8_0 file's experts): llama.cpp's vec_dot_q8_0_q8_1, VDR 2 (two int32 per call)
++__device__ __forceinline__ float vec_dot_q8_0_q8_1(const void* __restrict__ vbq, const block_q8_1* __restrict__ bq8_1,
++                                                   const int& kbx, const int& iqs) {
++    const block_q8_0* bq8_0 = (const block_q8_0*) vbq + kbx;
++    int sumi = 0;
++#pragma unroll
++    for (int i = 0; i < 2; ++i)
++        sumi = ggml_cuda_dp4a(get_int_b2(bq8_0->qs, iqs + i), get_int_b4(bq8_1->qs, iqs + i), sumi);
++    const float d8_0 = __half2float(bq8_0->d), d8_1 = __low2float(bq8_1->ds);
++    return d8_0 * d8_1 * (float) sumi;
++}
+ __device__ __forceinline__ float vec_dot_q2_0_q8_1(const void* __restrict__ vbq, const block_q8_1* __restrict__ bq8_1,
+                                                    const int& kbx, const int& iqs) {
+     const block_q2_0* bq2_0 = (const block_q2_0*) vbq + kbx;
+@@ -309,6 +320,8 @@ template<> struct Fmt<22> { static constexpr int qk = 256, ipb = 8, step = 2;
+     __device__ static float dot(const void* v, const block_q8_1* y, int kbx, int iqs) { return vec_dot_iq2_s_q8_1(v, y, kbx, iqs); } };
+ template<> struct Fmt<29> { static constexpr int qk = 256, ipb = 8, step = 1;
+     __device__ static float dot(const void* v, const block_q8_1* y, int kbx, int iqs) { return vec_dot_iq1_m_q8_1(v, y, kbx, iqs); } };
++template<> struct Fmt<8> { static constexpr int qk = 32, ipb = 4, step = 2;
++    __device__ static float dot(const void* v, const block_q8_1* y, int kbx, int iqs) { return vec_dot_q8_0_q8_1(v, y, kbx, iqs); } };
+ template<> struct Fmt<42> { static constexpr int qk = 64, ipb = 2, step = 1;
+     __device__ static float dot(const void* v, const block_q8_1* y, int kbx, int iqs) { return vec_dot_q2_0_q8_1(v, y, kbx, iqs); } };
+ 
+@@ -568,9 +581,21 @@ __device__ void dq_q2_0(const void* vx, int64_t ibs, dst_t* yy, int tid) {
+     }
+ }
+ 
++template<typename dst_t>
++__device__ void dq_q8_0(const void* vx, int64_t ibs, dst_t* yy, int tid) {
++    const block_q8_0* x = (const block_q8_0*) vx + ibs * 8;
++    const int b = tid / 4, part = tid % 4;          // block 0..7, 8 values each
++    const float d = __half2float(x[b].d);
++    for (int j = 0; j < 8; ++j) {
++        const int i = part * 8 + j;
++        yy[b * 32 + i] = cvt<dst_t>(d * (float) x[b].qs[i]);
++    }
++}
++
+ template<typename dst_t>
+ __device__ __forceinline__ void dq_dispatch(int ty, const void* vx, int64_t ibs, dst_t* y, int tid) {
+     switch (ty) {
++        case 8: dq_q8_0(vx, ibs, y, tid); break;
+         case 16: dq_iq2_xxs(vx, ibs, y, tid); break;
+         case 17: dq_iq2_xs(vx, ibs, y, tid); break;
+         case 18: dq_iq3_xxs(vx, ibs, y, tid); break;
+@@ -600,7 +625,8 @@ __global__ void dequant_gu_kernel(int ty, const void* __restrict__ gate, const v
+     dq_dispatch<__half>(ty, parity ? up : gate, i, y + ((2 * r + parity) * per_row + c) * QK_K, threadIdx.x);
+ }
+ 
+-bool is_iq(int t) { return t == 16 || t == 17 || t == 18 || t == 20 || t == 21 || t == 22 || t == 23 || t == 29 || t == 42 || t == 11; }
++bool is_iq(int t) { return t == 16 || t == 17 || t == 18 || t == 20 || t == 21 || t == 22 || t == 23 || t == 29 || t == 42 || t == 11 ||
++                          t == 8; }
+ 
+ }  // namespace
+ 
+@@ -618,6 +644,7 @@ size_t iq_row_bytes(int t, int64_t n) noexcept {
+         case 23: return (size_t) (n / 256) * sizeof(block_iq4_xs);
+         case 11: return (size_t) (n / 256) * sizeof(block_q3_K);
+         case 42: return (size_t) (n / 64) * sizeof(block_q2_0);
++        case 8: return (size_t) (n / 32) * sizeof(block_q8_0);
+         default: return 0;
+     }
+ }
+@@ -645,6 +672,7 @@ void iq_mmvq(int t, const void* w, const void* x_q8_1, float* y, int n_in, int n
+         case 23: mmvq_kernel<23><<<grid, block, 0, s>>>(W, rb, X, y, n_in, n_out, ncols); break;
+         case 29: mmvq_kernel<29><<<grid, block, 0, s>>>(W, rb, X, y, n_in, n_out, ncols); break;
+         case 42: mmvq_kernel<42><<<grid, block, 0, s>>>(W, rb, X, y, n_in, n_out, ncols); break;
++        case 8: mmvq_kernel<8><<<grid, block, 0, s>>>(W, rb, X, y, n_in, n_out, ncols); break;
+         default: std::fprintf(stderr, "iq_mmvq: type %d is not supported\n", t); std::exit(1);
+     }
+     check("iq_mmvq");
+@@ -728,6 +756,7 @@ void native_expert_grouped(const NativeExpertLayout& L, const unsigned long long
+         case 23: native_gu_kernel<23><<<ggu, 256, 0, s>>>(grp_ptr, grp_start, n_groups, ent_tok, X, L, gate, up); break;
+         case 29: native_gu_kernel<29><<<ggu, 256, 0, s>>>(grp_ptr, grp_start, n_groups, ent_tok, X, L, gate, up); break;
+         case 42: native_gu_kernel<42><<<ggu, 256, 0, s>>>(grp_ptr, grp_start, n_groups, ent_tok, X, L, gate, up); break;
++        case 8: native_gu_kernel<8><<<ggu, 256, 0, s>>>(grp_ptr, grp_start, n_groups, ent_tok, X, L, gate, up); break;
+         default: std::fprintf(stderr, "native_expert_grouped: gate/up type %d\n", L.gu_type); std::exit(1);
+     }
+     check("native_expert_grouped/gu");
+@@ -739,6 +768,7 @@ void native_expert_grouped(const NativeExpertLayout& L, const unsigned long long
+         case 20: native_down_kernel<20><<<gd, 256, 0, s>>>(grp_ptr, grp_start, n_groups, ent_dst, hq, L, out); break;
+         case 23: native_down_kernel<23><<<gd, 256, 0, s>>>(grp_ptr, grp_start, n_groups, ent_dst, hq, L, out); break;
+         case 42: native_down_kernel<42><<<gd, 256, 0, s>>>(grp_ptr, grp_start, n_groups, ent_dst, hq, L, out); break;
++        case 8: native_down_kernel<8><<<gd, 256, 0, s>>>(grp_ptr, grp_start, n_groups, ent_dst, hq, L, out); break;
+         default: std::fprintf(stderr, "native_expert_grouped: down type %d\n", L.d_type); std::exit(1);
+     }
+     check("native_expert_grouped/down");
+diff --git a/src/kernels/ngram.cpp b/src/kernels/ngram.cpp
+index b1bd98b..e02c530 100644
+--- a/src/kernels/ngram.cpp
++++ b/src/kernels/ngram.cpp
+@@ -107,6 +107,17 @@ void iq4nl_dequant_row(const uint8_t* row, float* out160) {
+     }
+ }
+ 
++void q8_0_dequant_row(const uint8_t* row, float* out160) {
++    for (int b = 0; b < PLE_HEAD_DIM / 32; ++b) {
++        const uint8_t* blk = row + (size_t) b * 34;
++        uint16_t dbits;
++        std::memcpy(&dbits, blk, 2);
++        const float d = f32_from_f16(dbits);
++        const int8_t* qs = (const int8_t*) (blk + 2);
++        for (int j = 0; j < 32; ++j) out160[b * 32 + j] = d * (float) qs[j];
++    }
++}
++
+ // ---------------------------------------------------------------------------------------------------
+ struct PleTable::Impl {
+     GgufFile* file = nullptr;
+@@ -120,7 +131,9 @@ struct PleTable::Impl {
+     strata::ngram::PleReader::Ticket ticket;
+     bool pending = false;
+     uint32_t rows[PLE_N_HEADS] = {};
+-    uint8_t raw[PLE_N_HEADS * PLE_ROW_BYTES] = {};
++    uint8_t raw[PLE_N_HEADS * PLE_ROW_BYTES_MAX] = {};
++    int row_bytes = PLE_ROW_BYTES;                     // 90 (IQ4_NL) or 170 (Q8_0)
++    void (*dequant)(const uint8_t*, float*) = iq4nl_dequant_row;
+ };
+ 
+ PleTable::PleTable() : impl_(new Impl) {}
+@@ -150,8 +163,14 @@ bool PleTable::open(const std::string& gguf_path, std::string& err, const PleIoO
+         close();
+         return false;
+     }
+-    if (std::strcmp(t->type_name(), "IQ4_NL") != 0) {
+-        err = std::string("per_layer_token_embd.weight is ") + t->type_name() + ", not IQ4_NL";
++    if (std::strcmp(t->type_name(), "IQ4_NL") == 0) {
++        impl_->row_bytes = PLE_ROW_BYTES;
++        impl_->dequant = iq4nl_dequant_row;
++    } else if (std::strcmp(t->type_name(), "Q8_0") == 0) {
++        impl_->row_bytes = PLE_ROW_BYTES_Q8_0;
++        impl_->dequant = q8_0_dequant_row;
++    } else {
++        err = std::string("per_layer_token_embd.weight is ") + t->type_name() + ", not IQ4_NL or Q8_0";
+         close();
+         return false;
+     }
+@@ -166,7 +185,7 @@ bool PleTable::open(const std::string& gguf_path, std::string& err, const PleIoO
+     // assumed.  A wrong data offset would leave a different remainder.
+     // A shard may hold other tensors too (Swift 1.5's shard 1 holds layers 0-12 and the table): the table must
+     // then fit inside the file at its own offset; alone in its shard (the original's shard 2) it fills it exactly.
+-    const uint64_t need = impl_->n_rows * (uint64_t) PLE_ROW_BYTES;
++    const uint64_t need = impl_->n_rows * (uint64_t) impl_->row_bytes;
+     const uint64_t have = impl_->file->file_size() - impl_->file->data_start();
+     const bool alone = impl_->file->tensors().size() == 1;
+     if (alone ? need != have : t->offset + need > have) {
+@@ -174,7 +193,7 @@ bool PleTable::open(const std::string& gguf_path, std::string& err, const PleIoO
+         std::snprintf(buf, sizeof buf,
+                       "PLE table size mismatch: %llu rows x %d B = %llu at offset %llu, but the file holds %llu from "
+                       "data_start %llu",
+-                      (unsigned long long) impl_->n_rows, PLE_ROW_BYTES, (unsigned long long) need,
++                      (unsigned long long) impl_->n_rows, impl_->row_bytes, (unsigned long long) need,
+                       (unsigned long long) t->offset, (unsigned long long) have,
+                       (unsigned long long) impl_->file->data_start());
+         err = buf;
+@@ -189,7 +208,8 @@ bool PleTable::open(const std::string& gguf_path, std::string& err, const PleIoO
+         delete impl_->file;
+         impl_->file = nullptr;
+         impl_->data = nullptr;
+-        if (!impl_->reader.open(gguf_path, table_offset, n_rows, io.max_inflight, io.cache_rows, err, io.io_thread)) {
++        if (!impl_->reader.open(gguf_path, table_offset, n_rows, io.max_inflight, io.cache_rows, err, io.io_thread,
++                                (uint32_t) impl_->row_bytes)) {
+             close();
+             return false;
+         }
+@@ -216,23 +236,23 @@ uint64_t PleTable::bytes_read() const { return impl_->bytes_read; }
+ 
+ void PleTable::read_row(uint32_t row, float* out160) const {
+     if (impl_->mode == PleIo::Direct && impl_->reader.is_open()) {
+-        uint8_t raw[PLE_ROW_BYTES];
++        uint8_t raw[PLE_ROW_BYTES_MAX];
+         std::string err;
+         const auto t = impl_->reader.issue(&row, 1, raw);
+         if (!impl_->reader.collect(t, err)) {
+             std::memset(out160, 0, (size_t) PLE_HEAD_DIM * sizeof(float));
+             return;
+         }
+-        iq4nl_dequant_row(raw, out160);
+-        impl_->bytes_read += PLE_ROW_BYTES;
++        impl_->dequant(raw, out160);
++        impl_->bytes_read += impl_->row_bytes;
+         return;
+     }
+     if (impl_->data == nullptr || row >= impl_->n_rows) {
+         std::memset(out160, 0, (size_t) PLE_HEAD_DIM * sizeof(float));
+         return;
+     }
+-    iq4nl_dequant_row(impl_->data + (size_t) row * PLE_ROW_BYTES, out160);
+-    impl_->bytes_read += PLE_ROW_BYTES;
++    impl_->dequant(impl_->data + (size_t) row * impl_->row_bytes, out160);
++    impl_->bytes_read += impl_->row_bytes;
+ }
+ 
+ bool PleTable::issue(const uint32_t* rows16) {
+@@ -249,8 +269,8 @@ bool PleTable::issue(const uint32_t* rows16) {
+         ULONG_PTR n = 0;
+         for (int h = 0; h < PLE_N_HEADS; ++h) {
+             if (rows16[h] >= impl_->n_rows) continue;
+-            ranges[n].VirtualAddress = (PVOID) (impl_->data + (size_t) rows16[h] * PLE_ROW_BYTES);
+-            ranges[n].NumberOfBytes = PLE_ROW_BYTES;
++            ranges[n].VirtualAddress = (PVOID) (impl_->data + (size_t) rows16[h] * impl_->row_bytes);
++            ranges[n].NumberOfBytes = impl_->row_bytes;
+             ++n;
+         }
+         if (n > 0) (void) PrefetchVirtualMemory(GetCurrentProcess(), n, ranges, 0);
+@@ -266,8 +286,8 @@ bool PleTable::collect(float* out2560, std::string& err) {
+     if (impl_->mode == PleIo::Direct) {
+         if (!impl_->reader.collect(impl_->ticket, err)) return false;
+         for (int h = 0; h < PLE_N_HEADS; ++h)
+-            iq4nl_dequant_row(impl_->raw + (size_t) h * PLE_ROW_BYTES, out2560 + (size_t) h * PLE_HEAD_DIM);
+-        impl_->bytes_read += (uint64_t) PLE_N_HEADS * PLE_ROW_BYTES;
++            impl_->dequant(impl_->raw + (size_t) h * impl_->row_bytes, out2560 + (size_t) h * PLE_HEAD_DIM);
++        impl_->bytes_read += (uint64_t) PLE_N_HEADS * impl_->row_bytes;
+         return true;
+     }
+     for (int h = 0; h < PLE_N_HEADS; ++h) read_row(impl_->rows[h], out2560 + (size_t) h * PLE_HEAD_DIM);
+@@ -278,11 +298,12 @@ bool PleTable::gather_batch(const uint32_t* rows, size_t n_tokens, float* out, s
+     if (impl_->pending) { err = "PleTable::gather_batch while a token is in flight"; return false; }
+     const size_t n = n_tokens * (size_t) PLE_N_HEADS;
+     if (impl_->mode == PleIo::Direct) {
+-        std::vector<uint8_t> raw(n * PLE_ROW_BYTES);
++        const size_t rb = (size_t) impl_->row_bytes;
++        std::vector<uint8_t> raw(n * rb);
+         const auto ticket = impl_->reader.issue(rows, n, raw.data());
+         if (!impl_->reader.collect(ticket, err)) return false;
+-        for (size_t i = 0; i < n; ++i) iq4nl_dequant_row(raw.data() + i * PLE_ROW_BYTES, out + i * PLE_HEAD_DIM);
+-        impl_->bytes_read += (uint64_t) n * PLE_ROW_BYTES;
++        for (size_t i = 0; i < n; ++i) impl_->dequant(raw.data() + i * rb, out + i * PLE_HEAD_DIM);
++        impl_->bytes_read += (uint64_t) (n * rb);
+         return true;
+     }
+     for (size_t i = 0; i < n; ++i) read_row(rows[i], out + i * PLE_HEAD_DIM);
+@@ -336,8 +357,8 @@ void PleTable::gather(const uint32_t* rows16, float* out2560) const {
+         for (int h = 0; h < PLE_N_HEADS; ++h) {
+             // Out-of-range rows are handled by `read_row` as zeros and have no address to prefetch.
+             if (rows16[h] >= impl_->n_rows) continue;
+-            ranges[n].VirtualAddress = (PVOID) (impl_->data + (size_t) rows16[h] * PLE_ROW_BYTES);
+-            ranges[n].NumberOfBytes = PLE_ROW_BYTES;
++            ranges[n].VirtualAddress = (PVOID) (impl_->data + (size_t) rows16[h] * impl_->row_bytes);
++            ranges[n].NumberOfBytes = impl_->row_bytes;
+             ++n;
+         }
+         if (n > 0) (void) PrefetchVirtualMemory(GetCurrentProcess(), n, ranges, 0);
+diff --git a/src/ngram/ple_reader.cpp b/src/ngram/ple_reader.cpp
+index ff6d513..066f74c 100644
+--- a/src/ngram/ple_reader.cpp
++++ b/src/ngram/ple_reader.cpp
+@@ -34,14 +34,16 @@ constexpr uint32_t EMPTY = 0xFFFFFFFFu;
+ struct RowCache {
+     uint64_t sets = 0;
+     std::vector<uint32_t> keys;     // sets * WAYS
+-    std::vector<uint8_t> data;      // sets * WAYS * ROW_BYTES
++    std::vector<uint8_t> data;      // sets * WAYS * rb
++    uint32_t rb = ROW_BYTES;        // bytes per row (90 IQ4_NL, 170 Q8_0)
+     std::vector<uint8_t> next;      // per-set replacement pointer
+     uint64_t used = 0;
+ 
+-    void init(uint64_t rows) {
++    void init(uint64_t rows, uint32_t row_bytes) {
++        rb = row_bytes;
+         sets = rows / WAYS;
+         keys.assign(sets * WAYS, EMPTY);
+-        data.assign(sets * WAYS * ROW_BYTES, 0);
++        data.assign(sets * WAYS * rb, 0);
+         next.assign(sets, 0);
+         used = 0;
+     }
+@@ -53,7 +55,7 @@ struct RowCache {
+         if (sets == 0) return nullptr;
+         const uint64_t s = mix(row) % sets;
+         for (uint32_t w = 0; w < WAYS; ++w)
+-            if (keys[s * WAYS + w] == row) return &data[(s * WAYS + w) * ROW_BYTES];
++            if (keys[s * WAYS + w] == row) return &data[(s * WAYS + w) * rb];
+         return nullptr;
+     }
+     void insert(uint32_t row, const uint8_t* bytes) {
+@@ -63,7 +65,7 @@ struct RowCache {
+         next[s] = (uint8_t) ((w + 1) % WAYS);
+         if (keys[s * WAYS + w] == EMPTY) ++used;
+         keys[s * WAYS + w] = row;
+-        std::memcpy(&data[(s * WAYS + w) * ROW_BYTES], bytes, ROW_BYTES);
++        std::memcpy(&data[(s * WAYS + w) * rb], bytes, rb);
+     }
+ };
+ 
+@@ -95,6 +97,7 @@ struct PleReader::Impl {
+     DirectFile file;
+     uint64_t table_offset = 0;
+     uint64_t n_rows = 0;
++    uint32_t row_bytes = ROW_BYTES;   // the table's row size (open)
+     uint32_t max_inflight = 0;
+     uint8_t* slab = nullptr;              // max_inflight slots of 2 pages
+     std::vector<uint32_t> free_slots;
+@@ -176,7 +179,7 @@ struct PleReader::Impl {
+         stats.bytes += c.bytes;
+         const uint8_t* buf = slot_buf(s);
+         for (const Use& u : j.uses) {
+-            if (u.in_page + ROW_BYTES > c.bytes) {
++            if (u.in_page + row_bytes > c.bytes) {
+                 error = "PleReader: short read inside the table";
+                 cancel_queued();
+                 j.uses.clear();
+@@ -187,7 +190,7 @@ struct PleReader::Impl {
+             }
+         }
+         for (const Use& u : j.uses) {
+-            std::memcpy(u.dst, buf + u.in_page, ROW_BYTES);
++            std::memcpy(u.dst, buf + u.in_page, row_bytes);
+             cache.insert(u.row, buf + u.in_page);
+         }
+         auto it = tickets.find(j.ticket);
+@@ -274,11 +277,12 @@ PleReader::~PleReader() {
+ }
+ 
+ bool PleReader::open(const std::string& path, uint64_t table_offset, uint64_t n_rows, uint32_t max_inflight,
+-                     uint64_t cache_rows, std::string& err, bool io_thread) {
++                     uint64_t cache_rows, std::string& err, bool io_thread, uint32_t row_bytes) {
+     close();
+     if (max_inflight == 0 || max_inflight > 1024) { err = "PleReader: max_inflight must be 1..1024"; return false; }
+     if (!impl_->file.open(path, err)) return false;
+-    if (table_offset + n_rows * (uint64_t) ROW_BYTES > impl_->file.size()) {
++    if (row_bytes == 0 || row_bytes > PAGE) { err = "PleReader: unsupported row size"; return false; }
++    if (table_offset + n_rows * (uint64_t) row_bytes > impl_->file.size()) {
+         err = "PleReader: the table extends past the end of " + path;
+         close();
+         return false;
+@@ -291,7 +295,8 @@ bool PleReader::open(const std::string& path, uint64_t table_offset, uint64_t n_
+     impl_->inflight.assign(max_inflight, Job{});
+     impl_->free_slots.clear();
+     for (uint32_t s = max_inflight; s-- > 0;) impl_->free_slots.push_back(s);
+-    impl_->cache.init(cache_rows);
++    impl_->row_bytes = row_bytes;
++    impl_->cache.init(cache_rows, row_bytes);
+     impl_->error.clear();
+     reset_stats();
+     impl_->stop = false;
+@@ -343,7 +348,7 @@ void PleReader::close() {
+     m.delayed.clear();
+     m.inflight.clear();
+     m.free_slots.clear();
+-    m.cache.init(0);
++    m.cache.init(0, m.row_bytes);
+     m.threaded = false;
+     m.stop = false;
+ }
+@@ -360,20 +365,21 @@ PleReader::Ticket PleReader::issue(const uint32_t* rows, size_t n, uint8_t* out_
+     std::unordered_map<uint64_t, size_t> by_page;     // aligned offset -> index in `jobs`
+     std::vector<Job> jobs;
+     for (size_t i = 0; i < n; ++i) {
+-        uint8_t* dst = out_raw + i * ROW_BYTES;
++        const uint32_t rb = m.row_bytes;
++        uint8_t* dst = out_raw + i * rb;
+         ++m.stats.requests;
+         if (rows[i] >= m.n_rows) {
+-            std::memset(dst, 0, ROW_BYTES);
++            std::memset(dst, 0, rb);
+             continue;
+         }
+         if (const uint8_t* hit = m.cache.find(rows[i])) {
+-            std::memcpy(dst, hit, ROW_BYTES);
++            std::memcpy(dst, hit, rb);
+             ++m.stats.cache_hits;
+             continue;
+         }
+-        const uint64_t at = m.table_offset + (uint64_t) rows[i] * ROW_BYTES;
++        const uint64_t at = m.table_offset + (uint64_t) rows[i] * rb;
+         const uint64_t first = at / PAGE * PAGE;
+-        const uint32_t length = (uint32_t) ((at + ROW_BYTES - 1) / PAGE * PAGE - first + PAGE);
++        const uint32_t length = (uint32_t) ((at + rb - 1) / PAGE * PAGE - first + PAGE);
+         auto f = by_page.find(first);
+         if (f != by_page.end()) {
+             Job& j = jobs[f->second];
+diff --git a/src/prefill/prefill.cpp b/src/prefill/prefill.cpp
+index 2dcdb54..5547b96 100644
+--- a/src/prefill/prefill.cpp
++++ b/src/prefill/prefill.cpp
+@@ -130,8 +130,12 @@ struct Stager {
+     // D-5: the pinned ring's depth (STRATA_STAGER_RING, default 16) - how far the host copies can run ahead of the
+     // DMAs of the unpinned experts' blobs
+     int kRing = 16;
+-    struct Job { const uint8_t* src; size_t bytes; };
+-    std::vector<uint8_t*> buf;
++    /// `tier`: a tiered source's expert read from the SSD into the buffer (the bypass), instead of a memcpy of `src`
++    struct Job { const uint8_t* src; size_t bytes; const core::ExpertSource* tier = nullptr; int32_t l = -1, e = -1; };
++    std::vector<uint8_t*> buf;                    // page-aligned views (an unbuffered read needs them)
++    std::vector<uint8_t*> raw;                    // the allocations
++    std::vector<uint32_t> delta;                  // per job: the blob's offset in its buffer (a tier read's page slack)
++    std::atomic<bool> failed{false};
+     std::vector<char> pinned;
+     std::vector<std::vector<uint8_t>> pageable;   // the fallback when no more RAM can be pinned
+     std::vector<cudaEvent_t> dma_done;
+@@ -152,16 +156,19 @@ struct Stager {
+     bool init(size_t blob_bytes, int nthreads) {
+         if (const char* v = std::getenv("STRATA_STAGER_RING")) kRing = std::clamp(std::atoi(v), 2, 256);
+         buf.assign((size_t) kRing, nullptr);
++        raw.assign((size_t) kRing, nullptr);
+         pinned.assign((size_t) kRing, 0);
+         dma_done.assign((size_t) kRing, nullptr);
+         pageable.resize(kRing);
++        const size_t alloc = blob_bytes + 2 * 4096;   // a page of slack for a tier read, a page for the alignment
+         for (int i = 0; i < kRing; ++i) {
+-            pinned[i] = cudaHostAlloc((void**) &buf[i], blob_bytes, cudaHostAllocDefault) == cudaSuccess;
++            pinned[i] = cudaHostAlloc((void**) &raw[i], alloc, cudaHostAllocDefault) == cudaSuccess;
+             if (!pinned[i]) {
+                 cudaGetLastError();
+-                pageable[(size_t) i].resize(blob_bytes);
+-                buf[i] = pageable[(size_t) i].data();
++                pageable[(size_t) i].resize(alloc);
++                raw[i] = pageable[(size_t) i].data();
+             }
++            buf[i] = (uint8_t*) (((uintptr_t) raw[i] + 4095) & ~(uintptr_t) 4095);
+             if (cudaEventCreateWithFlags(&dma_done[i], cudaEventDisableTiming) != cudaSuccess) return false;
+         }
+         cudaGetDevice(&device);
+@@ -175,7 +182,7 @@ struct Stager {
+         for (auto& t : threads) t.join();
+         for (int i = 0; i < kRing; ++i) {
+             if (dma_done[i]) cudaEventDestroy(dma_done[i]);
+-            if (buf[i] && pinned[i]) cudaFreeHost(buf[i]);
++            if (raw[i] && pinned[i]) cudaFreeHost(raw[i]);
+         }
+     }
+     void work() {
+@@ -197,7 +204,16 @@ struct Stager {
+                     while (issued.load(std::memory_order_acquire) <= j - kRing) std::this_thread::yield();
+                     cudaEventSynchronize(dma_done[b]);
+                 }
+-                std::memcpy(buf[b], jobs[(size_t) j].src, jobs[(size_t) j].bytes);
++                const Job& jb = jobs[(size_t) j];
++                if (jb.tier != nullptr) {
++                    uint32_t dl = 0;
++                    std::string terr;
++                    if (!jb.tier->read_blob_sync(jb.l, jb.e, buf[b], dl, terr)) failed.store(true);
++                    delta[(size_t) j] = dl;
++                } else {
++                    std::memcpy(buf[b], jb.src, jb.bytes);
++                    delta[(size_t) j] = 0;
++                }
+                 ready[(size_t) j].store(1, std::memory_order_release);
+                 active.fetch_sub(1, std::memory_order_acq_rel);
+             }
+@@ -222,6 +238,7 @@ struct Stager {
+             ready.reset(new std::atomic<int>[ready_cap]);
+         }
+         for (size_t i = 0; i < jobs.size(); ++i) ready[i].store(0, std::memory_order_relaxed);
++        delta.assign(jobs.size(), 0);
+         issued.store(0);
+         ++gen;
+         head.store((uint64_t) gen << 32 | (uint64_t) jobs.size() << 16, std::memory_order_release);
+@@ -230,7 +247,8 @@ struct Stager {
+     /// Job j's bytes, in a pinned buffer (waits for the copy).
+     const uint8_t* wait(int j) {
+         while (!ready[(size_t) j].load(std::memory_order_acquire)) std::this_thread::yield();
+-        return buf[j % kRing];
++        if (failed.load()) return nullptr;
++        return buf[j % kRing] + delta[(size_t) j];
+     }
+     /// The launching thread queued job j's DMA on `copy`: its buffer is free once that is done.
+     void issued_one(int j, cudaStream_t copy) {
+@@ -1074,7 +1092,8 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
+         // k lands in ring slot k % ring); a copy is issued once the entry `ring` before it is consumed (its slot's
+         // `used` event recorded), so the copy stream never waits on an event that is not queued yet
+         const strata::kernels::cpu::ExpertLayout& lay0 = strata::kernels::cpu::expert_layout();
+-        const bool stream_all = m.ring > STAGE && T >= STREAM_ALL_MIN && m.src != nullptr;
++        // a tiered source cannot hand out every layer's blobs up front (they do not fit in its slots): per layer
++        const bool stream_all = m.ring > STAGE && T >= STREAM_ALL_MIN && m.src != nullptr && !m.src->tiered();
+         struct StreamEntry { int32_t l, e; const uint8_t* blob; int job; };
+         std::vector<StreamEntry> seq;
+         std::vector<size_t> seq_start;
+@@ -1534,6 +1553,16 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
+                     // the experts, in id order: resident ones from VRAM, the others through the staging ring
+                     std::vector<int32_t> order;
+                     for (int32_t e = 0; e < m.g->n_expert; ++e) if (m.cnt[(size_t) e] > 0) order.push_back(e);
++                    // a tiered source: by default the chunk's non-resident experts are read from the SSD into the stager's
++                    // buffers and NOT admitted (a prompt touches nearly every expert and would flush the decode working
++                    // set); STRATA_TIER_PREFILL_ADMIT=1 admits them instead, the layer's reads in parallel
++                    static const bool tier_admit = std::getenv("STRATA_TIER_PREFILL_ADMIT") != nullptr;
++                    const bool tier_bypass = m.src != nullptr && m.src->tiered() && !tier_admit;
++                    if (m.src != nullptr && m.src->tiered() && tier_admit) {
++                        m.src->begin_layer(l, order.data(), (int64_t) order.size());
++                        std::string terr;
++                        if (!m.src->wait_loads(terr)) { err = "prefill: " + terr; return false; }
++                    }
+                     const strata::kernels::cpu::ExpertLayout& lay = strata::kernels::cpu::expert_layout();
+                     const bool use_mmq = mmq_plan().any && mmq_plan().layer[(size_t) l];
+                     const int mmq_gt = lay.native ? lay.fmt[(size_t) l].gu_type : 42;
+@@ -1576,6 +1605,11 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
+                             const int32_t e = order[j];
+                             if (m.host_res && m.cache && m.host_res[(size_t) l * m.g->n_expert + e] >= 0) continue;
+                             if (m.src->pinned(l, e)) continue;
++                            if (tier_bypass) {
++                                job_of[j] = (int) js.size();
++                                js.push_back({nullptr, (size_t) lay.blob_bytes(l), m.src, (int32_t) l, e});
++                                continue;
++                            }
+                             const uint8_t* b = m.src->blob(l, e);
+                             if (!b) { err = "prefill: expert source has no blob"; return false; }
+                             job_of[j] = (int) js.size();
+@@ -1591,9 +1625,10 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
+                         const int sl = stage_next;
+                         stage_next = (stage_next + 1) % STAGE;
+                         const auto th = Clock::now();
+-                        const uint8_t* b = m.src->blob(l, e);
+-                        if (!b) { err = "prefill: expert source has no blob"; return false; }
+-                        if (m.src->pinned(l, e)) {
++                        const bool from_stager = tier_bypass && job_of[j] >= 0;
++                        const uint8_t* b = from_stager ? nullptr : m.src->blob(l, e);
++                        if (!b && !from_stager) { err = "prefill: expert source has no blob"; return false; }
++                        if (!from_stager && m.src->pinned(l, e)) {
+                             // DMA straight from the page-locked arena: the copy stream only waits for the slot
+                             if (m.stage_live[sl]) cudaStreamWaitEvent(m.copy, m.used[sl], 0);
+                             cudaMemcpyAsync(m.stage_dev[sl], b, (size_t) lay.blob_bytes(l), cudaMemcpyHostToDevice, m.copy);
+@@ -1601,6 +1636,7 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
+                         } else {
+                             // copied to a pinned buffer by the stager (waits only if it is behind), then DMA
+                             const uint8_t* hb = m.stager->wait(job_of[j]);
++                            if (!hb) { err = "prefill: the stager could not read an expert"; return false; }
+                             if (m.stage_live[sl]) cudaStreamWaitEvent(m.copy, m.used[sl], 0);
+                             cudaMemcpyAsync(m.stage_dev[sl], hb, (size_t) lay.blob_bytes(l), cudaMemcpyHostToDevice, m.copy);
+                             m.stager->issued_one(job_of[j], m.copy);
+diff --git a/src/program/generate.cpp b/src/program/generate.cpp
+index 0bbc92e..a60e566 100644
+--- a/src/program/generate.cpp
++++ b/src/program/generate.cpp
+@@ -15,7 +15,9 @@
+ // (`phase-2-correct-engine.md:5-9`).  What it is FOR is the honest tok/s figure and the logit dump.
+ 
+ #include "strata/core/expert_cache.hpp"
++#include "strata/core/mem_info.hpp"
+ #include "strata/core/expert_source.hpp"
++#include "strata/core/tiered_source.hpp"
+ #include "strata/core/remote_experts.hpp"
+ #include "strata/core/on_device.hpp"
+ #include "strata/core/layer.hpp"
+@@ -182,6 +184,10 @@ struct Options {
+     /// is reserved for a host thread that has nothing to do while the drain runs.
+     bool no_host_worker = false;
+     bool mmap_experts = false;    ///< R2.1: opt OUT of the resident arena, back to MapViewOfFile
++    /// Experts beyond RAM (TieredExpertSource): the pack's experts.bin (`pack`) or a path, read from the SSD into
++    /// `expert_tier_gib` GiB of pinned DRAM slots that the GPU computes from in place (unified memory).
++    std::string expert_tier;
++    double expert_tier_gib = 0.0;
+     bool resident_cpu_experts = false; ///< mmap-backed static-cache misses copied into ordinary RAM
+     /// R4: slots of VRAM-resident experts.  **0 = off, and off is the default.**
+     /// **THE COMMENT THAT USED TO BE HERE WAS FALSE AND ROUND 328 MEASURED IT.**  It said "the cache has no
+@@ -684,7 +690,7 @@ void mem_mark(const char* where) {
+     static const bool on = std::getenv("STRATA_TRACE") != nullptr;
+     if (!on) return;
+     size_t free_b = 0, total_b = 0;
+-    cudaMemGetInfo(&free_b, &total_b);
++    strata::core::mem_get_info(&free_b, &total_b);
+     std::fprintf(stderr, "strata trace: %lld MiB free after %s\n", (long long) (free_b >> 20), where);
+ }
+ 
+@@ -1070,6 +1076,8 @@ int main(int argc, char** argv) {
+         else if (a == "--expert-profile") o.expert_profile = next("--expert-profile");
+         else if (a == "--gpu-stages") o.gpu_stages = true;
+         else if (a == "--mmap-experts") o.mmap_experts = true;
++        else if (a == "--expert-tier") o.expert_tier = next("--expert-tier");
++        else if (a == "--expert-tier-gib") o.expert_tier_gib = std::atof(next("--expert-tier-gib"));
+         else if (a == "--resident-cpu-experts") o.resident_cpu_experts = true;
+         else if (a == "--stats") o.stats = true;
+         else if (a == "--shared-late") o.shared_late = true;
+@@ -1340,6 +1348,14 @@ int main(int argc, char** argv) {
+     // link (the copy kernel, since 0.1.14), so on a slower link it must shrink or the window waits for it.  The
+     // real H2D bandwidth is probed once; from 20 GB/s up (x16 PCIe 4/5) the measured default stays.  The canonical
+     // pack's 0.2 was never measured against the link, so it is left alone.  `--calibrate` measures it outright.
++    // a unified-memory GPU reads a pinned expert in place as fast as its own copy of it: every miss goes to the GPU
++    // (read in place, no staging copy), none to the CPU pool, whose wait the GPU would otherwise sit through
++    const bool uma = strata::core::device_integrated();
++    if (uma && o.pcie_frac < 0.0) {
++        o.pcie_frac = 1.0;
++        std::fprintf(stderr, "strata generate: unified memory: the GPU reads every missed expert in place (pcie_frac 1.00)\n");
++    }
++    if (uma && o.pcie_mode == "auto") o.pcie_mode = "direct";
+     if (o.pcie_frac < 0.0) {
+         const double base = native_pack ? 0.55 : 0.2;
+         const double bw = native_pack ? probe_pcie_h2d_gbps() : -1.0;
+@@ -1706,7 +1722,7 @@ int main(int argc, char** argv) {
+                          bw, st.pcie_frac);
+         }
+         size_t fb = 0, tb = 0;
+-        cudaMemGetInfo(&fb, &tb);
++        strata::core::mem_get_info(&fb, &tb);
+         std::fprintf(stderr, "strata generate: layer split: CUDA%d holds its weights, session%s; %.2f GiB free\n",
+                      st.dev, last ? " and head" : "", (double) fb / 1073741824.0);
+     }
+@@ -1762,8 +1778,26 @@ int main(int argc, char** argv) {
+     // note in `pinned.cu`.
+     strata::core::FileExpertSource src;
+     strata::core::ArenaExpertSource arena_src;
++    strata::core::TieredExpertSource tier_src;
+     strata::core::ExpertSource* srcp = nullptr;
+-    if (o.mmap_experts) {
++    if (!o.expert_tier.empty()) {
++        const std::string path = o.expert_tier == "pack" ? o.pack + "/experts.bin" : o.expert_tier;
++        const uint64_t page = 4096, max_blob = strata::kernels::cpu::expert_layout().max_blob;
++        const uint64_t slot_b = ((max_blob + page - 1) / page + 1) * page;
++        const int64_t slots = (int64_t) (o.expert_tier_gib * 1073741824.0 / (double) slot_b);
++        const auto t0 = std::chrono::steady_clock::now();
++        if (!tier_src.open(path, g.n_layers, g.n_expert, slots, err)) {
++            std::fprintf(stderr, "strata generate: %s\n", err.c_str());
++            return 1;
++        }
++        std::fprintf(stderr, "strata generate: expert tier: %s (%.1f s)\n", tier_src.note().c_str(),
++                     std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count());
++        if (o.adapt_every != 0) {   // a swap would read its expert from the SSD between rounds; the VRAM tier stays as filled
++            o.adapt_every = 0;
++            std::fprintf(stderr, "strata generate: expert tier: adaptive VRAM swaps off (--adapt-every 0)\n");
++        }
++        srcp = &tier_src;
++    } else if (o.mmap_experts) {
+         // FileExpertSource maps the pack's experts.bin: a canonical pack has it; a native (IQ) pack has it when
+         // built with `tools/iq_pack.py --experts-bin` (the per-layer blob sizes of its layout, PR #121).  The low-RAM
+         // mode: the experts come from the file through the OS cache instead of a pinned copy in RAM, for a PC whose
+@@ -1850,7 +1884,7 @@ int main(int argc, char** argv) {
+     auto stage_room = [&](int dev, bool later) -> int64_t {
+         const strata::core::OnDevice on(dev);
+         size_t fb = 0, tb = 0;
+-        if (const cudaError_t e = cudaMemGetInfo(&fb, &tb); e != cudaSuccess)
++        if (const cudaError_t e = strata::core::mem_get_info(&fb, &tb); e != cudaSuccess)
+             std::fprintf(stderr, "strata generate: layer split: CUDA%d free memory: %s\n", dev < 0 ? 0 : dev,
+                          cudaGetErrorString(e));
+         const int64_t reserve = ((int64_t) o.vram_reserve_mib + split_pf_mib + (later ? 1024 : 0)) << 20;
+@@ -1987,7 +2021,7 @@ int main(int argc, char** argv) {
+     const bool auto_cache = o.expert_cache < 0;
+     if (o.expert_cache < 0) {
+         size_t free_b = 0, total_b = 0;
+-        cudaMemGetInfo(&free_b, &total_b);
++        strata::core::mem_get_info(&free_b, &total_b);
+         // Plan v0.3 P5: the batched prompt path's chunk buffers are allocated later, so they are reserved here -
+         // under WDDM an over-subscribed allocation does not fail, it pages to system memory and crawls.
+         // (with borrowing - the default with a profile - the prompt path lends cache slots instead)
+@@ -1995,6 +2029,11 @@ int main(int argc, char** argv) {
+         const int64_t prefill_mib = (o.prefill_chunk > 0 && !borrow) ? 160 + (o.prefill_chunk * 680) / 1024 : 0;
+         const int64_t reserve = ((int64_t) o.vram_reserve_mib + prefill_mib) << 20;
+         int64_t slots = ((int64_t) free_b - reserve) / (int64_t) strata::kernels::cpu::expert_layout().max_blob;
++        // unified memory: every cache slot duplicates an expert the GPU can already read in place from the arena
++        // (pcie_frac 1, direct), so the cache only buys the slightly faster read of device memory; a sixth of the
++        // experts matches the full copy's decode speed within noise on GB10 (bench P0 sweep), at 1/6 of its memory
++        if (strata::core::device_integrated() && o.pcie_frac >= 1.0 && o.pcie_mode == "direct")
++            slots = std::min<int64_t>(slots, 4096);
+         if (!profile.empty()) slots = std::min<int64_t>(slots, (int64_t) profile.size());
+         o.expert_cache = (int) std::max<int64_t>(slots, 0);
+         std::fprintf(stderr, "strata generate: expert cache auto: %.2f GiB free, %d MiB reserved -> %d slots\n",
+@@ -2003,7 +2042,7 @@ int main(int argc, char** argv) {
+         // a layer split's prompt path has its own buffers (it borrows no slots): an explicit cache size leaves room
+         // for them and the reserve, or the first prompt fails with "device buffers ... do not fit"
+         size_t free_b = 0, total_b = 0;
+-        cudaMemGetInfo(&free_b, &total_b);
++        strata::core::mem_get_info(&free_b, &total_b);
+         const int64_t prefill_mib = o.prefill_chunk > 0 ? 160 + (o.prefill_chunk * 680) / 1024 : 0;
+         const int64_t reserve = ((int64_t) o.vram_reserve_mib + prefill_mib) << 20;
+         const int64_t fit = std::max<int64_t>(((int64_t) free_b - reserve) / (int64_t) strata::kernels::cpu::expert_layout().max_blob, 0);
+@@ -2019,7 +2058,7 @@ int main(int argc, char** argv) {
+     std::vector<int64_t> sized_slots;
+     if (native_pack && o.expert_cache > 0 && !profile.empty()) {
+         size_t free_b = 0, total_b = 0;
+-        cudaMemGetInfo(&free_b, &total_b);
++        strata::core::mem_get_info(&free_b, &total_b);
+         const auto& lay = strata::kernels::cpu::expert_layout();
+         const uint64_t budget = (uint64_t) o.expert_cache * lay.max_blob;   // what the uniform sizing granted
+         uint64_t used = 0;
+@@ -2104,7 +2143,7 @@ int main(int argc, char** argv) {
+             cudaMemset(xcache.device_slot(0), 0, (size_t) xcache.bytes());
+             cudaDeviceSynchronize();
+             size_t free_b = 0, total_b = 0;
+-            cudaMemGetInfo(&free_b, &total_b);
++            strata::core::mem_get_info(&free_b, &total_b);
+             const int64_t want = (int64_t) o.vram_reserve_mib << 20;
+             if ((int64_t) free_b >= want - (64ll << 20)) break;
+             // short by (want - free); a figure of 0 only says "at least", so then give back a quarter as well
+@@ -2927,6 +2966,19 @@ int main(int argc, char** argv) {
+         thits.scratch = drive.d.hit_scratch;
+         thits.hit_out = drive.d.hit_out;
+         drive.d.host_res = host_res.data();
++        if (tier_src.slots() > 0) {   // one copy per expert: the DRAM tier skips what VRAM holds, then warms from the profile
++            tier_src.set_vram_residency(host_res.data());
++            const auto t0 = std::chrono::steady_clock::now();
++            const uint64_t b0 = tier_src.stats().bytes;
++            if (!tier_src.warm_fill(profile, err)) {
++                std::fprintf(stderr, "strata generate: expert tier warm fill: %s\n", err.c_str());
++                return 1;
++            }
++            const double sec = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
++            std::fprintf(stderr, "strata generate: expert tier: %lld of %lld slots warm from the profile in %.1f s (%.2f GB/s)\n",
++                         (long long) tier_src.resident(), (long long) tier_src.slots(), sec,
++                         sec > 0 ? (double) (tier_src.stats().bytes - b0) / sec / 1e9 : 0.0);
++        }
+         std::fprintf(stderr, "strata generate: token graph hit path: %lld resident experts, decided on the device\n",
+                      (long long) resident);
+     }
+@@ -3480,7 +3532,7 @@ int main(int argc, char** argv) {
+             // what is left once everything is allocated: under WDDM a GPU filled to the brim does not fail, it pages -
+             // and a page-in while the verify graph spins on a host flag stalls the request for good
+             size_t free_b = 0, total_b = 0;
+-            cudaMemGetInfo(&free_b, &total_b);
++            strata::core::mem_get_info(&free_b, &total_b);
+             // below ~256 MiB a later allocation (a first-used window's buffers, the desktop, another program) can make
+             // the driver page GPU memory, and a verify graph spinning on a host flag then never finishes
+             const int64_t free_mib = (int64_t) (free_b >> 20);
+@@ -3495,7 +3547,7 @@ int main(int argc, char** argv) {
+         // what the server's Monitor tab shows (servers before 0.1.8 skip unknown lines until READY)
+         {
+             size_t free_b = 0, total_b = 0;
+-            cudaMemGetInfo(&free_b, &total_b);
++            strata::core::mem_get_info(&free_b, &total_b);
+             std::printf("INFO context=%lld kv=%s kv_resident=%lld expert_slots=%lld expert_cache_mib=%lld spec=%d "
+                         "mtp_max=%d lookup=%d vram_free_mib=%lld cvec=%s arena_mib=%lld pool_workers=%d pcie_frac=%.2f "
+                         "spec_min_p=%.2f engine=" STRATA_VERSION "\n",
+@@ -4040,17 +4092,21 @@ int main(int argc, char** argv) {
+             struct DecSnap {
+                 double wait, pool, host, plan, actq, jobs, run;
+                 int64_t misses, entries, hits, pcie;
++                int64_t tier_hits, tier_loads;
++                double tier_wait;
+             };
+             auto dec_snap = [&]() {
+                 return DecSnap{ver.ms_wait, ver.ms_pool, ver.ms_host, drive.d.ms_plan, drive.d.ms_actq, drive.d.ms_jobs,
+                                drive.d.ms_run, drive.d.multi_misses, drive.d.multi_entries, drive.d.cache_hits,
+-                               drive.d.pcie_experts};
++                               drive.d.pcie_experts, drive.d.tier_hits, drive.d.tier_loads, tier_src.stats().wait_ms};
+             };
+             const DecSnap ds0 = dec_snap();
+             double dt_run = 0, dt_commit = 0, dt_draft = 0;
+             int64_t dec_windows = 0, dec_T = 0;
+             const int64_t decode_hits0 = drive.d.cache_hits;
+             const int64_t decode_look0 = drive.d.cache_hits + drive.d.cache_admitted + drive.d.cache_refused;
++            const strata::core::TieredExpertSource::Stats tier0 = tier_src.stats();
++            const int64_t tier_hits0 = drive.d.tier_hits, tier_loads0 = drive.d.tier_loads;
+             if (cancelled) finish = "cancel";
+             while (!cancelled && produced_n < max_new) {
+                 int T = S_mtp;
+@@ -4158,12 +4214,14 @@ int main(int argc, char** argv) {
+                 std::fprintf(stderr, "strata decode timing: %lld windows, avg T %.2f, %.2f tokens/window, %.2f ms/window = "
+                                      "verify %.2f (GPU-reach wait %.2f + per-layer host %.2f [plan %.2f actq %.2f jobs %.2f "
+                                      "CPU %.2f] + stage %.2f) + commit/emit %.2f + draft %.2f; per layer-window: CPU experts "
+-                                     "%.2f (%.2f entries), VRAM hits %.2f, PCIe %.2f\n",
++                                     "%.2f (%.2f entries), VRAM hits %.2f, PCIe %.2f; DRAM tier %.2f, SSD %.2f, SSD wait %.2f ms/window\n",
+                              (long long) dec_windows, dec_T / w, produced_n / w, decode_ms / w, dt_run / w,
+                              (d1.wait - ds0.wait) / w, (d1.pool - ds0.pool) / w, (d1.plan - ds0.plan) / w,
+                              (d1.actq - ds0.actq) / w, (d1.jobs - ds0.jobs) / w, (d1.run - ds0.run) / w,
+                              (d1.host - ds0.host) / w, dt_commit / w, dt_draft / w, (d1.misses - ds0.misses) / (w * L),
+-                             (d1.entries - ds0.entries) / (w * L), (d1.hits - ds0.hits) / (w * L), (d1.pcie - ds0.pcie) / (w * L));
++                             (d1.entries - ds0.entries) / (w * L), (d1.hits - ds0.hits) / (w * L), (d1.pcie - ds0.pcie) / (w * L),
++                             (d1.tier_hits - ds0.tier_hits) / (w * L), (d1.tier_loads - ds0.tier_loads) / (w * L),
++                             (d1.tier_wait - ds0.tier_wait) / w);
+                 const std::string pr = ver.profile_report();
+                 if (!pr.empty()) std::fprintf(stderr, "strata decode GPU stages (ms/window):%s\n", pr.c_str());
+             }
+@@ -4278,6 +4336,15 @@ int main(int argc, char** argv) {
+                              100.0 * (double) req_hits / (double) req_look,
+                              (long long) req_hits, (long long) req_look);
+             }
++            if (tier_src.slots() > 0) {   // the DRAM tier while decoding: distinct (layer, expert) per layer-window
++                const strata::core::TieredExpertSource::Stats& t1 = tier_src.stats();
++                const int64_t th = drive.d.tier_hits - tier_hits0, tl = drive.d.tier_loads - tier_loads0;
++                std::fprintf(stderr, "strata serve: decode expert tier: %lld resident + %lld from the SSD (%.1f%% resident), "
++                                     "%.2f GB read, waited %.0f ms in %lld layer-windows\n",
++                             (long long) th, (long long) tl, th + tl > 0 ? 100.0 * (double) th / (double) (th + tl) : 0.0,
++                             (double) (t1.bytes - tier0.bytes) / 1e9, t1.wait_ms - tier0.wait_ms,
++                             (long long) (t1.waited_layers - tier0.waited_layers));
++            }
+             // STRATA_SPLIT_TIMING: where each verify stage's host time went, cumulative per window since the start
+             // (waiting for its GPU to ring a layer, the CPU pool and plan per layer, staging the window)
+             if (static const bool st_timing = std::getenv("STRATA_SPLIT_TIMING") != nullptr; st_timing)

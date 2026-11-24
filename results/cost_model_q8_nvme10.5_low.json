@@ -1,0 +1,155 @@
+{
+ "params": {
+  "expert_mb": 5.222,
+  "dense_gb": 4.79,
+  "w_dense": 228.0,
+  "w_hit": 223.0,
+  "w_nvme": 10.5,
+  "t_fix": 8.54,
+  "t_tok": 2.82,
+  "t_draft": 2.0,
+  "residency": "0.25,0.15,0.10,0.05",
+  "caps": "0,1,3",
+  "out": "results/cost_model_q8_nvme10.5_low.json"
+ },
+ "table": {
+  "0.25": {
+   "0": {
+    "tok_s": 13.479485391019413,
+    "tokens_per_step": 1.0,
+    "unique_experts_per_true_token": 480.0,
+    "nvme_mb_per_true_token": 336.93201124227096,
+    "dram_gb_per_true_token": 6.959627988757729,
+    "ms_per_step": 74.18680839746605
+   },
+   "1": {
+    "tok_s": 15.973062797002108,
+    "tokens_per_step": 1.7023923444976077,
+    "unique_experts_per_true_token": 421.87895821622635,
+    "nvme_mb_per_true_token": 346.60401236649807,
+    "dram_gb_per_true_token": 4.6701353723065395,
+    "ms_per_step": 106.57895521559709
+   },
+   "3": {
+    "tok_s": 16.38571423762836,
+    "tokens_per_step": 2.5032833020637897,
+    "unique_experts_per_true_token": 415.15364436949596,
+    "nvme_mb_per_true_token": 378.4017556679783,
+    "dram_gb_per_true_token": 3.703017552932359,
+    "ms_per_step": 152.77230310261476
+   }
+  },
+  "0.15": {
+   "0": {
+    "tok_s": 10.1672757444086,
+    "tokens_per_step": 1.0,
+    "unique_experts_per_true_token": 480.0,
+    "nvme_mb_per_true_token": 603.2344421959903,
+    "dram_gb_per_true_token": 6.69332555780401,
+    "ms_per_step": 98.35476337404745
+   },
+   "1": {
+    "tok_s": 11.409976165910077,
+    "tokens_per_step": 1.7023923444976077,
+    "unique_experts_per_true_token": 421.87895821622635,
+    "nvme_mb_per_true_token": 622.4845130222972,
+    "dram_gb_per_true_token": 4.394254871650739,
+    "ms_per_step": 149.2020947058501
+   },
+   "3": {
+    "tok_s": 11.23525449865979,
+    "tokens_per_step": 2.5032833020637897,
+    "unique_experts_per_true_token": 415.15364436949596,
+    "nvme_mb_per_true_token": 686.6729417275623,
+    "dram_gb_per_true_token": 3.394746366872775,
+    "ms_per_step": 222.80610575954435
+   }
+  },
+  "0.1": {
+   "0": {
+    "tok_s": 8.324539580823416,
+    "tokens_per_step": 1.0,
+    "unique_experts_per_true_token": 480.0,
+    "nvme_mb_per_true_token": 843.1362728124415,
+    "dram_gb_per_true_token": 6.453423727187558,
+    "ms_per_step": 120.12676380368484
+   },
+   "1": {
+    "tok_s": 9.07418891137577,
+    "tokens_per_step": 1.7023923444976077,
+    "unique_experts_per_true_token": 421.87895821622635,
+    "nvme_mb_per_true_token": 871.070107925801,
+    "dram_gb_per_true_token": 4.1456692767472365,
+    "ms_per_step": 187.60821062072222
+   },
+   "3": {
+    "tok_s": 8.78015434111041,
+    "tokens_per_step": 2.5032833020637897,
+    "unique_experts_per_true_token": 415.15364436949596,
+    "nvme_mb_per_true_token": 960.9057286865279,
+    "dram_gb_per_true_token": 3.1205135799138093,
+    "ms_per_step": 285.1069815872057
+   }
+  },
+  "0.05": {
+   "0": {
+    "tok_s": 6.519746306707742,
+    "tokens_per_step": 1.0,
+    "unique_experts_per_true_token": 480.0,
+    "nvme_mb_per_true_token": 1209.550030728874,
+    "dram_gb_per_true_token": 6.087009969271126,
+    "ms_per_step": 153.3802011546316
+   },
+   "1": {
+    "tok_s": 6.823868635240959,
+    "tokens_per_step": 1.7023923444976077,
+    "unique_experts_per_true_token": 421.87895821622635,
+    "nvme_mb_per_true_token": 1271.5134588720255,
+    "dram_gb_per_true_token": 3.745225925801012,
+    "ms_per_step": 249.4761308425296
+   },
+   "3": {
+    "tok_s": 5.727774198678,
+    "tokens_per_step": 2.5032833020637897,
+    "unique_experts_per_true_token": 415.15364436949596,
+    "nvme_mb_per_true_token": 1629.6896267566049,
+    "dram_gb_per_true_token": 2.4517296818437324,
+    "ms_per_step": 437.0429446470778
+   }
+  }
+ },
+ "best": {
+  "0.25": {
+   "best_L": 3,
+   "best_tok_s": 16.38571423762836,
+   "L3_tok_s": 16.38571423762836,
+   "L0_tok_s": 13.479485391019413,
+   "gain_vs_L3": 1.0,
+   "mtp_gain_at_L3": 1.2156038426025668
+  },
+  "0.15": {
+   "best_L": 1,
+   "best_tok_s": 11.409976165910077,
+   "L3_tok_s": 11.23525449865979,
+   "L0_tok_s": 10.1672757444086,
+   "gain_vs_L3": 1.01555119799655,
+   "mtp_gain_at_L3": 1.1050407976628858
+  },
+  "0.1": {
+   "best_L": 1,
+   "best_tok_s": 9.07418891137577,
+   "L3_tok_s": 8.78015434111041,
+   "L0_tok_s": 8.324539580823416,
+   "gain_vs_L3": 1.0334885423242086,
+   "mtp_gain_at_L3": 1.0547315266944683
+  },
+  "0.05": {
+   "best_L": 1,
+   "best_tok_s": 6.823868635240959,
+   "L3_tok_s": 5.727774198678,
+   "L0_tok_s": 6.519746306707742,
+   "gain_vs_L3": 1.1913648126729477,
+   "mtp_gain_at_L3": 0.8785271587615405
+  }
+ }
+}

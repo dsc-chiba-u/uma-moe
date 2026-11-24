@@ -1,0 +1,13 @@
+evicted 54 files: Cached 32.4 -> 0.7 GiB
+2026-10-23 18:09:29 E1: MemFree: 115.8 GiB  Cached: 0.7 GiB  
+pc_E1_t60_nodraft {'load_s': 43.01503920555115, 'requests': 2, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.4012451171875, 'mem_avail_min_gib': 34.17293930053711}
+evicted 54 files: Cached 7.2 -> 0.8 GiB
+2026-10-23 18:10:58 F1: MemFree: 72.2 GiB  Cached: 44.3 GiB  
+pc_F1_t60_nodraft {'load_s': 44.01483917236328, 'requests': 2, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.07451629638672, 'mem_avail_min_gib': 33.83831787109375}
+evicted 54 files: Cached 32.9 -> 0.6 GiB
+2026-10-23 18:12:00 E2: MemFree: 115.9 GiB  Cached: 0.6 GiB  
+pc_E2_t60_nodraft {'load_s': 46.0160071849823, 'requests': 2, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.000160217285156, 'mem_avail_min_gib': 33.78059768676758}
+evicted 54 files: Cached 7.1 -> 0.7 GiB
+2026-10-23 18:13:24 F2: MemFree: 72.3 GiB  Cached: 44.2 GiB  
+pc_F2_t60_nodraft {'load_s': 46.023619174957275, 'requests': 2, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.50878143310547, 'mem_avail_min_gib': 34.27710723876953}
+2026-10-23 18:14:31 done

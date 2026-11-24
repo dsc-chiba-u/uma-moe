@@ -1,0 +1,19 @@
+gpu-gather alloc=dev pool=16.0GiB expert=1350KiB per_step=10 steps=3000 -> 212.8 GB/s, 65.0 us/step
+gpu-gather alloc=dev pool=16.0GiB expert=1350KiB per_step=40 steps=3000 -> 224.2 GB/s, 246.6 us/step
+gpu-gather alloc=pinned pool=16.0GiB expert=1350KiB per_step=10 steps=3000 -> 204.0 GB/s, 67.8 us/step
+gpu-gather alloc=pinned pool=16.0GiB expert=1350KiB per_step=40 steps=3000 -> 218.5 GB/s, 253.1 us/step
+gpu-gather alloc=registered pool=16.0GiB expert=1350KiB per_step=10 steps=3000 -> 156.8 GB/s, 88.2 us/step
+gpu-gather alloc=registered pool=16.0GiB expert=1350KiB per_step=40 steps=3000 -> 162.7 GB/s, 339.8 us/step
+gpu-gather alloc=pageable pool=16.0GiB expert=1350KiB per_step=10 steps=3000 -> 155.8 GB/s, 88.8 us/step
+gpu-gather alloc=pageable pool=16.0GiB expert=1350KiB per_step=40 steps=3000 -> 162.8 GB/s, 339.6 us/step
+gpu-gather alloc=file:~/src/Strata-data/models/Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf pool=16.0GiB expert=1350KiB per_step=10 steps=3000 -> 156.1 GB/s, 88.5 us/step
+gpu-gather alloc=file:~/src/Strata-data/models/Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf pool=16.0GiB expert=1350KiB per_step=40 steps=3000 -> 161.5 GB/s, 342.4 us/step
+cpu-seq threads=1 cpus=big GiB=8.0 median=32.0 GB/s max=32.1 GB/s
+cpu-seq threads=5 cpus=big GiB=8.0 median=49.2 GB/s max=49.3 GB/s
+cpu-seq threads=10 cpus=big GiB=8.0 median=92.9 GB/s max=93.0 GB/s
+cpu-seq threads=10 cpus=little GiB=8.0 median=103.0 GB/s max=103.3 GB/s
+cpu-seq threads=20 cpus=all GiB=8.0 median=103.6 GB/s max=103.9 GB/s
+concurrent gpu_alloc=none cpu_threads=20 cpus=all : GPU 0.0 GB/s, CPU 131.0 GB/s, sum 131.0 GB/s
+concurrent gpu_alloc=dev cpu_threads=5 cpus=all : GPU 218.3 GB/s, CPU 17.5 GB/s, sum 235.8 GB/s
+concurrent gpu_alloc=dev cpu_threads=10 cpus=all : GPU 180.9 GB/s, CPU 53.1 GB/s, sum 234.0 GB/s
+concurrent gpu_alloc=dev cpu_threads=20 cpus=all : GPU 169.8 GB/s, CPU 58.4 GB/s, sum 228.3 GB/s

@@ -1,0 +1,142 @@
+{
+ "name": "f_llama_cpumoeall_nomtp",
+ "engine": "llama",
+ "exe": null,
+ "args": [
+  "-m",
+  "~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00001-of-00006.gguf",
+  "-ngl",
+  "999",
+  "-fa",
+  "on",
+  "-c",
+  "32768",
+  "--no-warmup",
+  "-lm",
+  "mmap",
+  "--cpu-moe"
+ ],
+ "env": {},
+ "meta": {
+  "exp": "P2",
+  "n_cpu_moe": "all",
+  "mtp": false
+ },
+ "mem_avail_before_gib": 116.45338439941406,
+ "started": "2026-10-22T22:40:09",
+ "load_s": 138.23838710784912,
+ "mem_avail_loaded_gib": 108.40933227539062,
+ "requests": 12,
+ "mem_avail_min_gib": 106.98265838623047,
+ "watchdog": false,
+ "server_stats": [
+  {
+   "prompt_read": 34,
+   "prefill_ms": 4527.33,
+   "gen_tokens": 256,
+   "gen_ms": 53479.06,
+   "decode_tok_s": 4.786920338539982,
+   "prompt_id": "code_en",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 34,
+   "prefill_ms": 3683.64,
+   "gen_tokens": 256,
+   "gen_ms": 52424.77,
+   "decode_tok_s": 4.883187851849422,
+   "prompt_id": "story_en",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 38,
+   "prefill_ms": 249130.79,
+   "gen_tokens": 256,
+   "gen_ms": 50738.14,
+   "decode_tok_s": 5.045514084670821,
+   "prompt_id": "explain_en",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 70,
+   "prefill_ms": 36691.15,
+   "gen_tokens": 256,
+   "gen_ms": 50530.53,
+   "decode_tok_s": 5.066244110243847,
+   "prompt_id": "math_en",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 35,
+   "prefill_ms": 2288.88,
+   "gen_tokens": 256,
+   "gen_ms": 50431.55,
+   "decode_tok_s": 5.076187426323402,
+   "prompt_id": "essay_ja",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 42,
+   "prefill_ms": 24514.72,
+   "gen_tokens": 256,
+   "gen_ms": 48089.48,
+   "decode_tok_s": 5.323409610584269,
+   "prompt_id": "tech_ja",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 34,
+   "prefill_ms": 1711.8,
+   "gen_tokens": 256,
+   "gen_ms": 48152.8,
+   "decode_tok_s": 5.316409429981226,
+   "prompt_id": "code_en",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 34,
+   "prefill_ms": 1917.65,
+   "gen_tokens": 256,
+   "gen_ms": 48455.98,
+   "decode_tok_s": 5.283145650959902,
+   "prompt_id": "story_en",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 38,
+   "prefill_ms": 16091.87,
+   "gen_tokens": 256,
+   "gen_ms": 46984.39,
+   "decode_tok_s": 5.448618147431519,
+   "prompt_id": "explain_en",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 70,
+   "prefill_ms": 52014.61,
+   "gen_tokens": 256,
+   "gen_ms": 47988.19,
+   "decode_tok_s": 5.334645878496355,
+   "prompt_id": "math_en",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 35,
+   "prefill_ms": 1614.65,
+   "gen_tokens": 256,
+   "gen_ms": 48928.08,
+   "decode_tok_s": 5.232169339160661,
+   "prompt_id": "essay_ja",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 42,
+   "prefill_ms": 36199.86,
+   "gen_tokens": 256,
+   "gen_ms": 46685.94,
+   "decode_tok_s": 5.483449621020804,
+   "prompt_id": "tech_ja",
+   "repeat": 1
+  }
+ ]
+}

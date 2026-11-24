@@ -1,0 +1,6 @@
+e4b_llama_cpumoe_cache0 {'load_s': 64.72549772262573, 'requests': 6, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 51.8453254699707, 'mem_avail_min_gib': 50.75856399536133}
+e4b_llama_cpumoe_cache4096 {'load_s': 74.2702374458313, 'requests': 6, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 48.42789077758789, 'mem_avail_min_gib': 47.39335632324219}
+e4b_llama_cpumoe_cache8192 {'load_s': 65.9430685043335, 'requests': 6, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 43.68213653564453, 'mem_avail_min_gib': 42.65509033203125}
+e4b_llama_cpumoe_cache16384 {'load_s': 69.8184461593628, 'requests': 6, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 35.256290435791016, 'mem_avail_min_gib': 34.91416549682617}
+e4b_llama_cpumoe_cache24576 {'load_s': 68.05556464195251, 'requests': 6, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 27.771114349365234, 'mem_avail_min_gib': 26.454917907714844}
+e4b_llama_cpumoe_cache32768 {'load_s': 80.21421504020691, 'requests': 6, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 19.999645233154297, 'mem_avail_min_gib': 18.725296020507812}

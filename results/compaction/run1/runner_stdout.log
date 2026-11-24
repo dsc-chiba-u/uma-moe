@@ -1,0 +1,28 @@
+2026-10-23 15:10:36 armed by the root script; original value 20
+2026-10-23 15:10:36 GPU lock taken
+2026-10-23 15:10:36 phase A1 begins: compaction_proactiveness=20
+k_A1_t60_hostalloc_nodraft {'load_s': 40.011839151382446, 'requests': 24, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 32.647586822509766, 'mem_avail_min_gib': 32.10789489746094}
+k_A1_t60_mtp {'load_s': 33.01327419281006, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.206260681152344, 'mem_avail_min_gib': 33.70001983642578}
+k_A1_t75_mtp {'load_s': 47.02182173728943, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 15.365123748779297, 'mem_avail_min_gib': 15.043876647949219}
+2026-10-23 15:24:35 phase A1 ends: compaction_proactiveness=20
+2026-10-23 15:24:37 phase B1 begins: compaction_proactiveness=0
+k_B1_t60_hostalloc_nodraft {'load_s': 46.021546840667725, 'requests': 24, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 33.149169921875, 'mem_avail_min_gib': 32.70937728881836}
+k_B1_t60_mtp {'load_s': 38.019203424453735, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.188812255859375, 'mem_avail_min_gib': 33.80142593383789}
+k_B1_t75_mtp {'load_s': 37.0124032497406, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 15.520008087158203, 'mem_avail_min_gib': 15.120712280273438}
+2026-10-23 15:37:29 phase B1 ends: compaction_proactiveness=0
+2026-10-23 15:37:33 phase A2 begins: compaction_proactiveness=20
+k_A2_t60_hostalloc_nodraft {'load_s': 40.01352620124817, 'requests': 24, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 32.30086135864258, 'mem_avail_min_gib': 31.992992401123047}
+k_A2_t60_mtp {'load_s': 34.01147198677063, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 33.40455627441406, 'mem_avail_min_gib': 33.1239128112793}
+k_A2_t75_mtp {'load_s': 41.013336420059204, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 16.28260040283203, 'mem_avail_min_gib': 16.00204849243164}
+2026-10-23 15:50:26 phase A2 ends: compaction_proactiveness=20
+2026-10-23 15:50:28 phase B2 begins: compaction_proactiveness=0
+k_B2_t60_hostalloc_nodraft {'load_s': 42.022090435028076, 'requests': 24, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 33.141143798828125, 'mem_avail_min_gib': 32.915992736816406}
+k_B2_t60_mtp {'load_s': 38.01101088523865, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.244686126708984, 'mem_avail_min_gib': 33.91196060180664}
+k_B2_t75_mtp {'load_s': 41.021849393844604, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 16.432880401611328, 'mem_avail_min_gib': 15.35506820678711}
+2026-10-23 16:03:17 phase B2 ends: compaction_proactiveness=0
+2026-10-23 16:03:19 phase A3 begins: compaction_proactiveness=20
+k_A3_t60_hostalloc_nodraft {'load_s': 45.02479529380798, 'requests': 24, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 32.441951751708984, 'mem_avail_min_gib': 32.20506286621094}
+k_A3_t60_mtp {'load_s': 32.01579976081848, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 33.496986389160156, 'mem_avail_min_gib': 33.22337341308594}
+k_A3_t75_mtp {'load_s': 45.021756172180176, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 15.64706039428711, 'mem_avail_min_gib': 15.421722412109375}
+2026-10-23 16:16:21 phase A3 ends: compaction_proactiveness=20
+2026-10-23 16:16:21 all phases done: compaction_proactiveness=20

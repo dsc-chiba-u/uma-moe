@@ -1,0 +1,26 @@
+launch: launch+sync 4.82 us, async launch 2.05 us/kernel, graph replay 0.451 us/kernel, GPU->host->GPU doorbell 1.15 us
+gpu-seq alloc=dev GiB=0.2 first_pass=226.8 GB/s median=245.1 GB/s max=246.1 GB/s
+gpu-seq alloc=dev GiB=1.0 first_pass=231.6 GB/s median=236.8 GB/s max=237.5 GB/s
+gpu-seq alloc=dev GiB=4.0 first_pass=227.9 GB/s median=232.7 GB/s max=233.5 GB/s
+gpu-seq alloc=dev GiB=16.0 first_pass=233.8 GB/s median=235.6 GB/s max=238.1 GB/s
+gpu-seq alloc=pinned GiB=0.2 first_pass=207.4 GB/s median=240.5 GB/s max=242.8 GB/s
+gpu-seq alloc=pinned GiB=1.0 first_pass=218.1 GB/s median=220.2 GB/s max=225.9 GB/s
+gpu-seq alloc=pinned GiB=4.0 first_pass=197.9 GB/s median=209.3 GB/s max=219.5 GB/s
+gpu-seq alloc=pinned GiB=16.0 first_pass=221.6 GB/s median=218.3 GB/s max=220.8 GB/s
+gpu-seq alloc=registered GiB=0.2 first_pass=157.0 GB/s median=160.1 GB/s max=161.1 GB/s
+gpu-seq alloc=registered GiB=1.0 first_pass=164.2 GB/s median=166.9 GB/s max=167.8 GB/s
+gpu-seq alloc=registered GiB=4.0 first_pass=159.0 GB/s median=167.8 GB/s max=168.0 GB/s
+gpu-seq alloc=registered GiB=16.0 first_pass=166.2 GB/s median=168.0 GB/s max=168.6 GB/s
+gpu-seq alloc=pageable GiB=0.2 first_pass=157.4 GB/s median=160.1 GB/s max=162.1 GB/s
+gpu-seq alloc=pageable GiB=1.0 first_pass=164.6 GB/s median=166.3 GB/s max=167.4 GB/s
+gpu-seq alloc=pageable GiB=4.0 first_pass=167.3 GB/s median=166.0 GB/s max=168.1 GB/s
+gpu-seq alloc=pageable GiB=16.0 first_pass=165.7 GB/s median=168.2 GB/s max=168.7 GB/s
+gpu-seq alloc=managed GiB=0.2 first_pass=150.9 GB/s median=161.2 GB/s max=162.9 GB/s
+gpu-seq alloc=managed GiB=1.0 first_pass=159.2 GB/s median=161.7 GB/s max=162.7 GB/s
+gpu-seq alloc=managed GiB=4.0 first_pass=161.5 GB/s median=161.7 GB/s max=162.2 GB/s
+gpu-seq alloc=managed GiB=16.0 first_pass=161.3 GB/s median=161.2 GB/s max=161.9 GB/s
+[thp] MADV_COLLAPSE rc=0, AnonHugePages 4194304 kB of 4194304 kB
+gpu-seq alloc=pageable-thp GiB=4.0 first_pass=161.2 GB/s median=160.9 GB/s max=162.0 GB/s
+gpu-seq alloc=file:~/src/Strata-data/models/Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf GiB=4.0 first_pass=163.1 GB/s median=162.4 GB/s max=162.8 GB/s
+[thp] file MADV_COLLAPSE rc=-1 (Invalid argument), FilePmdMapped 0 kB of 4194304 kB
+gpu-seq alloc=filethp:~/src/Strata-data/models/Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf GiB=4.0 first_pass=154.9 GB/s median=162.5 GB/s max=163.1 GB/s

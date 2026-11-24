@@ -1,0 +1,22 @@
+~/work/uma-moe/results/e6_quality/q8_ppl.log:8.11.324.912 I Final estimate: PPL = 1.9750 +/- 0.03563
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:chunk             PPL               ln(PPL(Q)/PPL(base))          KL Divergence              Δp RMS            Same top p
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:Mean PPL(Q)                   :   2.634288 ±   0.056614
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:Mean PPL(base)                :   1.974433 ±   0.035556
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:Cor(ln(PPL(Q)), ln(PPL(base))):  76.94%
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:Mean ln(PPL(Q)/PPL(base))     :   0.288332 ±   0.013806
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:Mean PPL(Q)/PPL(base)         :   1.334200 ±   0.018421
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:Mean PPL(Q)-PPL(base)         :   0.659855 ±   0.037038
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:Mean    KLD:   0.463435 ±   0.011504
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:Maximum KLD:  12.962616
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:99.9%   KLD:   9.318558
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:99.0%   KLD:   5.278560
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:95.0%   KLD:   2.436036
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:90.0%   KLD:   1.371059
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:Median  KLD:   0.054644
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:10.0%   KLD:   0.000502
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log: 5.0%   KLD:   0.000159
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log: 1.0%   KLD:   0.000017
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log: 0.1%   KLD:   0.000001
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:Minimum KLD:  -0.000046
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:RMS Δp    : 26.158 ± 0.378 %
+~/work/uma-moe/results/e6_quality/q2_vs_q8_kld.log:Same top p: 81.659 ± 0.428 %

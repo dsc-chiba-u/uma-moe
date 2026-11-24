@@ -1,0 +1,9 @@
+evicted 54 files: Cached 32.4 -> 0.7 GiB
+2026-10-23 18:09:29 E1: MemFree: 115.8 GiB  Cached: 0.7 GiB  
+evicted 54 files: Cached 7.2 -> 0.8 GiB
+2026-10-23 18:10:58 F1: MemFree: 72.2 GiB  Cached: 44.3 GiB  
+evicted 54 files: Cached 32.9 -> 0.6 GiB
+2026-10-23 18:12:00 E2: MemFree: 115.9 GiB  Cached: 0.6 GiB  
+evicted 54 files: Cached 7.1 -> 0.7 GiB
+2026-10-23 18:13:24 F2: MemFree: 72.3 GiB  Cached: 44.2 GiB  
+2026-10-23 18:14:31 done

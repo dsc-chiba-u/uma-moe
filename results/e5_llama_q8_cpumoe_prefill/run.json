@@ -1,0 +1,40 @@
+{
+ "name": "e5_llama_q8_cpumoe_prefill",
+ "engine": "llama",
+ "args": [
+  "-m",
+  "~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00001-of-00006.gguf",
+  "-ngl",
+  "999",
+  "-fa",
+  "on",
+  "-c",
+  "16384",
+  "--no-warmup",
+  "--cpu-moe",
+  "-lm",
+  "mmap"
+ ],
+ "env": {},
+ "meta": {
+  "exp": "E5"
+ },
+ "mem_avail_before_gib": 116.24629974365234,
+ "started": "2026-10-21T13:26:35",
+ "load_s": 129.22450375556946,
+ "mem_avail_loaded_gib": 109.05356979370117,
+ "requests": 1,
+ "mem_avail_min_gib": 108.17159652709961,
+ "watchdog": false,
+ "server_stats": [
+  {
+   "prompt_read": 5411,
+   "prefill_ms": 1957278.36,
+   "gen_tokens": 200,
+   "gen_ms": 40126.24,
+   "decode_tok_s": 4.984269645000379,
+   "prompt_id": "long5k",
+   "repeat": 0
+  }
+ ]
+}

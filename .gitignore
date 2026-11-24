@@ -1,0 +1,32 @@
+# local environment and build products
+.venv/
+__pycache__/
+*.pyc
+.gpu.lock
+bench/uma_bw
+bench/nvme_bench
+bench/nvme_bench_v2
+bench/replay_io
+bench/p1/tests/ple_check
+bench/p1/tests/q8_dense_check
+bench/p1/tests/q8_expert_check
+bench/data/wikitext/
+locality/llama-bin/
+locality/moe_trace
+locality/locsim
+locality/logs/
+locality/tmp/
+# outputs of the analysis scripts (the manuscript's source is not part of this repository)
+paper/
+# contents of the data archive (Zenodo), extracted into results/
+results/trace_nodraft/
+results/trace_mtp/
+results/maps/
+results/e6_quality/
+results/locality/*/
+!results/locality/analysis/
+results/README-routing-traces.md
+results/LICENSE-routing-traces-CC-BY-4.0.txt
+# Nsight Systems reports embed the profiled process's environment; never commit them
+*.nsys-rep
+*.sqlite

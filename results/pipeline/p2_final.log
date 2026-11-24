@@ -1,0 +1,16 @@
+f_ours_t60_mtp {'load_s': 34.016931772232056, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.415565490722656, 'mem_avail_min_gib': 33.97278594970703}
+f_ours_t60_nodraft {'load_s': 34.011128664016724, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.232418060302734, 'mem_avail_min_gib': 33.152374267578125}
+f_ours_t45_mtp {'load_s': 27.00750231742859, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 51.58180618286133, 'mem_avail_min_gib': 50.9384880065918}
+f_ours_t45_nodraft {'load_s': 29.009331464767456, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 51.27155685424805, 'mem_avail_min_gib': 51.0936164855957}
+f_ours_t75_mtp {'load_s': 44.01790404319763, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 16.01608657836914, 'mem_avail_min_gib': 15.809745788574219}
+f_ours_t75_nodraft {'load_s': 44.01563215255737, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 16.50568389892578, 'mem_avail_min_gib': 15.938056945800781}
+f_ours_t60_nopred_mtp {'load_s': 37.01504182815552, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.39025115966797, 'mem_avail_min_gib': 34.115394592285156}
+f_ours_t60_nooverlap_mtp {'load_s': 31.013312816619873, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.413108825683594, 'mem_avail_min_gib': 33.937461853027344}
+f_ours_t60_nopred_nodraft {'load_s': 35.01650142669678, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.412296295166016, 'mem_avail_min_gib': 34.138648986816406}
+f_ours_t60_nooverlap_nodraft {'load_s': 33.013635873794556, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.38405227661133, 'mem_avail_min_gib': 34.12578582763672}
+f_up_b66_exact_mtp {'load_s': 145.7535581588745, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 32.75881576538086, 'mem_avail_min_gib': 30.368694305419922}
+f_up_b66_exact_nodraft {'load_s': 94.08596134185791, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 31.535621643066406, 'mem_avail_min_gib': 30.578121185302734}
+f_up_b90_default_mtp {'load_s': 125.61202001571655, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 9.905139923095703, 'mem_avail_min_gib': 7.531917572021484}
+f_llama_cpumoeall_nomtp {'load_s': 138.23838710784912, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 108.40933227539062, 'mem_avail_min_gib': 106.98265838623047}
+f_llama_cpumoeall_mtp {'load_s': 139.2775011062622, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 103.66605377197266, 'mem_avail_min_gib': 102.0610122680664}
+f_llama_cpumoe20_nomtp {'load_s': 371.5204610824585, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 38.2422981262207, 'mem_avail_min_gib': 36.662925720214844}

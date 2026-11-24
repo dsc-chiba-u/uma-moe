@@ -1,0 +1,5 @@
+./pipeline2.sh: line 8: 600464 Killed                  ( cd $B && $PY exp_overflow.py ) > $P/e5.log 2>&1
+[14:02:12] E5 (mmap) done
+[14:12:02] E6 done
+[14:28:20] E4b done
+[14:28:20] pipeline2 finished

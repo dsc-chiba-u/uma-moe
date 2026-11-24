@@ -1,0 +1,6 @@
+mmap-fault(normal) block=1700KiB threads=1 : 0.67 GB/s, 385 IOPS, lat p50=2501us p90=3748us p99=4864us  (~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00003-of-00006.gguf)
+mmap-fault(normal) block=1700KiB threads=8 : 2.55 GB/s, 1464 IOPS, lat p50=5384us p90=7414us p99=9250us  (~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00003-of-00006.gguf)
+mmap-fault(normal) block=1700KiB threads=32 : 8.32 GB/s, 4779 IOPS, lat p50=6525us p90=7833us p99=17059us  (~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00003-of-00006.gguf)
+mmap-fault(seq) block=1700KiB threads=1 : 0.69 GB/s, 394 IOPS, lat p50=2472us p90=3397us p99=4892us  (~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00003-of-00006.gguf)
+mmap-fault(seq) block=1700KiB threads=8 : 4.12 GB/s, 2367 IOPS, lat p50=3281us p90=4424us p99=6210us  (~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00003-of-00006.gguf)
+mmap-fault(seq) block=1700KiB threads=32 : 9.73 GB/s, 5587 IOPS, lat p50=5624us p90=6133us p99=14857us  (~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00003-of-00006.gguf)

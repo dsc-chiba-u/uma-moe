@@ -1,0 +1,165 @@
+[strata] 2026-10-26 18:03:50 engine started: ~/src/Strata-upstream-026/build-gb10/strata --serve --pack ~/src/Strata-data/packs-upstream/q8_0 --native ~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00001-of-00006.gguf --resident-budget-gib 66.8 --expert-profile ~/src/Strata-upstream-026/data/expert-profile.bin --expert-cache 1024 --prefill auto --spec 4 --spec-min-p 0.5 --mtp ~/src/Strata-data/mtp/rt --max-context 32768 --kv int8
+strata generate: memory guard: limit 121.7 GiB (source: meminfo), current 6.9 GiB, reclaimable cache credited 0.0 GiB; available 114.8 GiB (MemAvailable 114.8 GiB), floor 2560 MiB
+strata generate: PCIe probe: 59.3 GB/s host->device (best of 59.3 59.3 59.3 59.2) -> pcie_frac 0.55 (default 0.55)
+strata generate: this CPU has no AVX-512: the expert kernels run on ggml-cpu vec_dot (no AVX2: the older-CPU build) (multi-token for the i-quant gate/up rows)
+strata generate: native pack: ~/src/Strata-data/packs-upstream/q8_0 experts (largest blob 5.22 MB), token embedding Q8_0 in mapped host memory (644 MiB, 0.4 s)
+strata generate: 1416 MiB of weights loaded from ~/src/Strata-data/packs-upstream/q8_0 in 0.4 s (303 canonical tensors skipped: served natively)
+strata generate: 301 native projection matrices, 2975.00 MiB of weights, in 9.3 s
+strata generate: PLE direct read probe: 41517 rows/s (fine)
+strata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)
+strata generate: profile ~/src/Strata-upstream-026/data/expert-profile.bin: 24576 ranked pairs, built for 24576 slots
+strata generate: PLE on, table 320001536 rows of ~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00003-of-00006.gguf
+strata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.32 s (2462 MiB/s)
+strata generate: experimental native Q5_K head, 675430400 bytes, in 2.8 s
+strata generate: GPU 0: NVIDIA GB10, compute capability 12.1
+strata generate: experts via mmap (--mmap-experts; the GGUF shards in place, no experts.bin)
+strata generate: the file tier reads through the file cache (107.2 GiB available, 66.8 GiB of it still to be taken by the RAM copy, 52.7 GiB of experts read from the files: the file cache can keep the ones that come back)
+strata generate: file tier (Linux defaults, the GGUF read in place): page-cached experts computed from the mapping (STRATA_COLD_OVERLAP=4), io prefetch with whole-blob preads on 8 I/O threads, the decode's read-ahead only while the page cache has room for it and it pays (STRATA_IO_PF_GATE=1); off: STRATA_COLD_OVERLAP=0, STRATA_IO_PREFETCH=0, STRATA_IO_PF_GATE=0
+strata generate: GPU host-callback thread started before host-core pinning
+strata generate: CPU pool tasks/phase: 57 (automatic), participating threads: 19
+strata generate: CPU pool: 18 workers by default (20 physical cores, 20 logical processors; bounded by physical cores, one kept free)
+strata generate: 18 pool workers on logical processors 15,16,17,18,5,6,7,8,9,10,11,12,13,14,0,1,2,3, the host thread on 19 (draining too) (--host-core first)
+strata generate: CPU workers on logical processors 15,16,17,18,5,6,7,8,9,10,11,12,13,14,0,1,2,3 (18 workers, one per physical core; host on 19)
+strata aux cpus: threads that are neither pool workers nor the host go to CPUs 4 (off at start; a request's aux_cpus=1 turns it on)
+strata generate: expert cache 1024 slots, 4.98 GiB of VRAM; policy is
+strata generate: the GPU computes the experts in the cache; it rounds differently from the CPU,
+                 so a reply can differ slightly from a run without the cache (same quality:
+                 bench/results/2026-09-27-cache-parity).
+                 PROFILE, ranked by routing frequency, no eviction.
+strata generate: the profile fill asks for 256 pairs ahead (STRATA_FILL_AHEAD)
+strata generate: pre-filled 1024 of 1024 slots from the profile in 1.5 s (3656 MB/s); slot 0 verified
+strata generate: routing-aware prefetch on (the next layer's router, file tier)
+strata generate: R4 hit path ON - resident experts are computed on the GPU
+strata generate: 18 expert-pool workers + the host thread
+strata generate: session is up (engine 0.1.51)
+strata generate: token graph hit path: 1024 resident experts, decided on the device
+FileExpertSource: RAM budget 66.80 GiB: 13734 of the 114.55 GiB of experts the GPU cache does not hold, by profile rank; the rest are read from the files
+FileExpertSource: the prompt path's lend region: 0 of its 755 slots keep their experts in RAM too (0.00 GiB of the budget's remaining 0.00 GiB)
+FileExpertSource: allocating 66.80 GiB page-locked cache complement
+FileExpertSource: 59.77 GiB really free for a 66.80 GiB page-locked complement; the model files' cached pages were released: 96.19 GiB free
+FileExpertSource: copied cache complement through layer 8/48 (14.61 GiB, 4 s)
+FileExpertSource: copied cache complement through layer 16/48 (24.39 GiB, 6 s)
+FileExpertSource: copied cache complement through layer 24/48 (37.67 GiB, 22 s)
+FileExpertSource: copied cache complement through layer 32/48 (51.02 GiB, 30 s)
+FileExpertSource: copied cache complement through layer 40/48 (60.72 GiB, 36 s)
+FileExpertSource: copied cache complement through layer 48/48 (66.80 GiB, 40 s)
+FileExpertSource: mapped pinned cache complement ready: resident 66.80 GiB, pinned 66.80 GiB in 59 s; page-locked and mapped
+FileExpertSource: 0 of the prompt path's 755 lendable slots keep their experts in RAM too (the others are read from the file when lent: not enough RAM for them)
+FileExpertSource: WARNING: 755 of 755 lendable slots (100%) will read their experts from the pack during a long prompt; expect a slower prompt read on 50K+ token prompts (one measurement: 18% uncovered cost 26%). Raise --resident-budget-gib (the lend region comes after the ranked experts) and restart; the line above should read N of N.
+strata generate: WARNING: a prompt chunk of 8192 tokens lends 755 cache slots to the prompt path, but only 0 of their experts fit in RAM: the others are read from the SSD on every chunk, and prompts can read ~3x slower than with --prefill auto (#669). A larger --resident-budget-gib (the lend region comes after the ranked experts), or a smaller --prefill, keeps them all in RAM
+strata generate: resident RAM mode: 66.80 GiB of experts in RAM (page-locked), 1024 in the GPU cache; adaptive swaps exchange them with the GPU cache (no file reads)
+strata generate: the file tier reads through the file cache (re-checked with the RAM copy built (66.80 GiB): 32.7 GiB available, 0.0 GiB of it still to be taken by the RAM copy, 52.7 GiB of experts read from the files: the file cache can keep the ones that come back)
+strata: prefill plan: chunk 8192, ring 96 kept: file set 51.8 GiB does not fit the page cache 31.5 GiB -> about 222.3 GB read from the drive per 32768-token prompt (4 chunks); no option does better (the set cannot fit: fewest passes win)
+strata: prefill plan inputs: 119.5 GiB experts, 5.0 GiB in the GPU caches, 66.8 GiB RAM copy (0 lend slots kept), file tier 47.8 GiB; 31.5 GiB available for the page cache; PCIe 59.3 GB/s; drive 2.50 GB/s (nvme0n1 is NVMe); a 32768-token prompt
+strata serve: prompt chunk auto: 8192 tokens, a 96-slot ring
+strata serve: the prompt path borrows 755 CUDA0 cache slots (3.67 GiB)
+strata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked bit for bit against the plain read on this card (STRATA_HC_SPLIT=1 or 0 for the earlier ones)
+strata verify: window up to 6 tokens, 113.6 MiB of device buffers
+strata mtp: draft head over 106299 tokens (275.7 MiB)
+strata serve: conversation cache sized from the free RAM: 8192 MiB for up to 4 parked conversations, so an agent's next turn reuses its prompt (--conversation-cache-mib N sets it, 0 turns it off)
+strata serve: adaptive overlap: off: not in the resident RAM mode unless STRATA_ADAPT_OVERLAP_RESIDENT=1
+strata serve: 968 MiB of VRAM free with everything loaded
+strata verify: capturing the 6-token window (1596 MiB of VRAM free)
+strata verify: captured the 6-token window (upload no error, sync no error)
+strata verify: capturing the 3-token window (751 MiB of VRAM free)
+strata verify: captured the 3-token window (upload no error, sync no error)
+strata verify: capturing the 1-token window (971 MiB of VRAM free)
+strata verify: captured the 1-token window (upload no error, sync no error)
+strata verify: capturing the 4-token window (1048 MiB of VRAM free)
+strata verify: captured the 4-token window (upload no error, sync no error)
+strata verify: capturing the 2-token window (1106 MiB of VRAM free)
+strata verify: captured the 2-token window (upload no error, sync no error)
+strata serve: PCIe share: the CPU pool takes 121 us per missed expert (43.1 GB/s of expert bytes), the link 59.3 GB/s -> pcie_frac 0.45 (was 0.55; --pcie-frac N fixes it, STRATA_PCIE_FRAC_DEFAULT=old keeps the start-up rule)
+strata verify: capturing the 5-token window (980 MiB of VRAM free)
+strata verify: captured the 5-token window (upload no error, sync no error)
+strata decode timing: 88 windows, avg T 3.36, 2.91 tokens/window, 339.61 ms/window = verify 321.05 (GPU-reach wait 50.28 + per-layer host 265.99 [plan 0.27 actq 0.39 jobs 203.44 CPU 53.79] + stage 0.05) + commit/emit 0.51 + draft 9.60; per layer-window: CPU experts 9.74 (14.52 entries), VRAM hits 12.92, PCIe 5.32; adapt wait 3.51 join 4.91, 24.0 swaps/window
+strata serve: prompt 34 tokens = 0 reused + 34 read in 5795 ms (5.9 tok/s), 256 generated in 29886 ms (8.6 tok/s), drafts accepted 168 of 208, 1 checkpoints
+strata serve: decode expert cache hit rate: 47.1% (54591 hits / 115907 lookups); 26173 more read by the GPU over PCIe or from another GPU (18.4% of all 142080 routed)
+strata serve: resident RAM: 66.80 GiB of experts in RAM, 1524 exchanged with the VRAM tier, 17079 blob reads from the file
+strata serve: expert tiers: GPU 54591 hits this request; since the start RAM 56956 blobs, files 17079 blobs 76596.9 MB read (the GGUF in place)
+strata serve: file tier I/O this request: the OS read 135983.0 MB from storage (31463 major faults) for 76596.9 MB of expert reads; page cache held 98463.3 MB at the read, not 49858.1 MB; io prefetch: 414 read ahead (35019.7 MB by pread), 242 used, 172 unused, 167 skipped (cached), 0 dropped; decode waited 22541.8 ms in 10364 fetches; decode gate: cache room 0.25 of the experts, read-ahead used 58%, page cache held 87% of the decode's reads (EWMA), closed, closed in 93 windows so far, 1 flips; read ahead 2162.1 MB, 1263.8 MB of it used; 0 late, 0 not admitted (confidence), 0 (budget 0 MB/window)
+strata serve: suffix drafts: 20 windows, 24 of 31 drafts accepted
+strata serve: conversation cache: parked 289 tokens in 202.5 ms; parked=1 bytes=240589256 evictions=0 snapshot_bytes=240589256 reused_kv_bytes=0
+strata decode timing: 136 windows, avg T 2.79, 1.88 tokens/window, 570.46 ms/window = verify 548.55 (GPU-reach wait 48.69 + per-layer host 495.38 [plan 0.19 actq 0.16 jobs 428.37 CPU 59.13] + stage 0.10) + commit/emit 0.49 + draft 8.16; per layer-window: CPU experts 8.40 (11.28 entries), VRAM hits 12.60, PCIe 3.74; adapt wait 2.37 join 10.85, 22.0 swaps/window
+strata serve: prompt 34 tokens = 0 reused + 34 read in 11276 ms (3.0 tok/s), 256 generated in 77582 ms (3.3 tok/s), drafts accepted 120 of 244, 1 checkpoints
+strata serve: decode expert cache hit rate: 52.8% (82277 hits / 155906 lookups); 26494 more read by the GPU over PCIe or from another GPU (14.5% of all 182400 routed)
+strata serve: resident RAM: 66.80 GiB of experts in RAM, 3145 exchanged with the VRAM tier, 40442 blob reads from the file
+strata serve: expert tiers: GPU 82277 hits this request; since the start RAM 124525 blobs, files 40442 blobs 172025.9 MB read (the GGUF in place)
+strata serve: file tier I/O this request: the OS read 17655.6 MB from storage (52437 major faults) for 95428.9 MB of expert reads; page cache held 80689.6 MB at the read, not 14739.3 MB; io prefetch: 0 read ahead (156.7 MB by pread), 0 used, 0 unused, 0 skipped (cached), 0 dropped; decode waited 68019.9 ms in 12673 fetches; decode gate: cache room 0.26 of the experts, read-ahead used 58%, page cache held 90% of the decode's reads (EWMA), closed, closed in 235 windows so far, 1 flips; read ahead 0.0 MB, 0.0 MB of it used; 0 late, 0 not admitted (confidence), 0 (budget 0 MB/window)
+strata serve: conversation cache: parked 289 tokens in 68.9 ms; parked=2 bytes=481178512 evictions=0 snapshot_bytes=240589256 reused_kv_bytes=0
+strata decode timing: 110 windows, avg T 3.33, 2.33 tokens/window, 285.50 ms/window = verify 267.52 (GPU-reach wait 45.86 + per-layer host 217.70 [plan 0.38 actq 0.26 jobs 148.78 CPU 59.39] + stage 0.17) + commit/emit 0.46 + draft 8.81; per layer-window: CPU experts 10.74 (15.01 entries), VRAM hits 11.79, PCIe 5.77; adapt wait 3.75 join 4.94, 23.6 swaps/window
+strata serve: prompt 38 tokens = 0 reused + 38 read in 4123 ms (9.2 tok/s), 256 generated in 31405 ms (8.2 tok/s), drafts accepted 147 of 256, 1 checkpoints
+strata serve: decode expert cache hit rate: 44.0% (62272 hits / 141543 lookups); 34137 more read by the GPU over PCIe or from another GPU (19.4% of all 175680 routed)
+strata serve: resident RAM: 66.80 GiB of experts in RAM, 5273 exchanged with the VRAM tier, 56419 blob reads from the file
+strata serve: expert tiers: GPU 62272 hits this request; since the start RAM 208753 blobs, files 56419 blobs 239353.0 MB read (the GGUF in place)
+strata serve: file tier I/O this request: the OS read 13031.2 MB from storage (29586 major faults) for 67327.2 MB of expert reads; page cache held 56099.1 MB at the read, not 11228.1 MB; io prefetch: 0 read ahead (1.7 MB by pread), 0 used, 0 unused, 0 skipped (cached), 0 dropped; decode waited 18542.3 ms in 8397 fetches; decode gate: cache room 0.26 of the experts, read-ahead used 58%, page cache held 92% of the decode's reads (EWMA), closed, closed in 352 windows so far, 1 flips; read ahead 0.0 MB, 0.0 MB of it used; 0 late, 0 not admitted (confidence), 0 (budget 0 MB/window)
+strata serve: suffix drafts: 1 windows, 2 of 4 drafts accepted
+strata serve: conversation cache: parked 294 tokens in 151.1 ms; parked=3 bytes=721828860 evictions=0 snapshot_bytes=240650348 reused_kv_bytes=0
+strata decode timing: 78 windows, avg T 3.77, 3.28 tokens/window, 526.34 ms/window = verify 506.53 (GPU-reach wait 42.40 + per-layer host 459.67 [plan 0.37 actq 0.31 jobs 393.14 CPU 60.12] + stage 0.22) + commit/emit 0.50 + draft 10.64; per layer-window: CPU experts 14.57 (19.28 entries), VRAM hits 12.21, PCIe 5.57; adapt wait 2.69 join 5.94, 24.6 swaps/window
+strata serve: prompt 70 tokens = 0 reused + 70 read in 41738 ms (1.7 tok/s), 256 generated in 41055 ms (6.2 tok/s), drafts accepted 181 of 216, 1 checkpoints
+strata serve: decode expert cache hit rate: 38.8% (45703 hits / 117876 lookups); 23244 more read by the GPU over PCIe or from another GPU (16.5% of all 141120 routed)
+strata serve: resident RAM: 66.80 GiB of experts in RAM, 6333 exchanged with the VRAM tier, 88583 blob reads from the file
+strata serve: expert tiers: GPU 45703 hits this request; since the start RAM 273240 blobs, files 88583 blobs 386959.0 MB read (the GGUF in place)
+strata serve: file tier I/O this request: the OS read 17404.7 MB from storage (41787 major faults) for 147605.9 MB of expert reads; page cache held 132502.3 MB at the read, not 15103.6 MB; io prefetch: 0 read ahead (10.4 MB by pread), 0 used, 0 unused, 0 skipped (cached), 0 dropped; decode waited 53027.7 ms in 11991 fetches; decode gate: cache room 0.27 of the experts, read-ahead used 58%, page cache held 93% of the decode's reads (EWMA), closed, closed in 442 windows so far, 1 flips; read ahead 0.0 MB, 0.0 MB of it used; 0 late, 0 not admitted (confidence), 0 (budget 0 MB/window)
+strata serve: suffix drafts: 9 windows, 21 of 23 drafts accepted
+strata serve: conversation cache: parked 328 tokens in 465.8 ms; parked=4 bytes=962974064 evictions=0 snapshot_bytes=241145204 reused_kv_bytes=0
+strata decode timing: 152 windows, avg T 2.13, 1.68 tokens/window, 240.74 ms/window = verify 226.33 (GPU-reach wait 40.72 + per-layer host 181.26 [plan 0.16 actq 0.16 jobs 140.70 CPU 33.01] + stage 0.58) + commit/emit 0.42 + draft 7.04; per layer-window: CPU experts 6.67 (8.56 entries), VRAM hits 10.27, PCIe 2.30; adapt wait 2.38 join 4.53, 22.0 swaps/window
+strata serve: prompt 35 tokens = 0 reused + 35 read in 14867 ms (2.4 tok/s), 256 generated in 36592 ms (7.0 tok/s), drafts accepted 104 of 172, 1 checkpoints
+strata serve: decode expert cache hit rate: 54.5% (74947 hits / 137396 lookups); 18124 more read by the GPU over PCIe or from another GPU (11.7% of all 155520 routed)
+strata serve: resident RAM: 66.80 GiB of experts in RAM, 8202 exchanged with the VRAM tier, 117238 blob reads from the file
+strata serve: expert tiers: GPU 74947 hits this request; since the start RAM 322245 blobs, files 117238 blobs 512270.4 MB read (the GGUF in place)
+strata serve: file tier I/O this request: the OS read 16640.9 MB from storage (48226 major faults) for 125311.5 MB of expert reads; page cache held 111131.7 MB at the read, not 14179.8 MB; io prefetch: 0 read ahead (17.4 MB by pread), 0 used, 0 unused, 0 skipped (cached), 0 dropped; decode waited 33710.3 ms in 14209 fetches; decode gate: cache room 0.27 of the experts, read-ahead used 58%, page cache held 92% of the decode's reads (EWMA), closed, closed in 600 windows so far, 1 flips; read ahead 0.0 MB, 0.0 MB of it used; 0 late, 0 not admitted (confidence), 0 (budget 0 MB/window)
+strata serve: conversation cache: parked 290 tokens in 125.2 ms; parked=4 bytes=962974072 evictions=1 snapshot_bytes=240589264 reused_kv_bytes=0
+strata decode timing: 87 windows, avg T 3.37, 2.94 tokens/window, 1124.11 ms/window = verify 1104.48 (GPU-reach wait 41.59 + per-layer host 1058.03 [plan 0.42 actq 0.23 jobs 993.64 CPU 57.49] + stage 0.75) + commit/emit 0.38 + draft 10.24; per layer-window: CPU experts 12.30 (16.63 entries), VRAM hits 11.74, PCIe 4.75; adapt wait 2.97 join 6.01, 23.2 swaps/window
+strata serve: prompt 42 tokens = 0 reused + 42 read in 4530 ms (9.3 tok/s), 256 generated in 97798 ms (2.6 tok/s), drafts accepted 172 of 206, 1 checkpoints
+strata serve: decode expert cache hit rate: 41.4% (49008 hits / 118446 lookups); 22194 more read by the GPU over PCIe or from another GPU (15.8% of all 140640 routed)
+strata serve: resident RAM: 66.80 GiB of experts in RAM, 9520 exchanged with the VRAM tier, 144876 blob reads from the file
+strata serve: expert tiers: GPU 49008 hits this request; since the start RAM 377322 blobs, files 144876 blobs 631612.7 MB read (the GGUF in place)
+strata serve: file tier I/O this request: the OS read 15927.0 MB from storage (49452 major faults) for 119342.3 MB of expert reads; page cache held 105735.5 MB at the read, not 13606.8 MB; io prefetch: 0 read ahead (34.8 MB by pread), 0 used, 0 unused, 0 skipped (cached), 0 dropped; decode waited 89087.4 ms in 13476 fetches; decode gate: cache room 0.26 of the experts, read-ahead used 58%, page cache held 90% of the decode's reads (EWMA), closed, closed in 694 windows so far, 1 flips; read ahead 0.0 MB, 0.0 MB of it used; 0 late, 0 not admitted (confidence), 0 (budget 0 MB/window)
+strata serve: suffix drafts: 10 windows, 34 of 38 drafts accepted
+strata serve: conversation cache: parked 300 tokens in 936.9 ms; parked=4 bytes=963102404 evictions=2 snapshot_bytes=240717588 reused_kv_bytes=0
+strata decode timing: 80 windows, avg T 3.80, 3.20 tokens/window, 275.69 ms/window = verify 255.55 (GPU-reach wait 43.10 + per-layer host 208.30 [plan 0.20 actq 0.25 jobs 147.05 CPU 53.00] + stage 0.15) + commit/emit 0.49 + draft 11.26; per layer-window: CPU experts 11.91 (17.69 entries), VRAM hits 15.03, PCIe 4.60; adapt wait 2.68 join 5.69, 24.0 swaps/window
+strata serve: prompt 34 tokens = 0 reused + 34 read in 4239 ms (8.0 tok/s), 256 generated in 22055 ms (11.6 tok/s), drafts accepted 179 of 224, 1 checkpoints
+strata serve: decode expert cache hit rate: 45.9% (57728 hits / 125669 lookups); 20251 more read by the GPU over PCIe or from another GPU (13.9% of all 145920 routed)
+strata serve: resident RAM: 66.80 GiB of experts in RAM, 10609 exchanged with the VRAM tier, 169156 blob reads from the file
+strata serve: expert tiers: GPU 57728 hits this request; since the start RAM 426447 blobs, files 169156 blobs 739841.7 MB read (the GGUF in place)
+strata serve: file tier I/O this request: the OS read 10190.5 MB from storage (29774 major faults) for 108229.0 MB of expert reads; page cache held 99549.1 MB at the read, not 8679.9 MB; io prefetch: 0 read ahead (7.0 MB by pread), 0 used, 0 unused, 0 skipped (cached), 0 dropped; decode waited 13305.5 ms in 9114 fetches; decode gate: cache room 0.26 of the experts, read-ahead used 58%, page cache held 91% of the decode's reads (EWMA), closed, closed in 780 windows so far, 1 flips; read ahead 0.0 MB, 0.0 MB of it used; 0 late, 0 not admitted (confidence), 0 (budget 0 MB/window)
+strata serve: suffix drafts: 11 windows, 35 of 46 drafts accepted
+strata serve: conversation cache: parked 292 tokens in 221.6 ms; parked=4 bytes=963047468 evictions=3 snapshot_bytes=240595412 reused_kv_bytes=0
+strata decode timing: 123 windows, avg T 2.66, 2.08 tokens/window, 272.98 ms/window = verify 255.48 (GPU-reach wait 45.99 + per-layer host 204.61 [plan 0.18 actq 0.18 jobs 145.13 CPU 49.93] + stage 0.32) + commit/emit 0.47 + draft 9.23; per layer-window: CPU experts 7.98 (10.60 entries), VRAM hits 12.04, PCIe 3.64; adapt wait 3.24 join 4.54, 23.5 swaps/window
+strata serve: prompt 34 tokens = 0 reused + 34 read in 4279 ms (7.9 tok/s), 256 generated in 33577 ms (7.6 tok/s), drafts accepted 133 of 204, 1 checkpoints
+strata serve: decode expert cache hit rate: 53.2% (71073 hits / 133656 lookups); 23304 more read by the GPU over PCIe or from another GPU (14.8% of all 156960 routed)
+strata serve: resident RAM: 66.80 GiB of experts in RAM, 12597 exchanged with the VRAM tier, 187878 blob reads from the file
+strata serve: expert tiers: GPU 71073 hits this request; since the start RAM 487962 blobs, files 187878 blobs 818141.2 MB read (the GGUF in place)
+strata serve: file tier I/O this request: the OS read 10750.0 MB from storage (25039 major faults) for 78299.4 MB of expert reads; page cache held 69041.9 MB at the read, not 9257.6 MB; io prefetch: 0 read ahead (15.7 MB by pread), 0 used, 0 unused, 0 skipped (cached), 0 dropped; decode waited 20341.7 ms in 9250 fetches; decode gate: cache room 0.26 of the experts, read-ahead used 58%, page cache held 87% of the decode's reads (EWMA), closed, closed in 909 windows so far, 1 flips; read ahead 0.0 MB, 0.0 MB of it used; 0 late, 0 not admitted (confidence), 0 (budget 0 MB/window)
+strata serve: conversation cache: parked 289 tokens in 116.9 ms; parked=4 bytes=962491520 evictions=4 snapshot_bytes=240589256 reused_kv_bytes=0
+strata decode timing: 112 windows, avg T 3.21, 2.29 tokens/window, 819.05 ms/window = verify 794.87 (GPU-reach wait 43.28 + per-layer host 747.00 [plan 0.24 actq 0.23 jobs 676.59 CPU 62.30] + stage 0.27) + commit/emit 0.42 + draft 12.06; per layer-window: CPU experts 10.91 (15.16 entries), VRAM hits 11.22, PCIe 5.17; adapt wait 3.26 join 8.42, 24.0 swaps/window
+strata serve: prompt 38 tokens = 0 reused + 38 read in 4136 ms (9.2 tok/s), 256 generated in 91733 ms (2.8 tok/s), drafts accepted 144 of 248, 1 checkpoints
+strata serve: decode expert cache hit rate: 42.5% (60292 hits / 141766 lookups); 31034 more read by the GPU over PCIe or from another GPU (18.0% of all 172800 routed)
+strata serve: resident RAM: 66.80 GiB of experts in RAM, 14389 exchanged with the VRAM tier, 211108 blob reads from the file
+strata serve: expert tiers: GPU 60292 hits this request; since the start RAM 564417 blobs, files 211108 blobs 920808.3 MB read (the GGUF in place)
+strata serve: file tier I/O this request: the OS read 10520.7 MB from storage (33044 major faults) for 102667.2 MB of expert reads; page cache held 93740.0 MB at the read, not 8927.2 MB; io prefetch: 0 read ahead (0.0 MB by pread), 0 used, 0 unused, 0 skipped (cached), 0 dropped; decode waited 78029.0 ms in 9671 fetches; decode gate: cache room 0.27 of the experts, read-ahead used 58%, page cache held 94% of the decode's reads (EWMA), closed, closed in 1028 windows so far, 1 flips; read ahead 0.0 MB, 0.0 MB of it used; 0 late, 0 not admitted (confidence), 0 (budget 0 MB/window)
+strata serve: suffix drafts: 1 windows, 1 of 4 drafts accepted
+strata serve: conversation cache: parked 293 tokens in 870.3 ms; parked=4 bytes=962552600 evictions=5 snapshot_bytes=240650344 reused_kv_bytes=0
+strata decode timing: 80 windows, avg T 3.76, 3.20 tokens/window, 392.92 ms/window = verify 373.37 (GPU-reach wait 45.80 + per-layer host 323.25 [plan 0.30 actq 0.77 jobs 253.13 CPU 61.35] + stage 0.06) + commit/emit 0.40 + draft 11.58; per layer-window: CPU experts 14.64 (19.29 entries), VRAM hits 12.23, PCIe 5.48; adapt wait 2.68 join 4.85, 24.0 swaps/window
+strata serve: prompt 70 tokens = 0 reused + 70 read in 7233 ms (9.7 tok/s), 256 generated in 31434 ms (8.1 tok/s), drafts accepted 179 of 221, 1 checkpoints
+strata serve: decode expert cache hit rate: 38.8% (46955 hits / 121045 lookups); 23435 more read by the GPU over PCIe or from another GPU (16.2% of all 144480 routed)
+strata serve: resident RAM: 66.80 GiB of experts in RAM, 15480 exchanged with the VRAM tier, 245098 blob reads from the file
+strata serve: expert tiers: GPU 46955 hits this request; since the start RAM 628881 blobs, files 245098 blobs 1078159.3 MB read (the GGUF in place)
+strata serve: file tier I/O this request: the OS read 18038.3 MB from storage (49466 major faults) for 157350.9 MB of expert reads; page cache held 141838.2 MB at the read, not 15512.7 MB; io prefetch: 0 read ahead (20.9 MB by pread), 0 used, 0 unused, 0 skipped (cached), 0 dropped; decode waited 23316.8 ms in 12512 fetches; decode gate: cache room 0.26 of the experts, read-ahead used 58%, page cache held 92% of the decode's reads (EWMA), closed, closed in 1120 windows so far, 1 flips; read ahead 0.0 MB, 0.0 MB of it used; 0 late, 0 not admitted (confidence), 0 (budget 0 MB/window)
+strata serve: suffix drafts: 8 windows, 20 of 28 drafts accepted
+strata serve: conversation cache: parked 328 tokens in 122.9 ms; parked=4 bytes=962980216 evictions=6 snapshot_bytes=241145204 reused_kv_bytes=0
+strata decode timing: 147 windows, avg T 2.28, 1.74 tokens/window, 734.99 ms/window = verify 715.27 (GPU-reach wait 42.36 + per-layer host 667.92 [plan 0.25 actq 0.17 jobs 622.10 CPU 38.59] + stage 0.56) + commit/emit 0.43 + draft 9.63; per layer-window: CPU experts 6.80 (8.78 entries), VRAM hits 11.40, PCIe 2.39; adapt wait 2.74 join 6.89, 21.9 swaps/window
+strata serve: prompt 35 tokens = 0 reused + 35 read in 4804 ms (7.3 tok/s), 256 generated in 108044 ms (2.4 tok/s), drafts accepted 109 of 188, 1 checkpoints
+strata serve: decode expert cache hit rate: 56.5% (80467 hits / 142433 lookups); 18367 more read by the GPU over PCIe or from another GPU (11.4% of all 160800 routed)
+strata serve: resident RAM: 66.80 GiB of experts in RAM, 17444 exchanged with the VRAM tier, 272452 blob reads from the file
+strata serve: expert tiers: GPU 80467 hits this request; since the start RAM 678454 blobs, files 272452 blobs 1198650.5 MB read (the GGUF in place)
+strata serve: file tier I/O this request: the OS read 15724.4 MB from storage (45627 major faults) for 120491.2 MB of expert reads; page cache held 107050.8 MB at the read, not 13440.4 MB; io prefetch: 0 read ahead (31.3 MB by pread), 0 used, 0 unused, 0 skipped (cached), 0 dropped; decode waited 94529.2 ms in 12642 fetches; decode gate: cache room 0.27 of the experts, read-ahead used 58%, page cache held 92% of the decode's reads (EWMA), closed, closed in 1273 windows so far, 1 flips; read ahead 0.0 MB, 0.0 MB of it used; 0 late, 0 not admitted (confidence), 0 (budget 0 MB/window)
+strata serve: conversation cache: parked 290 tokens in 876.2 ms; parked=4 bytes=962974068 evictions=7 snapshot_bytes=240589264 reused_kv_bytes=0
+strata decode timing: 88 windows, avg T 3.31, 2.91 tokens/window, 346.64 ms/window = verify 327.86 (GPU-reach wait 45.33 + per-layer host 277.71 [plan 0.23 actq 0.22 jobs 208.75 CPU 61.60] + stage 0.26) + commit/emit 0.64 + draft 10.77; per layer-window: CPU experts 12.22 (16.34 entries), VRAM hits 11.56, PCIe 4.64; adapt wait 2.87 join 4.48, 24.0 swaps/window
+strata serve: prompt 42 tokens = 0 reused + 42 read in 4653 ms (9.0 tok/s), 256 generated in 30504 ms (8.4 tok/s), drafts accepted 171 of 203, 1 checkpoints
+strata serve: decode expert cache hit rate: 41.4% (48830 hits / 117842 lookups); 21838 more read by the GPU over PCIe or from another GPU (15.6% of all 139680 routed)
+strata serve: resident RAM: 66.80 GiB of experts in RAM, 18713 exchanged with the VRAM tier, 300839 blob reads from the file
+strata serve: expert tiers: GPU 48830 hits this request; since the start RAM 732870 blobs, files 300839 blobs 1322275.1 MB read (the GGUF in place)
+strata serve: file tier I/O this request: the OS read 15178.9 MB from storage (40962 major faults) for 123624.7 MB of expert reads; page cache held 110607.6 MB at the read, not 13017.0 MB; io prefetch: 0 read ahead (8.7 MB by pread), 0 used, 0 unused, 0 skipped (cached), 0 dropped; decode waited 20059.2 ms in 12050 fetches; decode gate: cache room 0.26 of the experts, read-ahead used 58%, page cache held 90% of the decode's reads (EWMA), closed, closed in 1368 windows so far, 1 flips; read ahead 0.0 MB, 0.0 MB of it used; 0 late, 0 not admitted (confidence), 0 (budget 0 MB/window)
+strata serve: suffix drafts: 4 windows, 14 of 16 drafts accepted

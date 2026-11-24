@@ -1,0 +1,106 @@
+[
+ {
+  "name": "e4_strata_c1024_mtp",
+  "error": null,
+  "mem_avail_before": 112.25436401367188,
+  "mem_avail_loaded": 72.0673599243164,
+  "mem_avail_min": 71.54182815551758,
+  "load_s": 25.007206916809082,
+  "prompts": {
+   "code_en": {
+    "decode_tok_s": 22.5,
+    "decode_min": 21.3,
+    "decode_max": 23.7,
+    "prefill_tok_s": null,
+    "accept_rate": 0.7521929824561404,
+    "tokens_per_step": 3.0296918767507,
+    "hit_rate": 50.35,
+    "cpu_util": 99.39471899224806,
+    "gpu_util": 92.4001937984496,
+    "nvme_mbs": 0.6134205426356589,
+    "client_decode": 22.668073579731587,
+    "n": 2
+   },
+   "story_en": {
+    "decode_tok_s": 18.700000000000003,
+    "decode_min": 18.1,
+    "decode_max": 19.3,
+    "prefill_tok_s": null,
+    "accept_rate": 0.5309056192034916,
+    "tokens_per_step": 1.9470213996529786,
+    "hit_rate": 57.8,
+    "cpu_util": 99.77528638814016,
+    "gpu_util": 92.56704851752022,
+    "nvme_mbs": 0.8612533692722372,
+    "client_decode": 18.793902470630346,
+    "n": 2
+   },
+   "essay_ja": {
+    "decode_tok_s": 18.25,
+    "decode_min": 18.0,
+    "decode_max": 18.5,
+    "prefill_tok_s": null,
+    "accept_rate": 0.5599042131257951,
+    "tokens_per_step": 1.5563604109690297,
+    "hit_rate": 63.8,
+    "cpu_util": 99.89662698412698,
+    "gpu_util": 93.01851851851852,
+    "nvme_mbs": 1.357175925925926,
+    "client_decode": 18.326034471989352,
+    "n": 2
+   }
+  }
+ },
+ {
+  "name": "e4_strata_c1024_mtp_pcie1",
+  "error": null,
+  "mem_avail_before": 112.2429313659668,
+  "mem_avail_loaded": 72.03165054321289,
+  "mem_avail_min": 71.64500045776367,
+  "load_s": 15.003747701644897,
+  "prompts": {
+   "code_en": {
+    "decode_tok_s": 37.95,
+    "decode_min": 37.1,
+    "decode_max": 38.8,
+    "prefill_tok_s": null,
+    "accept_rate": 0.8147174325178297,
+    "tokens_per_step": 3.030540767722051,
+    "hit_rate": 78.2,
+    "cpu_util": 95.23048941798942,
+    "gpu_util": 90.72883597883597,
+    "nvme_mbs": 1.8588624338624338,
+    "client_decode": 38.1243501633967,
+    "n": 2
+   },
+   "story_en": {
+    "decode_tok_s": 32.400000000000006,
+    "decode_min": 31.1,
+    "decode_max": 33.7,
+    "prefill_tok_s": null,
+    "accept_rate": 0.557999644416349,
+    "tokens_per_step": 1.964021164021164,
+    "hit_rate": 85.94999999999999,
+    "cpu_util": 88.9110606060606,
+    "gpu_util": 92.78333333333333,
+    "nvme_mbs": 3.0653030303030304,
+    "client_decode": 32.50286018906958,
+    "n": 2
+   },
+   "essay_ja": {
+    "decode_tok_s": 35.099999999999994,
+    "decode_min": 34.8,
+    "decode_max": 35.4,
+    "prefill_tok_s": null,
+    "accept_rate": 0.5980738239582534,
+    "tokens_per_step": 1.6050314465408806,
+    "hit_rate": 92.2,
+    "cpu_util": 61.50689655172414,
+    "gpu_util": 90.55172413793103,
+    "nvme_mbs": 2.132758620689655,
+    "client_decode": 35.247527202347,
+    "n": 2
+   }
+  }
+ }
+]

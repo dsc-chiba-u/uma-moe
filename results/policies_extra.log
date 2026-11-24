@@ -1,0 +1,5 @@
+2048 {'lru': 0.6261, 'lru2': 0.6106, 'arc': 0.6335, 'lookahead_1': 0.6527, 'lookahead_4': 0.6901, 'lookahead_16': 0.7006, 'belady': 0.7983}
+4096 {'lru': 0.7841, 'lru2': 0.7679, 'arc': 0.7848, 'lookahead_1': 0.7924, 'lookahead_4': 0.806, 'lookahead_16': 0.8337, 'belady': 0.894}
+6144 {'lru': 0.8657, 'lru2': 0.85, 'arc': 0.8618, 'lookahead_1': 0.8687, 'lookahead_4': 0.874, 'lookahead_16': 0.8885, 'belady': 0.9363}
+8192 {'lru': 0.9129, 'lru2': 0.9004, 'arc': 0.9112, 'lookahead_1': 0.9142, 'lookahead_4': 0.9162, 'lookahead_16': 0.9235, 'belady': 0.9595}
+12288 {'lru': 0.9611, 'lru2': 0.9523, 'arc': 0.9609, 'lookahead_1': 0.9614, 'lookahead_4': 0.9619, 'lookahead_16': 0.9637, 'belady': 0.9802}

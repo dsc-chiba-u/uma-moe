@@ -1,0 +1,2 @@
+f_ours_t60_hostalloc_nodraft {'load_s': 41.01787447929382, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 33.43592834472656, 'mem_avail_min_gib': 32.43168258666992}
+f_ours_t60_thp_nodraft {'load_s': None, 'requests': None, 'error': 'server did not become ready', 'watchdog': False, 'mem_avail_loaded_gib': None, 'mem_avail_min_gib': 45.50168228149414}

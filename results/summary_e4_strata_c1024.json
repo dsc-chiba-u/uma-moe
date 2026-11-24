@@ -1,0 +1,106 @@
+[
+ {
+  "name": "e4_strata_c1024_mtp",
+  "error": null,
+  "mem_avail_before": 112.25436401367188,
+  "mem_avail_loaded": 72.0673599243164,
+  "mem_avail_min": 71.54182815551758,
+  "load_s": 25.007206916809082,
+  "prompts": {
+   "code_en": {
+    "decode_tok_s": 22.5,
+    "decode_min": 21.3,
+    "decode_max": 23.7,
+    "prefill_tok_s": null,
+    "accept_rate": 0.7521929824561404,
+    "tokens_per_step": 3.0296918767507,
+    "hit_rate": 50.35,
+    "cpu_util": 99.39471899224806,
+    "gpu_util": 92.4001937984496,
+    "nvme_mbs": 0.6134205426356589,
+    "client_decode": 22.668073579731587,
+    "n": 2
+   },
+   "story_en": {
+    "decode_tok_s": 18.700000000000003,
+    "decode_min": 18.1,
+    "decode_max": 19.3,
+    "prefill_tok_s": null,
+    "accept_rate": 0.5309056192034916,
+    "tokens_per_step": 1.9470213996529786,
+    "hit_rate": 57.8,
+    "cpu_util": 99.77528638814016,
+    "gpu_util": 92.56704851752022,
+    "nvme_mbs": 0.8612533692722372,
+    "client_decode": 18.793902470630346,
+    "n": 2
+   },
+   "essay_ja": {
+    "decode_tok_s": 18.25,
+    "decode_min": 18.0,
+    "decode_max": 18.5,
+    "prefill_tok_s": null,
+    "accept_rate": 0.5599042131257951,
+    "tokens_per_step": 1.5563604109690297,
+    "hit_rate": 63.8,
+    "cpu_util": 99.89662698412698,
+    "gpu_util": 93.01851851851852,
+    "nvme_mbs": 1.357175925925926,
+    "client_decode": 18.326034471989352,
+    "n": 2
+   }
+  }
+ },
+ {
+  "name": "e4_strata_c1024_nodraft",
+  "error": null,
+  "mem_avail_before": 111.96543502807617,
+  "mem_avail_loaded": 71.56041717529297,
+  "mem_avail_min": 71.19379806518555,
+  "load_s": 16.0103816986084,
+  "prompts": {
+   "code_en": {
+    "decode_tok_s": 15.25,
+    "decode_min": 14.8,
+    "decode_max": 15.7,
+    "prefill_tok_s": null,
+    "accept_rate": null,
+    "tokens_per_step": null,
+    "hit_rate": 57.75,
+    "cpu_util": 99.928125,
+    "gpu_util": 93.6334918478261,
+    "nvme_mbs": 0.6234488224637682,
+    "client_decode": 15.327410610167492,
+    "n": 2
+   },
+   "story_en": {
+    "decode_tok_s": 15.7,
+    "decode_min": 15.7,
+    "decode_max": 15.7,
+    "prefill_tok_s": null,
+    "accept_rate": null,
+    "tokens_per_step": null,
+    "hit_rate": 61.099999999999994,
+    "cpu_util": 99.96923076923076,
+    "gpu_util": 94.67692307692307,
+    "nvme_mbs": 2.65,
+    "client_decode": 15.790096673436203,
+    "n": 2
+   },
+   "essay_ja": {
+    "decode_tok_s": 17.0,
+    "decode_min": 16.6,
+    "decode_max": 17.4,
+    "prefill_tok_s": null,
+    "accept_rate": null,
+    "tokens_per_step": null,
+    "hit_rate": 64.6,
+    "cpu_util": 99.97145279819107,
+    "gpu_util": 93.96127755794234,
+    "nvme_mbs": 0.7025155455059355,
+    "client_decode": 17.122938120398867,
+    "n": 2
+   }
+  }
+ }
+]

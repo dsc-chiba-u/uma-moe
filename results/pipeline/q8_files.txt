@@ -1,0 +1,9 @@
+total 183813560
+drwxrwxr-x 2 user user        4096 Oct 21 11:36 .
+drwxrwxr-x 5 user user        4096 Oct 21 10:34 ..
+-rw-rw-r-- 1 user user    10946624 Oct 21 10:35 Qwen3.8-Flash-Next-Q8_0-00001-of-00006.gguf
+-rw-rw-r-- 1 user user   682434912 Oct 21 10:36 Qwen3.8-Flash-Next-Q8_0-00002-of-00006.gguf
+-rw-rw-r-- 1 user user 54400261312 Oct 21 11:22 Qwen3.8-Flash-Next-Q8_0-00003-of-00006.gguf
+-rw-rw-r-- 1 user user 49446841216 Oct 21 11:36 Qwen3.8-Flash-Next-Q8_0-00004-of-00006.gguf
+-rw-rw-r-- 1 user user 49668930400 Oct 21 11:35 Qwen3.8-Flash-Next-Q8_0-00005-of-00006.gguf
+-rw-rw-r-- 1 user user 34015618784 Oct 21 11:14 Qwen3.8-Flash-Next-Q8_0-00006-of-00006.gguf

@@ -1,0 +1,85 @@
+{
+ "name": "e4b_llama_cpumoe_cache4096",
+ "engine": "llama",
+ "args": [
+  "-m",
+  "~/src/Strata-data/models/Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf",
+  "-ngl",
+  "999",
+  "-fa",
+  "on",
+  "-c",
+  "8192",
+  "--no-warmup",
+  "--cpu-moe",
+  "--moe-cache-mib",
+  "4096"
+ ],
+ "env": {},
+ "meta": {
+  "exp": "E4b"
+ },
+ "mem_avail_before_gib": 116.24600219726562,
+ "started": "2026-10-21T14:17:04",
+ "load_s": 74.2702374458313,
+ "mem_avail_loaded_gib": 48.42789077758789,
+ "requests": 6,
+ "mem_avail_min_gib": 47.39335632324219,
+ "watchdog": false,
+ "server_stats": [
+  {
+   "prompt_read": 34,
+   "prefill_ms": 763.08,
+   "gen_tokens": 256,
+   "gen_ms": 8178.04,
+   "decode_tok_s": 31.303344077554037,
+   "prompt_id": "code_en",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 34,
+   "prefill_ms": 477.02,
+   "gen_tokens": 256,
+   "gen_ms": 7849.43,
+   "decode_tok_s": 32.61383310635294,
+   "prompt_id": "story_en",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 35,
+   "prefill_ms": 443.99,
+   "gen_tokens": 256,
+   "gen_ms": 7926.5,
+   "decode_tok_s": 32.29672617170252,
+   "prompt_id": "essay_ja",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 34,
+   "prefill_ms": 434.59,
+   "gen_tokens": 256,
+   "gen_ms": 7822.25,
+   "decode_tok_s": 32.72715650867717,
+   "prompt_id": "code_en",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 34,
+   "prefill_ms": 462.38,
+   "gen_tokens": 256,
+   "gen_ms": 7469.16,
+   "decode_tok_s": 34.274269127987615,
+   "prompt_id": "story_en",
+   "repeat": 1
+  },
+  {
+   "prompt_read": 35,
+   "prefill_ms": 436.19,
+   "gen_tokens": 256,
+   "gen_ms": 7526.32,
+   "decode_tok_s": 34.01396698519329,
+   "prompt_id": "essay_ja",
+   "repeat": 1
+  }
+ ]
+}

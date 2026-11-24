@@ -1,0 +1,11 @@
+p0f_base_auto_mtp {'load_s': 19.007534980773926, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 44.23946762084961, 'mem_avail_min_gib': 42.716064453125}
+p0f_base_c4096_mtp {'load_s': 17.011547565460205, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 71.71514511108398, 'mem_avail_min_gib': 70.91495895385742}
+p0f_base_c4096_pcie1_mtp {'load_s': 16.006337881088257, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 71.70158004760742, 'mem_avail_min_gib': 70.97132873535156}
+p0f_fix_auto_mtp {'load_s': 17.00843906402588, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 71.54582595825195, 'mem_avail_min_gib': 70.87146377563477}
+p0f_fix_c1024_mtp {'load_s': 15.005955696105957, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 75.81025314331055, 'mem_avail_min_gib': 75.07527923583984}
+p0f_base_auto_nodraft {'load_s': 19.009466648101807, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 44.6751708984375, 'mem_avail_min_gib': 43.675811767578125}
+p0f_base_c4096_nodraft {'load_s': 17.006511926651, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 71.30293655395508, 'mem_avail_min_gib': 70.62021255493164}
+p0f_base_c4096_pcie1_nodraft {'load_s': 17.009435653686523, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 71.28322219848633, 'mem_avail_min_gib': 70.67758560180664}
+p0f_fix_auto_nodraft {'load_s': 15.00747275352478, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 71.29728698730469, 'mem_avail_min_gib': 70.3146858215332}
+p0f_fix_c1024_nodraft {'load_s': 16.00669026374817, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 75.45583724975586, 'mem_avail_min_gib': 74.89944458007812}
+p0f_fix_c24576_mtp {'load_s': 18.007185697555542, 'requests': 27, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 44.5937614440918, 'mem_avail_min_gib': 43.93685531616211}

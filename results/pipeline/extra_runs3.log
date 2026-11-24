@@ -1,0 +1,4 @@
+f_ours_t75_mtp {'load_s': 48.03004717826843, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 16.635269165039062, 'mem_avail_min_gib': 15.945541381835938}
+f_ours_t60_nooverlap_mtp {'load_s': 38.024081230163574, 'requests': 12, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.461456298828125, 'mem_avail_min_gib': 34.14316177368164}
+x_burn_cpu0_t60_mtp {'load_s': 30.00950002670288, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.42717361450195, 'mem_avail_min_gib': 34.18866729736328}
+x_burn_cpu19_t60_mtp {'load_s': 32.00935482978821, 'requests': 3, 'error': None, 'watchdog': False, 'mem_avail_loaded_gib': 34.45253372192383, 'mem_avail_min_gib': 34.20906066894531}

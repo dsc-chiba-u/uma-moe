@@ -1,0 +1,88 @@
+{
+ "name": "p0_ab_c1024_mtp_pcie1_direct",
+ "engine": "strata",
+ "exe": null,
+ "args": [
+  "--pack",
+  "~/src/Strata-data/packs/q2_0",
+  "--native",
+  "~/src/Strata-data/models/Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf",
+  "--ple-gguf",
+  "~/src/Strata-data/models/Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00002-of-00002.gguf",
+  "--expert-profile",
+  "~/src/Strata/data/expert-profile.bin",
+  "--expert-cache",
+  "1024",
+  "--prefill",
+  "auto",
+  "--spec",
+  "4",
+  "--spec-min-p",
+  "0.5",
+  "--mtp",
+  "~/src/Strata-data/mtp/rt",
+  "--max-context",
+  "32768",
+  "--kv",
+  "int8",
+  "--pcie-frac",
+  "1.0",
+  "--pcie-mode",
+  "direct"
+ ],
+ "env": {
+  "STRATA_DECODE_TIMING": "1",
+  "STRATA_VERIFY_PROFILE": "1"
+ },
+ "meta": {
+  "exp": "P0"
+ },
+ "mem_avail_before_gib": 116.00066375732422,
+ "started": "2026-10-22T17:48:47",
+ "load_s": 20.011638402938843,
+ "mem_avail_loaded_gib": 75.90330123901367,
+ "requests": 3,
+ "mem_avail_min_gib": 75.62714004516602,
+ "watchdog": false,
+ "server_stats": [
+  {
+   "prompt_tokens": 34,
+   "prompt_read": 34,
+   "prefill_ms": 899,
+   "gen_tokens": 256,
+   "gen_ms": 5777,
+   "decode_tok_s": 44.3,
+   "drafts_accepted": 175,
+   "drafts": 220,
+   "hit_rate": 77.2,
+   "prompt_id": "code_en",
+   "repeat": 0
+  },
+  {
+   "prompt_tokens": 34,
+   "prompt_read": 34,
+   "prefill_ms": 929,
+   "gen_tokens": 256,
+   "gen_ms": 7150,
+   "decode_tok_s": 35.8,
+   "drafts_accepted": 112,
+   "drafts": 227,
+   "hit_rate": 88.0,
+   "prompt_id": "story_en",
+   "repeat": 0
+  },
+  {
+   "prompt_tokens": 35,
+   "prompt_read": 35,
+   "prefill_ms": 917,
+   "gen_tokens": 256,
+   "gen_ms": 7018,
+   "decode_tok_s": 36.5,
+   "drafts_accepted": 96,
+   "drafts": 176,
+   "hit_rate": 91.3,
+   "prompt_id": "essay_ja",
+   "repeat": 0
+  }
+ ]
+}

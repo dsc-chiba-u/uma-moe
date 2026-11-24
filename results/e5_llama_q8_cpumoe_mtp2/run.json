@@ -1,0 +1,78 @@
+{
+ "name": "e5_llama_q8_cpumoe_mtp2",
+ "engine": "llama",
+ "args": [
+  "-m",
+  "~/models/unsloth-Qwen3.8-Flash-Next-GGUF/Q8_0/Qwen3.8-Flash-Next-Q8_0-00001-of-00006.gguf",
+  "-ngl",
+  "999",
+  "-fa",
+  "on",
+  "-c",
+  "16384",
+  "--no-warmup",
+  "--cpu-moe",
+  "-lm",
+  "mmap",
+  "-md",
+  "~/models/unsloth-Qwen3.8-Flash-Next-GGUF/MTP/mtp-Qwen3.8-Flash-Next-Q8_0.gguf",
+  "--spec-type",
+  "draft-mtp",
+  "-ngld",
+  "999",
+  "--spec-draft-n-max",
+  "2"
+ ],
+ "env": {},
+ "meta": {
+  "exp": "E5"
+ },
+ "mem_avail_before_gib": 115.8766975402832,
+ "started": "2026-10-21T13:22:43",
+ "load_s": 150.22339057922363,
+ "mem_avail_loaded_gib": 104.07151794433594,
+ "requests": 3,
+ "mem_avail_min_gib": 102.98332977294922,
+ "watchdog": false,
+ "server_stats": [
+  {
+   "prompt_read": 34,
+   "prefill_ms": 9788.73,
+   "gen_tokens": 128,
+   "gen_ms": 19160.21,
+   "decode_tok_s": 6.680511330512558,
+   "draft_accept_rate": 0.93182,
+   "drafts_accepted": 82,
+   "drafts": 88,
+   "mean_len": 2.86,
+   "prompt_id": "code_en",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 34,
+   "prefill_ms": 3133.78,
+   "gen_tokens": 128,
+   "gen_ms": 22307.49,
+   "decode_tok_s": 5.737983072053377,
+   "draft_accept_rate": 0.55,
+   "drafts_accepted": 66,
+   "drafts": 120,
+   "mean_len": 2.1,
+   "prompt_id": "story_en",
+   "repeat": 0
+  },
+  {
+   "prompt_read": 34,
+   "prefill_ms": 2076.77,
+   "gen_tokens": 128,
+   "gen_ms": 13026.69,
+   "decode_tok_s": 9.825980352645221,
+   "draft_accept_rate": 0.94318,
+   "drafts_accepted": 83,
+   "drafts": 88,
+   "mean_len": 2.89,
+   "prompt_id": "code_en",
+   "repeat": 0
+  }
+ ]
+}

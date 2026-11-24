@@ -1,0 +1,17 @@
+{
+ "mtp_base": "35.8",
+ "mtp_fix": "62.3",
+ "mtp_pcie1": "51.3",
+ "mtp_gain": "74",
+ "nd_base": "25.5",
+ "nd_fix": "34.8",
+ "nd_gain": "37",
+ "cpu_base": "99.7",
+ "cpu_fix": "5.8",
+ "mtp_full": "66.1",
+ "mem_full": "72",
+ "gap": "5.8",
+ "gap_nd": "3.6",
+ "mem_saved": "27",
+ "mtp_fixfull": "65.8"
+}
