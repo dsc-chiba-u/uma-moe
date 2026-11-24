@@ -1,5 +1,6 @@
 # Still to fill in: the arXiv identifier and the Zenodo dataset DOI below and in README.md, and the preferred-citation
-# status (`submitted` once the manuscript has been submitted; `preprint` while only the arXiv version exists). The DOIs
+# status (`in-preparation` until the manuscript is submitted; `preprint` while only the arXiv version exists;
+# `submitted` once it has been submitted). The DOIs
 # of this software record were minted by Zenodo's GitHub integration at release v1.0.0 (2026-11-24).
 cff-version: 1.2.0
 message: "If you use this software or data, please cite the paper (preferred-citation) and this release."
@@ -51,5 +52,5 @@ preferred-citation:
       affiliation: "Department of Artificial Intelligence Medicine, Graduate School of Medicine, Chiba University, Chiba, Japan; Institute for Advanced Academic Research, Chiba University, Chiba, Japan; Data Science Core, Chiba University, Chiba, Japan"
       orcid: "https://orcid.org/0000-0003-3777-5945"
   journal: "IEEE Transactions on Parallel and Distributed Systems"
-  status: submitted
+  status: in-preparation
   year: 2026

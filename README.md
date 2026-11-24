@@ -149,7 +149,8 @@ a pack made with the v0.1.27 packer keeps it as F32 (index kind 2), which the en
 words. The script ends by printing that tensor's line of `~/src/Strata-data/packs/q8_0/index.txt`, which must read
 `blk.1.ple_conv1d.weight 0 5 ... 81920 ...` (kind 5 = F16; 81,920 bytes for its 4 x 10,240 values). The pack
 regenerated this way on 2026-11-24 from the released packer was byte-identical to the pack of the paper's runs
-(`paper/submission/validation_record.md`, S-6).
+(entry S-6 of the authors' research validation record, which is kept with the manuscript and is not part of this
+release).
 
 ```bash
 mkdir -p ~/models && ~/work/uma-moe/download_models.sh
@@ -283,13 +284,13 @@ agent with the Claude Opus 5.5 model, wrote the engine patches and the benchmark
 ran the experiments, analyzed the results, produced the paper's tables and figures, wrote the automated check of the
 paper's numbers against these data, and drafted the paper and this documentation. The human authors defined the
 research objectives, directed the investigation, and take full responsibility for the accuracy, originality,
-experimental validity, and conclusions of this work. The paper's numbers, code and references were checked against
-the raw data and the primary sources by the AI system that produced them and, independently, by a second AI agent, ChatGPT (OpenAI) with the Astra 6.2
-model, which checked the manuscript and selected results before submission, as the research validation record
-documents. [PENDING: TO BE CONFIRMED WHEN THE AUTHORS' VALIDATION RECORD IS
+experimental validity, and conclusions of this work. Claude checked the paper's numbers, code and references against
+the raw data and the primary sources. A second AI agent, ChatGPT (OpenAI) with the Astra 6.2 model, independently
+checked the manuscript and selected results before submission, as the authors' research validation record documents
+(the record is kept with the manuscript and is not part of this release). [PENDING: TO BE CONFIRMED WHEN THE AUTHORS' VALIDATION RECORD IS
 COMPLETE] The authors reviewed the manuscript, the source code, the experimental records and the references to the
 extent that record documents.
 
 ## Citation
 
-See `CITATION.cff`. Please cite the paper (arXiv:XXXX.XXXXX) and this software record (Zenodo DOI 10.5281/zenodo.24486237 for all versions, 10.5281/zenodo.24486238 for v1.0.0) and, for the data, the Zenodo dataset record.
+See `CITATION.cff`. Please cite the paper (arXiv:XXXX.XXXXX; the identifier will be filled in when the preprint is posted) and this software record (Zenodo DOI 10.5281/zenodo.24486237 for all versions, 10.5281/zenodo.24486238 for v1.0.0) and, for the data, the Zenodo dataset record (not yet uploaded as of 2026-11-24; its DOI will be added here).

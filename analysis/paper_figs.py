@@ -25,8 +25,9 @@ def rows():
 
 
 def decode_vs_residency(R):
-    # the performance model with I/O fully hidden, for expert reads at 223 GB/s (driver memory, the plan's assumption)
-    # and at 165 GB/s (host page tables, what the DRAM tier's registered slots get)
+    # the performance model (each window's NVMe reads overlap its DRAM transfers and the longer of the two counts), for
+    # expert reads at 223 GB/s (driver memory, the plan's assumption) and at 165 GB/s (host page tables, what the DRAM
+    # tier's registered slots get)
     m_fast = json.load(open(RES / "cost_model_q8_overlap_wh223.json"))["table"]
     m_slow = json.load(open(RES / "cost_model_q8_overlap_wh165.json"))["table"]
     fig, ax = plt.subplots(figsize=(3.4, 1.9))
@@ -43,7 +44,7 @@ def decode_vs_residency(R):
         hi = [m_fast[key[x]][cap]["tok_s"] for x in xs]
         lo = [m_slow[key[x]][cap]["tok_s"] for x in xs]
         ax.fill_between(xs, lo, hi, color=C["model"], alpha=0.22, lw=0,
-                        label="model, I/O hidden (165–223 GB/s)" if cap == "3" else None)
+                        label="model, overlapping I/O (165–223 GB/s)" if cap == "3" else None)
     # baselines: they hold no DRAM tier, so they have no place on the x axis; each is a horizontal reference line with
     # its marker in a separate band at the right (Strata 0.2.6: the fastest exact configuration at a 66.8 GiB budget,
     # unbuffered file tier, 86 GiB taken; llama.cpp: every expert on the CPU)

@@ -35,7 +35,8 @@ came after 1.1 s.
   each request), and 0.67-0.82 GiB were free when each request's first token came. At 18:06, the
   paper's engine decoded normally with no reclaim and 1.7-1.9 GiB free.
 - `smoke2_cleanroom_t60_mtp` was interrupted on purpose (to reach the paper's engine sooner) and has no requests.
-- Both engines were equally slow, and their startup logs match line for line, so the clean-room build is not the cause.
+- Both engines were slow (the clean-room build at 1.44 and 0.81 tokens/s, the paper's at 1.42 and 1.93), and their
+  startup logs match line for line, so the clean-room build is not the cause.
   The clean-room build was configured like the paper's (Release, CUDA architecture 121); only the generator differs.
 
 ## Page-cache test (`bench/p2/pagecache_ab.sh`, 18:09-18:14)
