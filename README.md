@@ -1,18 +1,22 @@
 # Expert Tiering on Unified Memory: code, benchmarks and data
 
 Artifacts of the paper *Expert Tiering on Unified Memory: Running a 188 GB Mixture-of-Experts Model on a 128 GB GPU
-Workstation* (Hiromu Nishiuchi and Tazro Ohta; submitted to IEEE Transactions on Parallel and Distributed Systems; preprint:
-arXiv:XXXX.XXXXX, to be filled in). This software release is archived on Zenodo: DOI
-[10.5281/zenodo.24486238](https://doi.org/10.5281/zenodo.24486238) (v1.0.0, this release) and
-[10.5281/zenodo.24486237](https://doi.org/10.5281/zenodo.24486237) (all versions).
+Workstation* (Hiromu Nishiuchi and Tazro Ohta). The manuscript is being prepared for submission to IEEE Transactions
+on Parallel and Distributed Systems; the arXiv identifier of its preprint will be added here when the preprint is
+posted. This software is archived on Zenodo: DOI [10.5281/zenodo.24486238](https://doi.org/10.5281/zenodo.24486238)
+(archived release v1.0.0) and [10.5281/zenodo.24486237](https://doi.org/10.5281/zenodo.24486237) (all versions). The
+v1.0.0 archive predates the documentation-only commits made on GitHub later on 2026-11-24 (this README,
+`CITATION.cff`, the legend text in `analysis/paper_figs.py` and a sentence in `results/pagecache/README.md`); the
+current files are on the repository's `main` branch.
 
 The paper runs the 188 GB Q8_0 quantization of Qwen3.8-Flash-Next on a 128 GB NVIDIA DGX Spark (GB10) with a
 single-copy expert tier: a 1,024-expert device tier, a DRAM tier of pinned slots that the GPU reads in place, and the
 remaining experts read from NVMe with unbuffered I/O while the GPU computes. The tier is a patch to the Strata
 inference engine (0.1.27). This repository holds the engine patches, the benchmark harness and microbenchmarks, the
 analysis scripts that produce the paper's tables and figures, and the logs of every run. Routing traces, the
-locality study's per-model traces and the logits of the quality comparison are in a separate data archive
-(Zenodo DOI: 10.5281/zenodo.XXXXXXX, to be filled in).
+locality study's per-model traces and the logits of the quality comparison are not in this repository: we plan to
+deposit them as three archives in a separate Zenodo dataset record (listed under "Data archive" below), and its DOI
+will be added here when it is public.
 
 ## Contents
 
@@ -261,7 +265,8 @@ all configurations of this work produce the same 12 texts (`requests.jsonl`), wh
 
 ## Data archive
 
-The Zenodo record holds three archives; extract them in this directory (they unpack into `results/`):
+We plan to deposit the three data archives listed below in a separate Zenodo dataset record; its DOI will be added
+here when it is public. Once downloaded, extract them in this directory (they unpack into `results/`):
 
 | archive | contents | license |
 |---|---|---|
@@ -293,4 +298,4 @@ extent that record documents.
 
 ## Citation
 
-See `CITATION.cff`. Please cite the paper (arXiv:XXXX.XXXXX; the identifier will be filled in when the preprint is posted) and this software record (Zenodo DOI 10.5281/zenodo.24486237 for all versions, 10.5281/zenodo.24486238 for v1.0.0) and, for the data, the Zenodo dataset record (not yet uploaded as of 2026-11-24; its DOI will be added here).
+See `CITATION.cff`. Please cite the paper (the arXiv identifier of its preprint will be added here when it is posted) and this software record (Zenodo DOI 10.5281/zenodo.24486237 for all versions, 10.5281/zenodo.24486238 for v1.0.0); the DOI of the planned dataset record will be added here when it is public.
