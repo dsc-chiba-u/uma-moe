@@ -14,9 +14,9 @@ single-copy expert tier: a 1,024-expert device tier, a DRAM tier of pinned slots
 remaining experts read from NVMe with unbuffered I/O while the GPU computes. The tier is a patch to the Strata
 inference engine (0.1.27). This repository holds the engine patches, the benchmark harness and microbenchmarks, the
 analysis scripts that produce the paper's tables and figures, and the logs of every run. Routing traces, the
-locality study's per-model traces and the logits of the quality comparison are not in this repository: we plan to
-deposit them as three archives in a separate Zenodo dataset record (listed under "Data archive" below), and its DOI
-will be added here when it is public.
+locality study's per-model traces and the logits of the quality comparison are not in this repository: they are
+deposited as three archives in a separate Zenodo dataset record, DOI [10.5281/zenodo.24517462](https://doi.org/10.5281/zenodo.24517462) (listed under
+"Data archive" below).
 
 ## Contents
 
@@ -265,8 +265,8 @@ all configurations of this work produce the same 12 texts (`requests.jsonl`), wh
 
 ## Data archive
 
-We plan to deposit the three data archives listed below in a separate Zenodo dataset record; its DOI will be added
-here when it is public. Once downloaded, extract them in this directory (they unpack into `results/`):
+The three data archives listed below are in the Zenodo dataset record [10.5281/zenodo.24517462](https://doi.org/10.5281/zenodo.24517462). Download them and
+extract them in this directory (they unpack into `results/`):
 
 | archive | contents | license |
 |---|---|---|
@@ -298,4 +298,4 @@ extent that record documents.
 
 ## Citation
 
-See `CITATION.cff`. Please cite the paper (the arXiv identifier of its preprint will be added here when it is posted) and this software record (Zenodo DOI 10.5281/zenodo.24486237 for all versions, 10.5281/zenodo.24486238 for v1.0.0); the DOI of the planned dataset record will be added here when it is public.
+See `CITATION.cff`. Please cite the paper (the arXiv identifier of its preprint will be added here when it is posted) and this software record (Zenodo DOI 10.5281/zenodo.24486237 for all versions, 10.5281/zenodo.24486238 for v1.0.0) and, for the data, the Zenodo dataset record (DOI 10.5281/zenodo.24517462).
