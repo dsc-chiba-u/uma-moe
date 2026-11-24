@@ -15,7 +15,7 @@
       "orcid": "0000-0003-3777-5945"
     }
   ],
-  "license": "MIT",
+  "license": "mit",
   "access_right": "open",
   "keywords": [
     "mixture of experts",
@@ -26,8 +26,11 @@
     "speculative decoding"
   ],
   "related_identifiers": [
-    {"identifier": "arXiv:XXXX.XXXXX", "relation": "isSupplementTo", "resource_type": "publication-preprint", "scheme": "arxiv"},
-    {"identifier": "10.5281/zenodo.XXXXXXX", "relation": "isSupplementedBy", "resource_type": "dataset", "scheme": "doi"},
-    {"identifier": "https://github.com/Niko1221/Strata", "relation": "isDerivedFrom", "resource_type": "software", "scheme": "url"}
+    {
+      "identifier": "https://github.com/Niko1221/Strata",
+      "relation": "isDerivedFrom",
+      "resource_type": "software",
+      "scheme": "url"
+    }
   ]
 }

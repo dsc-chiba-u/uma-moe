@@ -1,12 +1,12 @@
-# TODO before publishing: date-released, the identifiers (arXiv ID, Zenodo dataset DOI) below and in README.md and
-# .zenodo.json, and the preferred-citation status (`submitted` once the manuscript has been submitted; `preprint`
-# while only the arXiv version exists). The DOI of this software record is minted by Zenodo's GitHub integration at the
-# first release and is added in the next commit.
+# Still to fill in: the arXiv identifier and the Zenodo dataset DOI below and in README.md, and the preferred-citation
+# status (`submitted` once the manuscript has been submitted; `preprint` while only the arXiv version exists). The DOI
+# of this software record is minted by Zenodo's GitHub integration at the first release (v1.0.0) and added afterwards.
 cff-version: 1.2.0
 message: "If you use this software or data, please cite the paper (preferred-citation) and this release."
 type: software
 title: "Expert Tiering on Unified Memory: Running a 188 GB Mixture-of-Experts Model on a 128 GB GPU Workstation"
 version: 1.0.0
+date-released: "2026-11-24"
 license: MIT
 authors:
   - family-names: Nishiuchi
