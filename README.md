@@ -2,7 +2,9 @@
 
 Artifacts of the paper *Expert Tiering on Unified Memory: Running a 188 GB Mixture-of-Experts Model on a 128 GB GPU
 Workstation* (Hiromu Nishiuchi and Tazro Ohta; submitted to IEEE Transactions on Parallel and Distributed Systems; preprint:
-arXiv:XXXX.XXXXX, to be filled in).
+arXiv:XXXX.XXXXX, to be filled in). This software release is archived on Zenodo: DOI
+[10.5281/zenodo.24486238](https://doi.org/10.5281/zenodo.24486238) (v1.0.0, this release) and
+[10.5281/zenodo.24486237](https://doi.org/10.5281/zenodo.24486237) (all versions).
 
 The paper runs the 188 GB Q8_0 quantization of Qwen3.8-Flash-Next on a 128 GB NVIDIA DGX Spark (GB10) with a
 single-copy expert tier: a 1,024-expert device tier, a DRAM tier of pinned slots that the GPU reads in place, and the
@@ -290,4 +292,4 @@ extent that record documents.
 
 ## Citation
 
-See `CITATION.cff`. Please cite the paper (arXiv:XXXX.XXXXX) and, for the data, the Zenodo record.
+See `CITATION.cff`. Please cite the paper (arXiv:XXXX.XXXXX) and this software record (Zenodo DOI 10.5281/zenodo.24486237 for all versions, 10.5281/zenodo.24486238 for v1.0.0) and, for the data, the Zenodo dataset record.

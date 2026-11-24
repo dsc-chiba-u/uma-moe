@@ -1,6 +1,6 @@
 # Still to fill in: the arXiv identifier and the Zenodo dataset DOI below and in README.md, and the preferred-citation
-# status (`submitted` once the manuscript has been submitted; `preprint` while only the arXiv version exists). The DOI
-# of this software record is minted by Zenodo's GitHub integration at the first release (v1.0.0) and added afterwards.
+# status (`submitted` once the manuscript has been submitted; `preprint` while only the arXiv version exists). The DOIs
+# of this software record were minted by Zenodo's GitHub integration at release v1.0.0 (2026-11-24).
 cff-version: 1.2.0
 message: "If you use this software or data, please cite the paper (preferred-citation) and this release."
 type: software
@@ -26,6 +26,12 @@ keywords:
   - speculative decoding
 repository-code: "https://github.com/dsc-chiba-u/uma-moe"
 identifiers:
+  - type: doi
+    value: "10.5281/zenodo.24486238"
+    description: "Zenodo record of this software release (v1.0.0)"
+  - type: doi
+    value: "10.5281/zenodo.24486237"
+    description: "Zenodo concept DOI of the software record (all versions)"
   - type: other
     value: "arXiv:XXXX.XXXXX"
     description: "Preprint of the paper (to be filled in)"
