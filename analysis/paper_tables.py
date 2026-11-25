@@ -46,6 +46,11 @@ def f(x, nd=1):
     return "--" if x is None else f"{x:.{nd}f}"
 
 
+# the two cells of the paper's main comparison (Section 7.3): our tier at 60% with MTP, and the fastest exact
+# Strata 0.2.6 configuration at about the same memory (unbuffered file tier forced on) with MTP
+BOLD = ("f_ours_t60_mtp", "f_up026_b66_exact_unbuf_mtp")
+
+
 def no_overlap(run):
     """True when the run was recorded with STRATA_TIER_NO_OVERLAP=1 (results/<run>/run.json env)."""
     p = ROOT / "results" / run / "run.json"
@@ -64,7 +69,8 @@ def main():
         d = r["decode"]
         nv = r.get("nvme") or {}
         same = f"{r['same']}" if r.get("same") is not None else "--"
-        lines.append(" & ".join([eng, cfg, "\\checkmark" if mtp else "--", f(r["mean"])] + [f(d.get(k)) for k in SHORT] +
+        mean = f"\\textbf{{{f(r['mean'])}}}" if run in BOLD else f(r["mean"])
+        lines.append(" & ".join([eng, cfg, "\\checkmark" if mtp else "--", mean] + [f(d.get(k)) for k in SHORT] +
                                 [f(r["cpu"], 0), f(r["gpu"], 0), f(r["mem_gib"]), f(nv.get("prompt")) + " / " + f(nv.get("decode")),
                                  same]) + " \\\\")
         if run in ("f_ours_t75_mtp", "f_up_b66_exact_mtp", "f_up026_b90_default_mtp"):
